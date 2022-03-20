@@ -79,6 +79,8 @@ jobs:
           include_directories(include)
           target_link_libraries(GameProject ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${SDL2_TTF_LIBRARY})
           install(TARGETS GameProject RUNTIME DESTINATION ${BIN_DIR})
+          include(CTest)
+          add_test(NAME GameProject COMMAND GameProject)
 
         # The mode of writing to use: `overwrite`, `append`, or `preserve`.
         write-mode: # optional, default is preserve
