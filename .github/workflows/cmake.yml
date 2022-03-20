@@ -42,7 +42,7 @@ jobs:
       run: mkdir cmake && touch CMakeLists.txt cmake/FindSDL2.cmake cmake/FindSDL2_image.cmake cmake/FindSDL2_ttf.cmake
     
     - name: Write CMakeLists File
-      #if: steps.cache-ci-files.outputs.cache-hit != 'true'
+      if: steps.cache-ci-files.outputs.cache-hit != 'true'
       # You may pin to the exact commit or the version.
       # uses: DamianReeves/write-file-action@e19fd875ed54f16fc583a3486e62547ce4a5dde8
       uses: DamianReeves/write-file-action@v1.0
@@ -79,8 +79,6 @@ jobs:
           include_directories(include)
           target_link_libraries(GameProject ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${SDL2_TTF_LIBRARY})
           install(TARGETS GameProject RUNTIME DESTINATION ${BIN_DIR})
-          include(CTest)
-          add_test(NAME GameProject COMMAND GameProject)
 
         # The mode of writing to use: `overwrite`, `append`, or `preserve`.
         write-mode: # optional, default is preserve
