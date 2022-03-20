@@ -42,7 +42,7 @@ jobs:
       run: mkdir cmake && touch CMakeLists.txt cmake/FindSDL2.cmake cmake/FindSDL2_image.cmake cmake/FindSDL2_ttf.cmake
     
     - name: Write CMakeLists File
-      if: steps.cache-ci-files.outputs.cache-hit != 'true'
+      #if: steps.cache-ci-files.outputs.cache-hit != 'true'
       # You may pin to the exact commit or the version.
       # uses: DamianReeves/write-file-action@e19fd875ed54f16fc583a3486e62547ce4a5dde8
       uses: DamianReeves/write-file-action@v1.0
