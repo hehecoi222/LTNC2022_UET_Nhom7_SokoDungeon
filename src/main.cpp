@@ -1,8 +1,8 @@
 #include <SDL.h>
-#include <stdio.h>
-#include <find_res.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include <stdio.h>
+#include <find_res.h>
 
 const int WINDOW_WIDTH = 640;
 const int WINDOW_HEIGHT = 480;
@@ -44,7 +44,9 @@ int main(int, char**) {
 
     // Define at Run-time when the scope is main
     FindRes *imgPath = new FindRes("img");
-    SDL_Surface *image = IMG_Load((*imgPath + "preview.png").c_str());
+    // SDL_Surface *image = IMG_Load((*imgPath + "preview.png").c_str());
+    SDL_Surface *image = IMG_Load("res/img/preview.png");
+
     // Free the memory allocated by FindRes
     delete imgPath;
     SDL_Texture* imageTexture = SDL_CreateTextureFromSurface(renderer, image);

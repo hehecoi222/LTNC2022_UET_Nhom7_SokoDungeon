@@ -6,3 +6,6 @@ build/
 cmake/
 SDL*
 CMakeLists.txt
+Makefile
+include/
+lib/
