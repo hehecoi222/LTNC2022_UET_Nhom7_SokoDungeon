@@ -62,7 +62,7 @@ jobs:
         contents: |
           cmake_minimum_required(VERSION 3.0)
           project(GameProject)
-          set(SOURCES ${GameProject_SOURCE_DIR}/src/main.cpp)
+          file(GLOB SOURCES ${GameProject_SOURCE_DIR}/src/*.cpp ${GameProject_SOURCE_DIR}/src/*.h)
           set(BIN_DIR ${GameProject_SOURCE_DIR}/bin)
           list(APPEND CMAKE_MODULE_PATH ${GameProject_SOURCE_DIR}/cmake)
           
