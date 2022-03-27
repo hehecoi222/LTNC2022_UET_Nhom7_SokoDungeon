@@ -41,14 +41,8 @@ int main(int, char**) {
         SDL_Quit();
         return 2;
     }
-
-    // Define at Run-time when the scope is main
-    FindRes *imgPath = new FindRes("img");
     // SDL_Surface *image = IMG_Load((*imgPath + "preview.png").c_str());
-    SDL_Surface *image = IMG_Load("res/img/preview.png");
-
-    // Free the memory allocated by FindRes
-    delete imgPath;
+    SDL_Surface *image = IMG_Load(FindRes::getPath("img", "preview.png"));
     SDL_Texture* imageTexture = SDL_CreateTextureFromSurface(renderer, image);
     SDL_FreeSurface(image);
     SDL_Rect imageRect = {WINDOW_WIDTH/4,WINDOW_HEIGHT/4,WINDOW_WIDTH/2,WINDOW_HEIGHT/2};
@@ -59,9 +53,7 @@ int main(int, char**) {
         SDL_Quit();
         return 4;
     }
-    // Define at Compile-time when narrow the scope (delete when end of scope)
-    FindRes fontPath("font");
-    TTF_Font* font = TTF_OpenFont((fontPath+"lazy.ttf").c_str(), 24);
+    TTF_Font* font = TTF_OpenFont(FindRes::getPath("font","lazy.ttf"), 24);
     SDL_Color textcolor = {0,0,0,0xFF};
     SDL_Surface* text = TTF_RenderText_Solid(font, "Hello World!", textcolor);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, text);
