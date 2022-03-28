@@ -91,23 +91,18 @@ bool Game::loadMedia(){
 
 	bool success = true;
 
-	Game::gFont = TTF_OpenFont("font/AV.ttf", 28);
+	Game::gFont = TTF_OpenFont("font/lazy.ttf", 28);
 	SDL_Color textColor = {0, 0, 0, 255};
 
 	DotTexture.loadFromFile("res/dot.bmp");
 
-	playerIdleDown.loadFromFile("res/idown.png");
+	playerIdleDown.loadFromFile("res/img/idown.png");
 	for (int i = 0; i < PLAYER_FRAMES; i++)
 	{
 		playerCurrentFrame[i].x = i*64;
 		playerCurrentFrame[i].y = 0;
 		playerCurrentFrame[i].w = playerCurrentFrame[i].h = 64;
 	}
-	//Load map
-	Map.loadFromFile("res/T002.png");
-	mapBlock.x = mapBlock.y = 8;
-	mapBlock.w = mapBlock.h = 16;
-	
 	
 	return success;
 
