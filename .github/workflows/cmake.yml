@@ -26,15 +26,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
-    - name: Cache APT Packages
-      # You may pin to the exact commit or the version.
-      # uses: awalsh128/cache-apt-pkgs-action@4cc899ce9be75fea058bdb82851e3e5219292683
-      uses: awalsh128/cache-apt-pkgs-action@v1.0.1
-      with:
-        # Space delimited list of packages to install.
-        packages: # default is
-          gir1.2-ibus-1.0 libasound2-dev libasyncns0 libdbus-1-dev libegl-dev libegl-mesa0 libegl1 libegl1-mesa-dev libflac8 libgl-dev libgl1-mesa-dev libgles-dev libgles1 libgles2 libgles2-mesa-dev libglu1-mesa libglu1-mesa-dev libglvnd-dev libglx-dev libibus-1.0-5 libibus-1.0-dev libopengl-dev libopengl0 libpulse-dev libpulse-mainloop-glib0 libpulse0 libsdl2-2.0-0 libsdl2-dev libsdl2-image-2.0-0 libsdl2-image-dev libsdl2-ttf-2.0-0 libsdl2-ttf-dev libsndfile1 libsndio-dev libsndio7.0 libudev-dev libvorbisenc2 libwayland-bin libwayland-dev libxcursor-dev libxfixes-dev libxi-dev libxinerama-dev libxkbcommon-dev libxrandr-dev libxss-dev libxv-dev libxxf86vm-dev x11proto-input-dev x11proto-randr-dev x11proto-scrnsaver-dev x11proto-xf86vidmode-dev x11proto-xinerama-dev libfluidsynth2 libinstpatch-1.0-2 libmodplug1 libmpg123-0 libopusfile0 libsdl2-mixer-2.0-0 libsdl2-mixer-dev libvorbisfile3 timgm6mb-soundfont
-
     - name: Cache CI Files
       id: cache-ci-files
       uses: actions/cache@v2.1.7
@@ -433,7 +424,7 @@ jobs:
         path: cmake/FindSDL2_mixer.cmake
         # The contents of the file
         contents: |
-          FIND_PATH(SDL2_MIXER_INCLUDE_DIR SDL_ttf.h
+          FIND_PATH(SDL2_MIXER_INCLUDE_DIR SDL_mixer.h
             HINTS
             ${SDL2}
             $ENV{SDL2}
@@ -506,7 +497,6 @@ jobs:
           overwrite
 
     - name: Update Library
-      if: steps.cache-ci-files.outputs.cache-hit != 'true'
       run: sudo apt update && sudo apt install -y libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev
 
     - name: Make build directory
