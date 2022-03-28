@@ -23,7 +23,6 @@ public:
     // operator+ for the path of object
     std::string operator+(const std::string& subPath) const;
     static char* getPath(const std::string& subdir, const std::string& file);
-    
 private:
     // The path
     std::string path;
