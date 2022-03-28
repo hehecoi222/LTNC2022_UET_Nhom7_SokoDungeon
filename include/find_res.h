@@ -22,6 +22,8 @@ public:
     FindRes(const std::string& subdir);
     // operator+ for the path of object
     std::string operator+(const std::string& subPath) const;
+    static char* getPath(const std::string& subdir, const std::string& file);
+    
 private:
     // The path
     std::string path;
@@ -93,4 +95,18 @@ std::string FindRes::retPath(const std::string& path) {
     }
     return path.substr(0, pos);
 }
+
+char* FindRes::getPath(const std::string& subdir, const std::string& file) {
+    // Get the path to the resource directory
+    FindRes res(subdir);
+    // Concat the path to the file
+    std::string path = res + file;
+    // Allocate memory for the path
+    char* pathC = new char[path.length() + 1];
+    // Copy the path to the allocated memory
+    strcpy(pathC, path.c_str());
+    // Return the path
+    return pathC;
+}
+
 #endif

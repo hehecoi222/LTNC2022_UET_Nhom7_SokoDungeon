@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "Texture.h"
 #include "Dot.h"
+#include "find_res.h"
 
 SDL_Renderer* Game::gRenderer = nullptr;
 TTF_Font* Game::gFont = nullptr;
@@ -91,12 +92,12 @@ bool Game::loadMedia(){
 
 	bool success = true;
 
-	Game::gFont = TTF_OpenFont("font/lazy.ttf", 28);
+	Game::gFont = TTF_OpenFont(FindRes::getPath("font","lazy.ttf"), 28);
 	SDL_Color textColor = {0, 0, 0, 255};
 
-	DotTexture.loadFromFile("res/dot.bmp");
+	DotTexture.loadFromFile(FindRes::getPath("img","dot.png"));
 
-	playerIdleDown.loadFromFile("res/img/idown.png");
+	playerIdleDown.loadFromFile(FindRes::getPath("img","idown.png"));
 	for (int i = 0; i < PLAYER_FRAMES; i++)
 	{
 		playerCurrentFrame[i].x = i*64;
