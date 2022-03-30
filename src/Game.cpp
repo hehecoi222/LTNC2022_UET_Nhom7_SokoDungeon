@@ -1,18 +1,17 @@
 #include "Game.h"
 #include "Texture.h"
-#include "Dot.h"
+#include "Hero.h"
+#include "find_res.h"
 
 SDL_Renderer* Game::gRenderer = nullptr;
 TTF_Font* Game::gFont = nullptr;
 
 LTexture DotTexture;
-Dot dot;
+Hero mainHero;
 
 //PlayerTexture
-LTexture playerIdleDown;
-const int PLAYER_FRAMES = 4;
-SDL_Rect playerCurrentFrame[PLAYER_FRAMES];
-int frame = 0;
+// LTexture playerIdleDown;
+
 
 //Map
 LTexture Map;
@@ -35,7 +34,7 @@ bool Game::init(){
 	else
 	{
 		//Set texture filtering to linear
-		if( !SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" ) )
+		if( !SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "0" ) )
 		{
 			printf( "Warning: Linear texture filtering not enabled!" );
 		}
@@ -91,18 +90,16 @@ bool Game::loadMedia(){
 
 	bool success = true;
 
-	Game::gFont = TTF_OpenFont("font/lazy.ttf", 28);
+	Game::gFont = TTF_OpenFont("font/AV.ttf", 28);
 	SDL_Color textColor = {0, 0, 0, 255};
-
-	DotTexture.loadFromFile("res/dot.bmp");
-
-	playerIdleDown.loadFromFile("res/img/idown.png");
-	for (int i = 0; i < PLAYER_FRAMES; i++)
-	{
-		playerCurrentFrame[i].x = i*64;
-		playerCurrentFrame[i].y = 0;
-		playerCurrentFrame[i].w = playerCurrentFrame[i].h = 64;
-	}
+	
+	//load Hero img
+	mainHero.loadHeroIMG();
+	
+	//Load map
+	Map.loadFromFile("res/T002.png");
+	mapBlock.x = mapBlock.y = 8;
+	mapBlock.w = mapBlock.h = 16;
 	
 	return success;
 
@@ -122,13 +119,14 @@ void Game::handleEvents(){
 		{
 			isRunning = false;
 		}
-
-		dot.dotHandleEvent(e);
-		
+		else
+		{
+		mainHero.heroHandleEvent(e);
+		}
 	}
 }
 void Game::update(){
-	dot.dotMove();
+	mainHero.heroMove();
 }
 
 void Game::render(){
@@ -140,13 +138,11 @@ void Game::render(){
 	Map.render(300,300, &mapBlock);
 
 	//Render player
-	SDL_Rect* currentClip = &playerCurrentFrame[frame/12];
-	dot.dotRender(playerIdleDown, currentClip);
+	mainHero.heroRender();
 	//Update Screen
 	SDL_RenderPresent( gRenderer );
 	//Update frames
-	frame++;
-	if( frame/4 > PLAYER_FRAMES ) frame =0;
+
 
 }
     

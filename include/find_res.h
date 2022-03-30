@@ -3,8 +3,8 @@
 // Code inspired by: https://www.willusher.io/sdl2%20tutorials/2014/06/16/postscript-0-properly-finding-resource-paths
 // With the implementation class
 
-#ifndef FIND_RES_H
-#define FIND_RES_H
+#ifndef find_res_h
+#define find_res_h
 
 // stdio for logging errors, string for finding and concatenating paths, SDL for get errors and base path
 #include <stdio.h>
@@ -22,6 +22,7 @@ public:
     FindRes(const std::string& subdir);
     // operator+ for the path of object
     std::string operator+(const std::string& subPath) const;
+    static char* getPath(const std::string& subdir, const std::string& file);
 private:
     // The path
     std::string path;
@@ -93,4 +94,18 @@ std::string FindRes::retPath(const std::string& path) {
     }
     return path.substr(0, pos);
 }
+
+char* FindRes::getPath(const std::string& subdir, const std::string& file) {
+    // Get the path to the resource directory
+    FindRes res(subdir);
+    // Concat the path to the file
+    std::string path = res + file;
+    // Allocate memory for the path
+    char* pathC = new char[path.length() + 1];
+    // Copy the path to the allocated memory
+    strcpy(pathC, path.c_str());
+    // Return the path
+    return pathC;
+}
+
 #endif
