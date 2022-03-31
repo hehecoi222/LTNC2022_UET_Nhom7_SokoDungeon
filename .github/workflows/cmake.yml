@@ -26,15 +26,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
-    - name: Cache APT Packages
-      # You may pin to the exact commit or the version.
-      # uses: awalsh128/cache-apt-pkgs-action@4cc899ce9be75fea058bdb82851e3e5219292683
-      uses: awalsh128/cache-apt-pkgs-action@v1.0.1
-      with:
-        # Space delimited list of packages to install.
-        packages: # default is
-          libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev
-
     - name: Cache CI Files
       id: cache-ci-files
       uses: actions/cache@v2.1.7
@@ -48,7 +39,7 @@ jobs:
 
     - name: Create CI Files
       if: steps.cache-ci-files.outputs.cache-hit != 'true'
-      run: mkdir cmake && touch CMakeLists.txt cmake/FindSDL2.cmake cmake/FindSDL2_image.cmake cmake/FindSDL2_ttf.cmake
+      run: mkdir cmake && touch CMakeLists.txt cmake/FindSDL2.cmake cmake/FindSDL2_image.cmake cmake/FindSDL2_ttf.cmake cmake/FindSDL2_mixer.cmake
     
     - name: Write CMakeLists File
       if: steps.cache-ci-files.outputs.cache-hit != 'true'
@@ -62,12 +53,12 @@ jobs:
         contents: |
           cmake_minimum_required(VERSION 3.0)
           project(GameProject)
-          file(GLOB SOURCES ${GameProject_SOURCE_DIR}/src/*.cpp ${GameProject_SOURCE_DIR}/src/*.h)
+          file(GLOB SOURCES ${GameProject_SOURCE_DIR}/src/*.cpp ${GameProject_SOURCE_DIR}/src/*.hpp)
           set(BIN_DIR ${GameProject_SOURCE_DIR}/bin)
           list(APPEND CMAKE_MODULE_PATH ${GameProject_SOURCE_DIR}/cmake)
           
           if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
-              set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -std=c++11")
+              set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -std=c++17")
               set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG} -g")
               set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE} -O2")
           elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
@@ -82,11 +73,13 @@ jobs:
           include_directories(${SDL2_INCLUDE_DIR})
           find_package(SDL2_image REQUIRED)
           include_directories(${SDL2_IMAGE_INCLUDE_DIR})
+          find_package(SDL2_mixer REQUIRED)
+          include_directories(${SDL2_MIXER_INCLUDE_DIR})
           find_package(SDL2_ttf REQUIRED)
           include_directories(${SDL2_TTF_INCLUDE_DIR})
           add_executable(GameProject ${SOURCES})
           include_directories(include)
-          target_link_libraries(GameProject ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${SDL2_TTF_LIBRARY})
+          target_link_libraries(GameProject ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${SDL2_TTF_LIBRARY} ${SDL2_MIXER_LIBRARY})
           install(TARGETS GameProject RUNTIME DESTINATION ${BIN_DIR})
 
         # The mode of writing to use: `overwrite`, `append`, or `preserve`.
@@ -421,9 +414,90 @@ jobs:
         write-mode: # optional, default is preserve
           overwrite
 
-    - name: Update Library
+    - name: Write FindSDL2_mixer File
       if: steps.cache-ci-files.outputs.cache-hit != 'true'
-      run: sudo apt update && sudo apt install -y libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev
+      # You may pin to the exact commit or the version.
+      # uses: DamianReeves/write-file-action@e19fd875ed54f16fc583a3486e62547ce4a5dde8
+      uses: DamianReeves/write-file-action@v1.0
+      with:
+        # The path to the file to write
+        path: cmake/FindSDL2_mixer.cmake
+        # The contents of the file
+        contents: |
+          FIND_PATH(SDL2_MIXER_INCLUDE_DIR SDL_mixer.h
+            HINTS
+            ${SDL2}
+            $ENV{SDL2}
+            $ENV{SDL2_MIXER}
+            PATH_SUFFIXES include/SDL2 include SDL2
+            i686-w64-mingw32/include/SDL2
+            x86_64-w64-mingw32/include/SDL2
+            PATHS
+            ~/Library/Frameworks
+            /Library/Frameworks
+            /usr/local/include/SDL2
+            /usr/include/SDL2
+            /sw # Fink
+            /opt/local # DarwinPorts
+            /opt/csw # Blastwave
+            /opt
+          )
+
+          # Lookup the 64 bit libs on x64
+          IF(CMAKE_SIZEOF_VOID_P EQUAL 8)
+            FIND_LIBRARY(SDL2_MIXER_LIBRARY_TEMP
+              NAMES SDL2_mixer
+              HINTS
+              ${SDL2}
+              $ENV{SDL2}
+              $ENV{SDL2_MIXER}
+              PATH_SUFFIXES lib64 lib
+              lib/x64
+              x86_64-w64-mingw32/lib
+              PATHS
+              /sw
+              /opt/local
+              /opt/csw
+              /opt
+            )
+          # On 32bit build find the 32bit libs
+          ELSE(CMAKE_SIZEOF_VOID_P EQUAL 8)
+            FIND_LIBRARY(SDL2_MIXER_LIBRARY_TEMP
+              NAMES SDL2_mixer
+              HINTS
+              ${SDL2}
+              $ENV{SDL2}
+              $ENV{SDL2_MIXER}
+              PATH_SUFFIXES lib
+              lib/x86
+              i686-w64-mingw32/lib
+              PATHS
+              /sw
+              /opt/local
+              /opt/csw
+              /opt
+            )
+          ENDIF(CMAKE_SIZEOF_VOID_P EQUAL 8)
+
+          SET(SDL2_MIXER_FOUND "NO")
+            IF(SDL2_MIXER_LIBRARY_TEMP)
+            # Set the final string here so the GUI reflects the final state.
+            SET(SDL2_MIXER_LIBRARY ${SDL2_MIXER_LIBRARY_TEMP} CACHE STRING "Where the SDL2_mixer Library can be found")
+            # Set the temp variable to INTERNAL so it is not seen in the CMake GUI
+            SET(SDL2_MIXER_LIBRARY_TEMP "${SDL2_MIXER_LIBRARY_TEMP}" CACHE INTERNAL "")
+            SET(SDL2_MIXER_FOUND "YES")
+          ENDIF(SDL2_MIXER_LIBRARY_TEMP)
+
+          INCLUDE(FindPackageHandleStandardArgs)
+
+          FIND_PACKAGE_HANDLE_STANDARD_ARGS(SDL2_mixer REQUIRED_VARS SDL2_MIXER_LIBRARY SDL2_MIXER_INCLUDE_DIR)
+
+        # The mode of writing to use: `overwrite`, `append`, or `preserve`.
+        write-mode: # optional, default is preserve
+          overwrite
+
+    - name: Update Library
+      run: sudo apt update && sudo apt install -y libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev
 
     - name: Make build directory
       run: rm -rf build && mkdir build

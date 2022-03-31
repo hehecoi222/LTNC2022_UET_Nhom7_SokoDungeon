@@ -8,7 +8,6 @@ int main( int argc, char* args[] ){
 	Uint32 frameStart;
 	int frameTime;
 
-
 	game = new Game();
 	if(!game->init())
 	{
