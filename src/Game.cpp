@@ -99,8 +99,8 @@ bool Game::loadMedia(){
 
 	//Load map
 	Map.loadFromFile(FindRes::getPath("img","T002.png"));
-	return success;
 
+	return success;
 }
 
 void Game::handleEvents(){
@@ -108,8 +108,6 @@ void Game::handleEvents(){
     //Event handler
     SDL_Event e;
 	//Handle events on queue
-
-
 	while( SDL_PollEvent( &e ) != 0 )
 	{
 		//User requests quit
@@ -125,7 +123,7 @@ void Game::handleEvents(){
 	}
 }
 void Game::update(){
-	mainHero.heroMove();
+	// mainHero.heroMove();
 }
 
 void Game::render(){
@@ -142,8 +140,6 @@ void Game::render(){
 	mainHero.heroRender();
 	//Update Screen
 	SDL_RenderPresent( gRenderer );
-	//Update frames
-
 
 }
 
