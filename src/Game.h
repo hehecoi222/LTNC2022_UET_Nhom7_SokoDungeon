@@ -24,11 +24,11 @@ public:
 
     bool init();
     bool loadMedia();
-    
+
     void handleEvents();
     void update();
     void render();
-    
+
     void close();
 
     bool getGameState(){ return isRunning; }
