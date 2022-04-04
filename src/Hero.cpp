@@ -3,16 +3,17 @@
 
 Hero::Hero()
 {
-    hPosX = 100;
-    hPosY = 100;
+    hCurPosX = 100;
+    hCurPosY = 100;
 
-    hDesPosX = hPosX;
-    hDesPoxY = hPosY;
+    hDesPosX = hCurPosX;
+    hDesPoxY = hCurPosY;
 
     hVelX = 0;
     hVelY = 0;
 
     playerCurrentTex = new LTexture();
+    playerCurrentTex = &idleDown;
 }
 
 void Hero::loadHeroIMG(){
@@ -93,9 +94,9 @@ void Hero::heroMove(int direction){
     case 1:
         hDesPosX+= BLOCK_WIDTH;
         playerCurrentTex = &walkRight;
-        while (hPosX != hDesPosX)
+        while (hCurPosX != hDesPosX)
         {
-            hPosX += HERO_VEL;
+            hCurPosX += HERO_VEL;
             heroRender();
         }
         playerCurrentTex = &idleRight;
@@ -103,9 +104,9 @@ void Hero::heroMove(int direction){
     case 2:
         hDesPosX -= BLOCK_WIDTH;
         playerCurrentTex = &walkLeft;
-        while (hPosX != hDesPosX)
+        while (hCurPosX != hDesPosX)
         {
-            hPosX -= HERO_VEL;
+            hCurPosX -= HERO_VEL;
             heroRender();
         }
         playerCurrentTex = &idleLeft;
@@ -113,9 +114,9 @@ void Hero::heroMove(int direction){
     case 3:
         hDesPoxY -= BLOCK_WIDTH;
         playerCurrentTex = &walkUp;
-        while (hPosY != hDesPoxY)
+        while (hCurPosY != hDesPoxY)
         {
-            hPosY -= HERO_VEL;
+            hCurPosY -= HERO_VEL;
             heroRender();
         }
         playerCurrentTex = &idleUp;
@@ -123,9 +124,9 @@ void Hero::heroMove(int direction){
     case 4:
         hDesPoxY += BLOCK_WIDTH;
         playerCurrentTex = &walkDown;
-        while (hPosY != hDesPoxY)
+        while (hCurPosY != hDesPoxY)
         {
-            hPosY += HERO_VEL;
+            hCurPosY += HERO_VEL;
             heroRender();
         }
         playerCurrentTex = &idleDown;
@@ -137,15 +138,15 @@ void Hero::heroRender()
 {
 	SDL_RenderClear( Game::gRenderer );
 	SDL_Rect* currentClip = &playerCurrentFrame[frame/16];
-    playerCurrentTex->render(hPosX, hPosY, currentClip);
+    playerCurrentTex->render(hCurPosX, hCurPosY, currentClip);
 	SDL_RenderPresent( Game::gRenderer );
     frame++;
 	if( frame/16 >= PLAYER_FRAMES ) frame = 0;
-    cout << hPosX  << " " << hPosY << endl;
+    cout << hCurPosX  << " " << hCurPosY << endl;
 
 }
 
-// Hero::~Hero(){
-//     playerCurrentTex->free();
-//     playerCurrentTex = nullptr;
-// }
+Hero::~Hero(){
+    playerCurrentTex->free();
+    playerCurrentTex = nullptr;
+}
