@@ -2,6 +2,7 @@
 #include "Texture.h"
 #include "Hero.h"
 #include "find_res.h"
+#include "mapgame.h"
 
 SDL_Renderer* Game::gRenderer = nullptr;
 TTF_Font* Game::gFont = nullptr;
@@ -15,8 +16,8 @@ Hero mainHero;
 
 //Map
 LTexture Map;
-SDL_Rect mapBlock;
-
+MapGame Game0;
+SDL_Rect Mapblock;
 
 Game::Game(){}
 Game::~Game(){}
@@ -92,15 +93,12 @@ bool Game::loadMedia(){
 
 	Game::gFont = TTF_OpenFont("font/AV.ttf", 28);
 	SDL_Color textColor = {0, 0, 0, 255};
-	
+
 	//load Hero img
 	mainHero.loadHeroIMG();
-	
+
 	//Load map
-	Map.loadFromFile("res/T002.png");
-	mapBlock.x = mapBlock.y = 8;
-	mapBlock.w = mapBlock.h = 16;
-	
+	Map.loadFromFile(FindRes::getPath("img","T002.png"));
 	return success;
 
 }
@@ -122,6 +120,7 @@ void Game::handleEvents(){
 		else
 		{
 		mainHero.heroHandleEvent(e);
+
 		}
 	}
 }
@@ -133,10 +132,12 @@ void Game::render(){
 	//Clear screen
 	SDL_SetRenderDrawColor( gRenderer, 255, 255, 255, 255 );
 	SDL_RenderClear( gRenderer );
-	
-	//render map
-	Map.render(300,300, &mapBlock);
 
+	//render map
+	Map.render(300, 300, &Mapblock);
+
+    //Load Mapgame0
+    Game0.LoadMap();
 	//Render player
 	mainHero.heroRender();
 	//Update Screen
@@ -145,10 +146,10 @@ void Game::render(){
 
 
 }
-    
+
 void Game::close(){
 
-	//Destroy window	
+	//Destroy window
 	SDL_DestroyRenderer( gRenderer );
 	SDL_DestroyWindow( gWindow );
 	gWindow = NULL;

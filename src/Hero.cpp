@@ -1,5 +1,5 @@
 #include "Hero.h"
-
+#include "find_res.h"
 
 Hero::Hero()
 {
@@ -13,6 +13,8 @@ Hero::Hero()
 }
 
 void Hero::loadHeroIMG(){
+    idleDown.loadFromFile(FindRes::getPath("img", "idown.png"));
+    idleDown.loadFromFile(FindRes::getPath("img","idown.png"));
     idleDown.loadFromFile(FindRes::getPath("img","idown.png"));
     idleUp.loadFromFile(FindRes::getPath("img","iup.png"));
     idleLeft.loadFromFile(FindRes::getPath("img","ileft.png"));
@@ -43,15 +45,15 @@ void Hero::heroHandleEvent( SDL_Event &e )
                 playerCurrentTex = &walkUp;
                 break;
             case SDLK_DOWN:
-                 hVelY += HERO_VEL; 
+                 hVelY += HERO_VEL;
                  playerCurrentTex = &walkDown;
                  break;
             case SDLK_LEFT:
-                 hVelX -= HERO_VEL; 
+                 hVelX -= HERO_VEL;
                 playerCurrentTex = &walkLeft;
                  break;
             case SDLK_RIGHT:
-                 hVelX += HERO_VEL; 
+                 hVelX += HERO_VEL;
                 playerCurrentTex = &walkRight;
                  break;
         }
@@ -64,15 +66,15 @@ void Hero::heroHandleEvent( SDL_Event &e )
         switch( e.key.keysym.sym )
         {
             case SDLK_UP:
-                 hVelY +=HERO_VEL; 
+                 hVelY +=HERO_VEL;
                 playerCurrentTex = &idleUp;
                  break;
             case SDLK_DOWN:
-                 hVelY -= HERO_VEL; 
+                 hVelY -= HERO_VEL;
                  playerCurrentTex = &idleDown;
                  break;
             case SDLK_LEFT:
-                 hVelX += HERO_VEL; 
+                 hVelX += HERO_VEL;
                  playerCurrentTex = &idleLeft;
                  break;
             case SDLK_RIGHT:
