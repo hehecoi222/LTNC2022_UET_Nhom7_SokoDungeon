@@ -7,14 +7,10 @@
 SDL_Renderer* Game::gRenderer = nullptr;
 TTF_Font* Game::gFont = nullptr;
 
-LTexture DotTexture;
+//init main character
 Hero mainHero;
 
-//PlayerTexture
-// LTexture playerIdleDown;
-
-
-//Map
+// Map
 LTexture Map;
 MapGame Game0;
 SDL_Rect Mapblock;
@@ -123,7 +119,6 @@ void Game::handleEvents(){
 	}
 }
 void Game::update(){
-	// mainHero.heroMove();
 }
 
 void Game::render(){

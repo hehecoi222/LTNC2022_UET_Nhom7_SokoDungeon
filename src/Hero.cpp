@@ -48,43 +48,16 @@ void Hero::heroHandleEvent( SDL_Event &e )
                 heroMove(MOVE_UP);
                 break;
             case SDLK_DOWN:
-                 hVelY += HERO_VEL;
-                 playerCurrentTex = &walkDown;
+                heroMove(MOVE_DOWN);
                  break;
             case SDLK_LEFT:
-                 hVelX -= HERO_VEL;
-                playerCurrentTex = &walkLeft;
+                heroMove(MOVE_LEFT);
                  break;
             case SDLK_RIGHT:
-                 hVelX += HERO_VEL;
-                playerCurrentTex = &walkRight;
+                heroMove(MOVE_RIGHT);
                  break;
         }
 
-    }
-    // If a key was released
-    else if( e.type == SDL_KEYUP && e.key.repeat == 0 )
-    {
-        //Adjust the velocity
-        switch( e.key.keysym.sym )
-        {
-            case SDLK_UP:
-                 hVelY +=HERO_VEL;
-                playerCurrentTex = &idleUp;
-                 break;
-            case SDLK_DOWN:
-                 hVelY -= HERO_VEL;
-                 playerCurrentTex = &idleDown;
-                 break;
-            case SDLK_LEFT:
-                 hVelX += HERO_VEL;
-                 playerCurrentTex = &idleLeft;
-                 break;
-            case SDLK_RIGHT:
-                 hVelX -= HERO_VEL;
-                 playerCurrentTex = &idleRight;
-                 break;
-        }
     }
 }
 
@@ -137,11 +110,11 @@ void Hero::heroMove(int direction){
 void Hero::heroRender()
 {
 	SDL_RenderClear( Game::gRenderer );
-	SDL_Rect* currentClip = &playerCurrentFrame[frame/16];
+	SDL_Rect* currentClip = &playerCurrentFrame[frame/8];
     playerCurrentTex->render(hCurPosX, hCurPosY, currentClip);
 	SDL_RenderPresent( Game::gRenderer );
     frame++;
-	if( frame/16 >= PLAYER_FRAMES ) frame = 0;
+	if( frame/8 >= PLAYER_FRAMES ) frame = 0;
     cout << hCurPosX  << " " << hCurPosY << endl;
 
 }
