@@ -33,12 +33,9 @@ public:
 
     bool getGameState(){ return isRunning; }
 
-    int frame = 0;
-
     static SDL_Renderer* gRenderer;
 
     static TTF_Font* gFont;
-
 
     int getScreenW(){return SCREEN_WIDTH;}
     int getScreenH() {return SCREEN_HEIGHT;}

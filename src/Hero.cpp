@@ -3,13 +3,17 @@
 
 Hero::Hero()
 {
-    hPosX = 100;
-    hPosY = 100;
+    hCurPosX = 100;
+    hCurPosY = 100;
+
+    hDesPosX = hCurPosX;
+    hDesPoxY = hCurPosY;
 
     hVelX = 0;
     hVelY = 0;
 
     playerCurrentTex = new LTexture();
+    playerCurrentTex = &idleDown;
 }
 
 void Hero::loadHeroIMG(){
@@ -41,83 +45,81 @@ void Hero::heroHandleEvent( SDL_Event &e )
         switch( e.key.keysym.sym )
         {
             case SDLK_UP:
-                hVelY -= HERO_VEL;
-                playerCurrentTex = &walkUp;
+                heroMove(MOVE_UP);
                 break;
             case SDLK_DOWN:
-                 hVelY += HERO_VEL;
-                 playerCurrentTex = &walkDown;
+                heroMove(MOVE_DOWN);
                  break;
             case SDLK_LEFT:
-                 hVelX -= HERO_VEL;
-                playerCurrentTex = &walkLeft;
+                heroMove(MOVE_LEFT);
                  break;
             case SDLK_RIGHT:
-                 hVelX += HERO_VEL;
-                playerCurrentTex = &walkRight;
+                heroMove(MOVE_RIGHT);
                  break;
         }
 
-    }
-    // If a key was released
-    else if( e.type == SDL_KEYUP && e.key.repeat == 0 )
-    {
-        //Adjust the velocity
-        switch( e.key.keysym.sym )
-        {
-            case SDLK_UP:
-                 hVelY +=HERO_VEL;
-                playerCurrentTex = &idleUp;
-                 break;
-            case SDLK_DOWN:
-                 hVelY -= HERO_VEL;
-                 playerCurrentTex = &idleDown;
-                 break;
-            case SDLK_LEFT:
-                 hVelX += HERO_VEL;
-                 playerCurrentTex = &idleLeft;
-                 break;
-            case SDLK_RIGHT:
-                 hVelX -= HERO_VEL;
-                 playerCurrentTex = &idleRight;
-                 break;
-        }
     }
 }
 
-void Hero::heroMove(){
-    //Move the dot left or right
-    if(hVelX != 0){
-    SDL_Delay(100);
-    hPosX += hVelX;
-    }
-
-    //If the dot went too far to the left or right
-    if( ( hPosX < 0 ) || ( hPosX - HERO_WIDTH > 800) )
+void Hero::heroMove(int direction){
+    switch (direction)
     {
-        //Move back
-        hPosX -= hVelX;
-    }
-    //Move the dot up or down
-    if(hVelY != 0){
-    SDL_Delay(100);
-    hPosY += hVelY;
-    }
-
-    //If the dot went too far up or down
-    if( ( hPosY < 0 ) || ( hPosY + HERO_HEIGHT > 400 ) )
-    {
-        //Move back
-        hPosY -= hVelY;
+    case 1:
+        hDesPosX+= BLOCK_WIDTH;
+        playerCurrentTex = &walkRight;
+        while (hCurPosX != hDesPosX)
+        {
+            hCurPosX += HERO_VEL;
+            heroRender();
+        }
+        playerCurrentTex = &idleRight;
+        break;
+    case 2:
+        hDesPosX -= BLOCK_WIDTH;
+        playerCurrentTex = &walkLeft;
+        while (hCurPosX != hDesPosX)
+        {
+            hCurPosX -= HERO_VEL;
+            heroRender();
+        }
+        playerCurrentTex = &idleLeft;
+        break;
+    case 3:
+        hDesPoxY -= BLOCK_WIDTH;
+        playerCurrentTex = &walkUp;
+        while (hCurPosY != hDesPoxY)
+        {
+            hCurPosY -= HERO_VEL;
+            heroRender();
+        }
+        playerCurrentTex = &idleUp;
+        break;
+    case 4:
+        hDesPoxY += BLOCK_WIDTH;
+        playerCurrentTex = &walkDown;
+        while (hCurPosY != hDesPoxY)
+        {
+            hCurPosY += HERO_VEL;
+            heroRender();
+        }
+        playerCurrentTex = &idleDown;
+        break;
     }
 }
 
 void Hero::heroRender()
 {
+	SDL_RenderClear( Game::gRenderer );
 	SDL_Rect* currentClip = &playerCurrentFrame[frame/8];
-    playerCurrentTex->render(hPosX, hPosY, currentClip);
+    playerCurrentTex->render(hCurPosX, hCurPosY, currentClip);
+	SDL_RenderPresent( Game::gRenderer );
     frame++;
-    cout << frame << endl;
 	if( frame/8 >= PLAYER_FRAMES ) frame = 0;
+    cout << hCurPosX  << " " << hCurPosY << endl;
 
+}
+
+Hero::~Hero(){
+    playerCurrentTex->free();
+    playerCurrentTex = nullptr;
 }
