@@ -1,18 +1,35 @@
-#ifndef MAP_H_INCLUDED
-#define MAP_H_INCLUDED
+#ifndef mapgame_H_INCLUDED
+#define mapgame_H_INCLUDED
 #include "find_res.h"
 #include "Texture.h"
-static LTexture Map00;
+
 class MapGame
 {
 public:
     //load the map
     void LoadMap();
-    //destination of walls,...
-    SDL_Rect Getdes0();
+
 
 private:
+    //destination to render
     SDL_Rect des0;
+
+    //ve nen
+    LTexture nen1;
+    LTexture nen2;
+    LTexture nen3;
+
+
+    //ve tuong
+    LTexture wall1;
+    LTexture wall2;
+    LTexture wall3;
+
+    //ve cong
+    LTexture gate;
+
+    //ve chest
+    LTexture chest;
 };
 
 
