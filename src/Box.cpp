@@ -4,8 +4,8 @@
 
 Box::Box() {
     //Initialize the variables
-    bCurPosX = 400;
-    bCurPosY = 400;
+    bCurPosX = bDesPosX = 400;
+    bCurPosY = bDesPosY = 400;
     bVelX = 0;
     bVelY = 0;
 }
