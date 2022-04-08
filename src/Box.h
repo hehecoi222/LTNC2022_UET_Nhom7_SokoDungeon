@@ -1,28 +1,63 @@
+#ifndef BOX_H
+#define BOX_H
 #include "Game.h"
 #include "Texture.h"
+#include "find_res.h"
+#include "Hero.h"
 
 class Box {
 public:
     //The dimensions of the box
-    static const int BOX_WIDTH = 800/12;
-    static const int BOX_HEIGHT = 640/12;
+    static const int BOX_WIDTH = 32;
+    static const int BOX_HEIGHT = 32;
 
-    //Maximum axis velocity of the box
-    static const int BOX_VEL = 10;
+    //Maximum axis velocity of the BOX
+    static const int BLOCK_WIDTH = 32;
+    static const int BOX_VEL = 4;
 
     //Initializes the variables
     Box();
+    ~Box();
 
-    //Moves the box
-    void boxMove();
+    //Load box img
+    void loadBoxIMG();
+
+    //Found the collision
+    bool collision(Hero& hero);
+
+    //Move the box according to collision
+    void boxMove(int direction);
 
     //Shows the box on the screen
-    void boxRender(LTexture &box, SDL_Rect *clip);
+    void boxRender();
 
-    int getX(){return mPosX;}
-    int getY(){return mPosY;}
+    //Return box current position
+    int getCurX(){return bCurPosX;}
+    int getCurY(){return bCurPosY;}
+
+    //Simple Texture
+    LTexture box;
+
+    //Box direction
+    enum {
+        MOVE_LEFT,
+        MOVE_RIGHT,
+        MOVE_UP,
+        MOVE_DOWN
+    };
 
 private:
-    int mPosX, mPosY;
-    int mVelX, mVelY;
+    //The X and Y offsets of the box
+    int bCurPosX, bCurPosY;
+
+    //The X and Y destination of the box
+    int bDesPosX, bDesPosY;
+
+    //The velocity of the box
+    int bVelX, bVelY;
+
+    //Rectangle to represent the box
+    SDL_Rect bRect;
 };
+
+#endif

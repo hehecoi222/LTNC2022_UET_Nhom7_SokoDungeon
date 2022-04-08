@@ -3,6 +3,7 @@
 #include "Hero.h"
 #include "find_res.h"
 #include "mapgame.h"
+#include "Box.h"
 
 SDL_Renderer* Game::gRenderer = nullptr;
 TTF_Font* Game::gFont = nullptr;
@@ -14,6 +15,9 @@ Hero mainHero;
 LTexture Map;
 MapGame Game0;
 SDL_Rect Mapblock;
+
+//Box
+Box box;
 
 Game::Game(){}
 Game::~Game(){}
@@ -96,6 +100,9 @@ bool Game::loadMedia(){
 	//Load map
 	Map.loadFromFile(FindRes::getPath("img","T002.png"));
 
+	//Load box img
+	box.loadBoxIMG();
+
 	return success;
 }
 
@@ -114,7 +121,7 @@ void Game::handleEvents(){
 		else
 		{
 		mainHero.heroHandleEvent(e);
-
+		box.collision(mainHero);
 		}
 	}
 }
@@ -133,6 +140,8 @@ void Game::render(){
     Game0.LoadMap();
 	//Render player
 	mainHero.heroRender();
+
+	box.boxRender();
 	//Update Screen
 	SDL_RenderPresent( gRenderer );
 
