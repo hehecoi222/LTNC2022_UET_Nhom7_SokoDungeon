@@ -12,6 +12,8 @@ Hero::Hero()
     hVelX = 0;
     hVelY = 0;
 
+    playerRectDest = {0,0,HERO_WIDTH*2,HERO_HEIGHT*2};
+
     playerCurrentTex = new LTexture();
     playerCurrentTex = &idleDown;
 }
@@ -30,9 +32,9 @@ void Hero::loadHeroIMG(){
     walkRight.loadFromFile(FindRes::getPath("img","wRight.png"));
     for (int i = 0; i < PLAYER_FRAMES; i++)
 	{
-		playerCurrentFrame[i].x = i*64;
-		playerCurrentFrame[i].y = 0;
-		playerCurrentFrame[i].w = playerCurrentFrame[i].h = 64;
+		playerCurrentFrame[i].x = (i*64)+16;
+		playerCurrentFrame[i].y = 16;
+		playerCurrentFrame[i].w = playerCurrentFrame[i].h = 32;
 	}
 }
 
@@ -111,7 +113,7 @@ void Hero::heroRender()
 {
 	// SDL_RenderClear( Game::gRenderer );
 	SDL_Rect* currentClip = &playerCurrentFrame[frame/8];
-    playerCurrentTex->render(hCurPosX, hCurPosY, currentClip);
+    playerCurrentTex->render(hCurPosX, hCurPosY, currentClip,&playerRectDest);
 	// SDL_RenderPresent( Game::gRenderer );
     frame++;
 	if( frame/8 >= PLAYER_FRAMES ) frame = 0;

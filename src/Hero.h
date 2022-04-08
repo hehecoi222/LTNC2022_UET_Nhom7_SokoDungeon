@@ -70,7 +70,7 @@ class Hero
 		bool isMoving = false;
 		bool isAlive = true;
 
-
+		SDL_Rect playerRectDest;
 
 };
 #endif 

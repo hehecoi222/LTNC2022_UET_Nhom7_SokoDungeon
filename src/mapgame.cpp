@@ -28,7 +28,7 @@ int level0[20][25] = {
 void MapGame::LoadMap()
 {
     des0.x = des0.y = 0;
-    des0.w = des0.h = 16;
+    des0.w = des0.h = 32;
     wall1.loadFromFile(FindRes::getPath("img","wall1.png"));
     wall2.loadFromFile(FindRes::getPath("img","wall2.png"));
     wall3.loadFromFile(FindRes::getPath("img","wall3.png"));
@@ -44,31 +44,31 @@ void MapGame::LoadMap()
             switch(level0[i][j])
             {
                 case 1:
-                wall1.render(i*32,j*32, &des0);
+                wall1.render(i*32,j*32,nullptr, &des0);
                 break;
                 case 2:
-                wall2.render(i*32,j*32, &des0);
+                wall2.render(i*32,j*32, nullptr, &des0);
                 break;
                 case 3:
-                wall3.render(i*32,j*32, &des0);
+                wall3.render(i*32,j*32, nullptr, &des0);
                 break;
                 case 12:
-                nen1.render(i*32, j*32, &des0);
+                nen1.render(i*32, j*32, nullptr, &des0);
                 break;
                 case 0:
-                nen2.render(i*32, j*32, &des0);
+                nen2.render(i*32, j*32, nullptr, &des0);
                 break;
                 case 13:
-                nen3.render(i*32, j*32, &des0);
+                nen3.render(i*32, j*32, nullptr, &des0);
                 break;
                 case 20:
-                gate.render(i*32, j*32, &des0);
+                gate.render(i*32, j*32, nullptr, &des0);
                 break;
             }
 
         }
     }
-    chest.render(8*32, 8*32, &des0);
+    chest.render(8*32, 8*32, nullptr, &des0);
 }
 
 

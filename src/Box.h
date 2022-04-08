@@ -23,7 +23,7 @@ public:
     void loadBoxIMG();
 
     //Found the collision
-    bool collision(Hero& hero);
+    int collision(Hero& hero);
 
     //Move the box according to collision
     void boxMove(int direction);
@@ -57,7 +57,8 @@ private:
     int bVelX, bVelY;
 
     //Rectangle to represent the box
-    SDL_Rect bRect;
+    SDL_Rect bRectDest;
+    SDL_Rect bRectClip{2,8,17,16};
 };
 
 #endif

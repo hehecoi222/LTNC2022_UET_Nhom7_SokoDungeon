@@ -104,20 +104,14 @@ void LTexture::setColor( Uint8 red, Uint8 green, Uint8 blue )
 	SDL_SetTextureColorMod( mTexture, red, green, blue );
 }
 
-void LTexture::render( int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip )
+void LTexture::render( int x, int y, SDL_Rect* clip, SDL_Rect* dest, double angle, SDL_Point* center, SDL_RendererFlip flip )
 {
 	//Set rendering space and render to screen
-	SDL_Rect renderQuad = { x, y, mWidth, mHeight };
-
-	//Set clip rendering dimensions
-	if( clip != NULL )
-	{
-		renderQuad.w = clip->w*2;
-		renderQuad.h = clip->h*2;
-	}
-
+	if (dest == NULL) dest = new SDL_Rect{x, y, mWidth, mHeight};
+	dest->x = x;  
+	dest->y = y; 
 	//Render to screen
-	SDL_RenderCopyEx( Game::gRenderer, mTexture, clip, &renderQuad, angle, center, flip );
+	SDL_RenderCopyEx( Game::gRenderer, mTexture, clip, dest, angle, center, flip );
 }
 
 int LTexture::getWidth()

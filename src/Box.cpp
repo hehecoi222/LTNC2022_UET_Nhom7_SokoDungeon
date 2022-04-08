@@ -12,40 +12,19 @@ Box::Box() {
 
 void Box::loadBoxIMG() {
     box.loadFromFile(FindRes::getPath("img", "box.png"));
-    bRect = {0,0,32,32};
+    bRectDest = {0,0,BOX_WIDTH,BOX_HEIGHT};
 }
 
-bool Box::collision(Hero& hero) {
+int Box::collision(Hero& hero) {
     // If the box is colliding with the hero in the left direction
-    if (bCurPosX < hero.getCurX() + Hero::HERO_WIDTH &&
-        bCurPosX + Box::BOX_WIDTH > hero.getCurX() &&
-        bCurPosY < hero.getCurY() + Hero::HERO_HEIGHT &&
-        bCurPosY + Box::BOX_HEIGHT > hero.getCurY()) {
+    if (bCurPosX + BOX_WIDTH - 8 > hero.getCurX() + 32 &&
+        bCurPosX + BOX_WIDTH - 8 < hero.getCurX() + 48 &&
+        bCurPosY + BOX_HEIGHT > hero.getCurY() + 24 &&
+        bCurPosY < hero.getCurY() + 40)
+    {
         boxMove(MOVE_LEFT);
-        return true;
-    } // Else if the box is colliding with the hero in the right direction
-    else if (bCurPosX + Box::BOX_WIDTH > hero.getCurX() &&
-             bCurPosX < hero.getCurX() + Hero::HERO_WIDTH &&
-             bCurPosY < hero.getCurY() + Hero::HERO_HEIGHT &&
-             bCurPosY + Box::BOX_HEIGHT > hero.getCurY()) {
-        boxMove(MOVE_RIGHT);
-        return true;
-    } // Else if the box is colliding with the hero in the up direction
-    else if (bCurPosY < hero.getCurY() + Hero::HERO_HEIGHT &&
-             bCurPosY + Box::BOX_HEIGHT > hero.getCurY() &&
-             bCurPosX < hero.getCurX() + Hero::HERO_WIDTH &&
-             bCurPosX + Box::BOX_WIDTH > hero.getCurX()) {
-        boxMove(MOVE_UP);
-        return true;
-    } // Else if the box is colliding with the hero in the down direction
-    else if (bCurPosY + Box::BOX_HEIGHT > hero.getCurY() &&
-             bCurPosY < hero.getCurY() + Hero::HERO_HEIGHT &&
-             bCurPosX < hero.getCurX() + Hero::HERO_WIDTH &&
-             bCurPosX + Box::BOX_WIDTH > hero.getCurX()) {
-        boxMove(MOVE_DOWN);
-        return true;
+        return MOVE_LEFT;
     }
-    return false;
 }
 
 void Box::boxMove(int direction) {
@@ -83,7 +62,7 @@ void Box::boxMove(int direction) {
 
 void Box::boxRender() {
     printf("Box: %d, %d\n", bCurPosX, bCurPosY);
-    box.render(bCurPosX, bCurPosY,&bRect);
+    box.render(bCurPosX, bCurPosY, &bRectClip, &bRectDest);
 }
 
 Box::~Box() {
