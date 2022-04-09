@@ -109,14 +109,12 @@ void Hero::heroMove(int direction){
 
 void Hero::heroRender()
 {
-	SDL_RenderClear( Game::gRenderer );
+	// SDL_RenderClear( Game::gRenderer );
 	SDL_Rect* currentClip = &playerCurrentFrame[frame/8];
     playerCurrentTex->render(hCurPosX, hCurPosY, currentClip);
-	SDL_RenderPresent( Game::gRenderer );
+	// SDL_RenderPresent( Game::gRenderer );
     frame++;
 	if( frame/8 >= PLAYER_FRAMES ) frame = 0;
-    cout << hCurPosX  << " " << hCurPosY << endl;
-
 }
 
 Hero::~Hero(){
