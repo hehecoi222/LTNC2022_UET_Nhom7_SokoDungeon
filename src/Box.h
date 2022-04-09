@@ -17,16 +17,56 @@ public:
 
     //Initializes the variables
     Box();
+    Box(int x, int y);
     ~Box();
 
     //Load box img
     static void loadBoxIMG();
 
     //Found the collision
-    int collision(Hero& hero, int direction);
+    template <class T>
+    int collision(T& obj, int direction) {
+        // If the box is colliding with the obj in the left direction
+        if (direction == NOT_MOVE) {
+            return NOT_MOVE;
+        } else if (bCurPosX < obj.getCurX() + Hero::HERO_WIDTH &&
+                bCurPosX >= obj.getCurX() &&
+                bCurPosY <= obj.getCurY() &&
+                bCurPosY + BOX_HEIGHT > obj.getCurY() &&
+                direction == MOVE_RIGHT) 
+        {
+            Move(MOVE_RIGHT);
+            return MOVE_RIGHT;
+        } else if (bCurPosX + BOX_WIDTH > obj.getCurX() &&
+                bCurPosX + BOX_WIDTH <= obj.getCurX() + Hero::HERO_WIDTH &&
+                bCurPosY <= obj.getCurY() &&
+                bCurPosY + BOX_HEIGHT > obj.getCurY() &&
+                direction == MOVE_LEFT) 
+        {
+            Move(MOVE_LEFT);
+            return MOVE_LEFT;
+        } else if (bCurPosY < obj.getCurY() + Hero::HERO_HEIGHT &&
+                bCurPosY >= obj.getCurY() &&
+                bCurPosX <= obj.getCurX() &&
+                bCurPosX + BOX_WIDTH > obj.getCurX() &&
+                direction == MOVE_DOWN) 
+        {
+            Move(MOVE_DOWN);
+            return MOVE_DOWN;
+        } else if (bCurPosY + BOX_HEIGHT > obj.getCurY() &&
+                bCurPosY + BOX_HEIGHT <= obj.getCurY() + Hero::HERO_HEIGHT &&
+                bCurPosX <= obj.getCurX() &&
+                bCurPosX + BOX_WIDTH > obj.getCurX() && 
+                direction == MOVE_UP) 
+        {
+            Move(MOVE_UP);
+            return MOVE_UP;
+        }
+        return NOT_MOVE;
+    }
 
     //Move the box according to collision
-    void boxMove(int direction);
+    void Move(int direction);
 
     //Shows the box on the screen
     void boxRender();
@@ -40,6 +80,7 @@ public:
 
     //Box direction
     enum {
+        NOT_MOVE,
         MOVE_UP,
         MOVE_DOWN,
         MOVE_LEFT,

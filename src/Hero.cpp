@@ -3,8 +3,8 @@
 
 Hero::Hero()
 {
-    hCurPosX = -16;
-    hCurPosY = -16;
+    hCurPosX = 0;
+    hCurPosY = 0;
 
     hDesPosX = hCurPosX;
     hDesPoxY = hCurPosY;
@@ -47,28 +47,35 @@ int Hero::heroHandleEvent( SDL_Event &e )
         switch( e.key.keysym.sym )
       
 		 {
+            case SDLK_w:
             case SDLK_UP:
-                heroMove(MOVE_UP);
+                Move(MOVE_UP);
                 return MOVE_UP;
                 break;
+            case SDLK_s:
             case SDLK_DOWN:
-                heroMove(MOVE_DOWN);
+                Move(MOVE_DOWN);
                 return MOVE_DOWN;
                  break;
+            case SDLK_a:
             case SDLK_LEFT:
-                heroMove(MOVE_LEFT);
+                Move(MOVE_LEFT);
                 return MOVE_LEFT;
                  break;
+            case SDLK_d:
             case SDLK_RIGHT:
-                heroMove(MOVE_RIGHT);
+                Move(MOVE_RIGHT);
                 return MOVE_RIGHT;
                  break;
+            default:
+                return NOT_MOVE;
+                break;
         }
-
     }
+    return NOT_MOVE;
 }
 
-void Hero::heroMove(int direction){
+void Hero::Move(int direction){
     switch (direction)
     {
     case MOVE_RIGHT:
@@ -118,7 +125,7 @@ void Hero::heroRender()
 {
 	// SDL_RenderClear( Game::gRenderer );
 	SDL_Rect* currentClip = &playerCurrentFrame[frame/8];
-    playerCurrentTex->render(hCurPosX, hCurPosY, currentClip,&playerRectDest);
+    playerCurrentTex->render(hCurPosX-16, hCurPosY-16, currentClip,&playerRectDest);
 	// SDL_RenderPresent( Game::gRenderer );
     frame++;
 	if( frame/8 >= PLAYER_FRAMES ) frame = 0;

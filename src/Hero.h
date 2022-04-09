@@ -26,7 +26,7 @@ class Hero
 		int heroHandleEvent( SDL_Event& e );
 
 		//Moves the hero according to key
-		void heroMove(int direction);
+		void Move(int direction);
 
 		//Shows the hero on the screen
 		void heroRender();
@@ -46,6 +46,7 @@ class Hero
 
 		//Hero directions
 		enum {
+			NOT_MOVE,
 			MOVE_UP,
 			MOVE_DOWN,
 			MOVE_LEFT,

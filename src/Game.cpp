@@ -17,7 +17,8 @@ MapGame Game0;
 SDL_Rect Mapblock;
 
 //Box
-Box box;
+Box box1;
+Box box2(64,64);
 
 Game::Game(){}
 Game::~Game(){}
@@ -120,7 +121,7 @@ void Game::handleEvents(){
 		}
 		else
 		{
-		box.collision(mainHero, mainHero.heroHandleEvent(e));
+		box2.collision(box1, box1.collision(mainHero, mainHero.heroHandleEvent(e)));
 		}
 	}
 }
@@ -140,7 +141,8 @@ void Game::render(){
 	//Render player
 	mainHero.heroRender();
 
-	box.boxRender();
+	box1.boxRender();
+	box2.boxRender();
 	//Update Screen
 	SDL_RenderPresent( gRenderer );
 
