@@ -101,7 +101,7 @@ bool Game::loadMedia(){
 	Map.loadFromFile(FindRes::getPath("img","T002.png"));
 
 	//Load box img
-	box.loadBoxIMG();
+	Box::loadBoxIMG();
 
 	return success;
 }
@@ -153,6 +153,7 @@ void Game::close(){
 	SDL_DestroyWindow( gWindow );
 	gWindow = NULL;
 	gRenderer = NULL;
+	Box::box.free();
 
 	//Quit SDL subsystems
 	SDL_Quit();

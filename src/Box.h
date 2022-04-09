@@ -20,7 +20,7 @@ public:
     ~Box();
 
     //Load box img
-    void loadBoxIMG();
+    static void loadBoxIMG();
 
     //Found the collision
     int collision(Hero& hero, int direction);
@@ -36,7 +36,7 @@ public:
     int getCurY(){return bCurPosY;}
 
     //Simple Texture
-    LTexture box;
+    static LTexture box;
 
     //Box direction
     enum {

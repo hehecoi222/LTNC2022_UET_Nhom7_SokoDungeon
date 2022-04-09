@@ -2,17 +2,19 @@
 #include <stdio.h>
 #include "find_res.h"
 
+LTexture Box::box;
+
 Box::Box() {
     //Initialize the variables
     bCurPosX = bDesPosX = 32;
     bCurPosY = bDesPosY = 0;
     bVelX = 0;
     bVelY = 0;
+    bRectDest = {0,0,BOX_WIDTH,BOX_HEIGHT};
 }
 
 void Box::loadBoxIMG() {
-    box.loadFromFile(FindRes::getPath("img", "box.png"));
-    bRectDest = {0,0,BOX_WIDTH,BOX_HEIGHT};
+    Box::box.loadFromFile(FindRes::getPath("img", "box.png"));
 }
 
 int Box::collision(Hero& hero, int direction) {
@@ -86,10 +88,8 @@ void Box::boxMove(int direction) {
 }
 
 void Box::boxRender() {
-    printf("Box: %d, %d\n", bCurPosX, bCurPosY);
-    box.render(bCurPosX, bCurPosY, &bRectClip, &bRectDest);
+    Box::box.render(bCurPosX, bCurPosY, &bRectClip, &bRectDest);
 }
 
 Box::~Box() {
-    box.free();
 }
