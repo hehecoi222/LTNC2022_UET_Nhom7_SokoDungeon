@@ -120,8 +120,7 @@ void Game::handleEvents(){
 		}
 		else
 		{
-		mainHero.heroHandleEvent(e);
-		box.collision(mainHero);
+		box.collision(mainHero, mainHero.heroHandleEvent(e));
 		}
 	}
 }

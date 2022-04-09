@@ -3,8 +3,8 @@
 
 Hero::Hero()
 {
-    hCurPosX = 100;
-    hCurPosY = 100;
+    hCurPosX = -16;
+    hCurPosY = -16;
 
     hDesPosX = hCurPosX;
     hDesPoxY = hCurPosY;
@@ -38,25 +38,30 @@ void Hero::loadHeroIMG(){
 	}
 }
 
-void Hero::heroHandleEvent( SDL_Event &e )
+int Hero::heroHandleEvent( SDL_Event &e )
 {
     //If a key was pressed
 	if( e.type == SDL_KEYDOWN && e.key.repeat == 0 )
     {
         //Adjust the velocity
         switch( e.key.keysym.sym )
-        {
+      
+		 {
             case SDLK_UP:
                 heroMove(MOVE_UP);
+                return MOVE_UP;
                 break;
             case SDLK_DOWN:
                 heroMove(MOVE_DOWN);
+                return MOVE_DOWN;
                  break;
             case SDLK_LEFT:
                 heroMove(MOVE_LEFT);
+                return MOVE_LEFT;
                  break;
             case SDLK_RIGHT:
                 heroMove(MOVE_RIGHT);
+                return MOVE_RIGHT;
                  break;
         }
 
@@ -66,7 +71,7 @@ void Hero::heroHandleEvent( SDL_Event &e )
 void Hero::heroMove(int direction){
     switch (direction)
     {
-    case 1:
+    case MOVE_RIGHT:
         hDesPosX+= BLOCK_WIDTH;
         playerCurrentTex = &walkRight;
         while (hCurPosX != hDesPosX)
@@ -76,7 +81,7 @@ void Hero::heroMove(int direction){
         }
         playerCurrentTex = &idleRight;
         break;
-    case 2:
+    case MOVE_LEFT:
         hDesPosX -= BLOCK_WIDTH;
         playerCurrentTex = &walkLeft;
         while (hCurPosX != hDesPosX)
@@ -86,7 +91,7 @@ void Hero::heroMove(int direction){
         }
         playerCurrentTex = &idleLeft;
         break;
-    case 3:
+    case MOVE_UP:
         hDesPoxY -= BLOCK_WIDTH;
         playerCurrentTex = &walkUp;
         while (hCurPosY != hDesPoxY)
@@ -96,7 +101,7 @@ void Hero::heroMove(int direction){
         }
         playerCurrentTex = &idleUp;
         break;
-    case 4:
+    case MOVE_DOWN:
         hDesPoxY += BLOCK_WIDTH;
         playerCurrentTex = &walkDown;
         while (hCurPosY != hDesPoxY)

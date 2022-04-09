@@ -23,7 +23,7 @@ public:
     void loadBoxIMG();
 
     //Found the collision
-    int collision(Hero& hero);
+    int collision(Hero& hero, int direction);
 
     //Move the box according to collision
     void boxMove(int direction);
@@ -40,10 +40,10 @@ public:
 
     //Box direction
     enum {
-        MOVE_LEFT,
-        MOVE_RIGHT,
         MOVE_UP,
-        MOVE_DOWN
+        MOVE_DOWN,
+        MOVE_LEFT,
+        MOVE_RIGHT
     };
 
 private:

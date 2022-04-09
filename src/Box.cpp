@@ -4,8 +4,8 @@
 
 Box::Box() {
     //Initialize the variables
-    bCurPosX = bDesPosX = 400;
-    bCurPosY = bDesPosY = 400;
+    bCurPosX = bDesPosX = 32;
+    bCurPosY = bDesPosY = 0;
     bVelX = 0;
     bVelY = 0;
 }
@@ -15,15 +15,40 @@ void Box::loadBoxIMG() {
     bRectDest = {0,0,BOX_WIDTH,BOX_HEIGHT};
 }
 
-int Box::collision(Hero& hero) {
+int Box::collision(Hero& hero, int direction) {
     // If the box is colliding with the hero in the left direction
-    if (bCurPosX + BOX_WIDTH - 8 > hero.getCurX() + 32 &&
-        bCurPosX + BOX_WIDTH - 8 < hero.getCurX() + 48 &&
-        bCurPosY + BOX_HEIGHT > hero.getCurY() + 24 &&
-        bCurPosY < hero.getCurY() + 40)
+     if (bCurPosX < hero.getCurX() + 16 + Hero::HERO_WIDTH &&
+               bCurPosX >= hero.getCurX() + 16 &&
+               bCurPosY <= hero.getCurY() + 16 &&
+               bCurPosY + BOX_HEIGHT > hero.getCurY() + 16 &&
+               direction == MOVE_RIGHT) 
+    {
+        boxMove(MOVE_RIGHT);
+        return MOVE_RIGHT;
+    } else if (bCurPosX + BOX_WIDTH > hero.getCurX() + 16 &&
+               bCurPosX + BOX_WIDTH <= hero.getCurX() + 16 + Hero::HERO_WIDTH &&
+               bCurPosY <= hero.getCurY() + 16 &&
+               bCurPosY + BOX_HEIGHT > hero.getCurY() + 16 &&
+               direction == MOVE_LEFT) 
     {
         boxMove(MOVE_LEFT);
         return MOVE_LEFT;
+    } else if (bCurPosY < hero.getCurY() + 16 + Hero::HERO_HEIGHT &&
+               bCurPosY >= hero.getCurY() + 16 &&
+               bCurPosX <= hero.getCurX() + 16 &&
+               bCurPosX + BOX_WIDTH > hero.getCurX() + 16 &&
+               direction == MOVE_DOWN) 
+    {
+        boxMove(MOVE_DOWN);
+        return MOVE_DOWN;
+    } else if (bCurPosY + BOX_HEIGHT > hero.getCurY() + 16 &&
+               bCurPosY + BOX_HEIGHT <= hero.getCurY() + 16 + Hero::HERO_HEIGHT &&
+               bCurPosX <= hero.getCurX() + 16 &&
+               bCurPosX + BOX_WIDTH > hero.getCurX() + 16 && 
+               direction == MOVE_UP) 
+    {
+        boxMove(MOVE_UP);
+        return MOVE_UP;
     }
 }
 
