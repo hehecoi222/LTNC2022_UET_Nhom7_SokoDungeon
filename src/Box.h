@@ -87,6 +87,9 @@ public:
         MOVE_RIGHT
     };
 
+    //Check collision with map
+    template <class T> friend bool checkCollisionwithMap(int** level,T& obj);
+
 private:
     //The X and Y offsets of the box
     int bCurPosX, bCurPosY;

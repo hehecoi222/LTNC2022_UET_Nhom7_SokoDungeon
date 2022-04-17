@@ -9,7 +9,6 @@ using namespace std;
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
-
 class Game{
 private:
     int cnt =0;
@@ -40,5 +39,19 @@ public:
     int getScreenW(){return SCREEN_WIDTH;}
     int getScreenH() {return SCREEN_HEIGHT;}
 };
+
+template <class T> bool checkCollisionwithMap(int** level, T& obj) {
+    int boxX = obj.getCurX()/obj.BLOCK_WIDTH;
+    int boxY = obj.getCurY()/obj.BLOCK_WIDTH;
+    switch (level[boxY][boxX]) {
+        case 1:
+        case 2:
+        case 3:
+            return true;
+            break;
+        default:
+            return false;
+    }
+}
 
 #endif /* Game_hpp */

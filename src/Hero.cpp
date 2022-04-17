@@ -1,14 +1,17 @@
 #include "Hero.h"
+#include "Game.h"
 #include "find_res.h"
+
+#include "mapgame.h"
 
 Hero::Hero()
 {
-    hCurPosX = 0;
-    hCurPosY = 0;
+    hCurPosX = 32;
+    hCurPosY = 32;
 
     hDesPosX = hCurPosX;
     hDesPoxY = hCurPosY;
-
+   
     hVelX = 0;
     hVelY = 0;
 
@@ -50,21 +53,37 @@ int Hero::heroHandleEvent( SDL_Event &e )
             case SDLK_w:
             case SDLK_UP:
                 Move(MOVE_UP);
+                if (checkCollisionwithMap(MapGame::level0, *this)) {
+                    Move(MOVE_DOWN);
+                    return NOT_MOVE;
+                }
                 return MOVE_UP;
                 break;
             case SDLK_s:
             case SDLK_DOWN:
                 Move(MOVE_DOWN);
+                if (checkCollisionwithMap(MapGame::level0, *this)) {
+                    Move(MOVE_UP);
+                    return NOT_MOVE;
+                }
                 return MOVE_DOWN;
                  break;
             case SDLK_a:
             case SDLK_LEFT:
                 Move(MOVE_LEFT);
+                if (checkCollisionwithMap(MapGame::level0, *this)) {
+                    Move(MOVE_RIGHT);
+                    return NOT_MOVE;
+                }
                 return MOVE_LEFT;
                  break;
             case SDLK_d:
             case SDLK_RIGHT:
                 Move(MOVE_RIGHT);
+                if (checkCollisionwithMap(MapGame::level0, *this)) {
+                    Move(MOVE_LEFT);
+                    return NOT_MOVE;
+                }
                 return MOVE_RIGHT;
                  break;
             default:
