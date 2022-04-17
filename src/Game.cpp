@@ -16,6 +16,7 @@ Hero mainHero;
 LTexture Map;
 MapGame Game0;
 SDL_Rect Mapblock;
+Box testBox(128,128);
 
 Game::Game() {}
 Game::~Game() {}
@@ -95,6 +96,8 @@ bool Game::loadMedia() {
     Map.loadFromFile(FindRes::getPath("img", "T002.png"));
     Game0.LoadMap();
 
+    Box::loadBoxIMG();
+
     return success;
 }
 
@@ -107,7 +110,7 @@ void Game::handleEvents() {
         if (e.type == SDL_QUIT) {
             isRunning = false;
         } else {
-            mainHero.heroHandleEvent(e);
+            testBox.collision(mainHero, mainHero.heroHandleEvent(e));
         }
     }
 }
@@ -125,6 +128,8 @@ void Game::render() {
     Game0.LoadMap();
     // Render player
     mainHero.heroRender();
+
+    testBox.boxRender();
 
     // Update Screen
     SDL_RenderPresent(gRenderer);
