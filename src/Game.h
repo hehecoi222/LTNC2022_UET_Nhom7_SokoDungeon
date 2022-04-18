@@ -46,6 +46,7 @@ template <class T> bool checkCollisionwithMap(int** level, T& obj) {
     switch (level[boxY][boxX]) {
         case 1:
         case 2:
+        case 20:
         case 3:
             return true;
             break;
