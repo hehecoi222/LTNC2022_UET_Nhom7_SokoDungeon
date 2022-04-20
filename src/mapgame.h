@@ -9,7 +9,7 @@ public:
     //load the map
     void LoadMap();
     //Map level0
-    static inline int** level0 = nullptr;
+    static int** level0;
 private:    
     //destination to render
     SDL_Rect des0;

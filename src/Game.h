@@ -40,18 +40,34 @@ public:
     int getScreenH() {return SCREEN_HEIGHT;}
 };
 
-template <class T> bool checkCollisionwithMap(int** level, T& obj) {
-    int boxX = obj.getCurX()/obj.BLOCK_WIDTH;
-    int boxY = obj.getCurY()/obj.BLOCK_WIDTH;
-    switch (level[boxY][boxX]) {
+template <class T> int checkCollisionwithMap(int** level, T& obj, int direction) {
+    int objX = obj.getCurX()/obj.BLOCK_WIDTH;
+    int objY = obj.getCurY()/obj.BLOCK_WIDTH;
+    switch (direction) {
+        case obj.MOVE_LEFT:
+            objX--;
+            break;
+        case obj.MOVE_RIGHT:
+            objX++;
+            break;
+        case obj.MOVE_UP:
+            objY--;
+            break;
+        case obj.MOVE_DOWN:
+            objY++;
+            break;
+        default:
+            return direction;
+    }
+    switch (level[objY][objX]) {
         case 1:
         case 2:
         case 20:
         case 3:
-            return true;
+            return obj.NOT_MOVE;
             break;
         default:
-            return false;
+            return direction;
     }
 }
 

@@ -21,6 +21,9 @@ class Box {
     Box(int x, int y);
     ~Box();
 
+    // Box layer
+    static int** layerBox;
+
     // Load box img
     static void loadBoxIMG();
 
@@ -34,44 +37,32 @@ class Box {
                    bCurPosX >= obj.getCurX() && bCurPosY <= obj.getCurY() &&
                    bCurPosY + BOX_HEIGHT > obj.getCurY() &&
                    direction == MOVE_RIGHT) {
-            Move(MOVE_RIGHT);
-            if (checkCollisionwithMap(MapGame::level0, *this)) {
-                Move(MOVE_LEFT);
-                return NOT_MOVE;
-            }
-            return MOVE_RIGHT;
+            int way = checkCollisionwithMap(MapGame::level0, *this, MOVE_RIGHT);
+            Move(way);
+            return way;
         } else if (bCurPosX + BOX_WIDTH > obj.getCurX() &&
                    bCurPosX + BOX_WIDTH <= obj.getCurX() + Hero::HERO_WIDTH &&
                    bCurPosY <= obj.getCurY() &&
                    bCurPosY + BOX_HEIGHT > obj.getCurY() &&
                    direction == MOVE_LEFT) {
-            Move(MOVE_LEFT);
-            if (checkCollisionwithMap(MapGame::level0, *this)) {
-                Move(MOVE_RIGHT);
-                return NOT_MOVE;
-            }
-            return MOVE_LEFT;
+            int way = checkCollisionwithMap(MapGame::level0, *this, MOVE_LEFT);
+            Move(way);
+            return way;
         } else if (bCurPosY < obj.getCurY() + Hero::HERO_HEIGHT &&
                    bCurPosY >= obj.getCurY() && bCurPosX <= obj.getCurX() &&
                    bCurPosX + BOX_WIDTH > obj.getCurX() &&
                    direction == MOVE_DOWN) {
-            Move(MOVE_DOWN);
-            if (checkCollisionwithMap(MapGame::level0, *this)) {
-                Move(MOVE_UP);
-                return NOT_MOVE;
-            }
-            return MOVE_DOWN;
+            int way = checkCollisionwithMap(MapGame::level0, *this, MOVE_DOWN);
+            Move(way);
+            return way;
         } else if (bCurPosY + BOX_HEIGHT > obj.getCurY() &&
                    bCurPosY + BOX_HEIGHT <= obj.getCurY() + Hero::HERO_HEIGHT &&
                    bCurPosX <= obj.getCurX() &&
                    bCurPosX + BOX_WIDTH > obj.getCurX() &&
                    direction == MOVE_UP) {
-            Move(MOVE_UP);
-            if (checkCollisionwithMap(MapGame::level0, *this)) {
-                Move(MOVE_DOWN);
-                return NOT_MOVE;
-            }
-            return MOVE_UP;
+            int way = checkCollisionwithMap(MapGame::level0, *this, MOVE_UP);
+            Move(way);
+            return way;
         }
         return NOT_MOVE;
     }
@@ -91,10 +82,6 @@ class Box {
 
     // Box direction
     enum { NOT_MOVE, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT };
-
-    // Check collision with map
-    template <class T>
-    friend bool checkCollisionwithMap(int** level, T& obj);
 
    private:
     // The X and Y offsets of the box

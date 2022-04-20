@@ -5,6 +5,8 @@
 #include "Box.h"
 #include "find_res.h"
 
+int** MapGame::level0 = nullptr;
+
 void MapGame::LoadMap() {
     // load the map
     ifstream file(FindRes::getPath("map", "level0.smap"));

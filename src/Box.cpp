@@ -3,6 +3,7 @@
 #include "find_res.h"
 
 LTexture Box::box;
+int** Box::layerBox = nullptr;
 
 Box::Box() {
     //Initialize the variables
