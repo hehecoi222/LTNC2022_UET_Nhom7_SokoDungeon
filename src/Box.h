@@ -61,7 +61,7 @@ class Box {
         // If the box is colliding with the obj in the left direction
         if (direction == NOT_MOVE) return direction;
         int way = checkCollisionwithMap(MapGame::level0, *this, direction);
-        way = hitBox(*this, direction);
+        way = hitBox(*this, way);
         Move(way);
         return way;
         //  else if (bCurPosX < obj.getCurX() + Hero::HERO_WIDTH &&
