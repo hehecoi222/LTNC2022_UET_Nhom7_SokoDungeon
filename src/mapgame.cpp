@@ -41,8 +41,11 @@ void MapGame::LoadMap() {
                 case 3:
                     wall3.render(j * 32, i * 32, nullptr, &des0);
                     break;
+                case 5:
+                    Box::layerBox[i][j] = new Box(j * 32, i * 32);
                 case 12:
                     nen1.render(j * 32, i * 32, nullptr, &des0);
+                    if (Box::layerBox[i][j]) Box::layerBox[i][j]->boxRender();
                     break;
                 case 0:
                     nen2.render(j * 32, i * 32, nullptr, &des0);

@@ -22,7 +22,7 @@ class Box {
     ~Box();
 
     // Box layer
-    static int** layerBox;
+    static Box*** layerBox;
 
     // Load box img
     static void loadBoxIMG();

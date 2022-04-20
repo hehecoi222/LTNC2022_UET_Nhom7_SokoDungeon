@@ -91,12 +91,13 @@ bool Game::loadMedia() {
 
     // load Hero img
     mainHero.loadHeroIMG();
+    // load Box img
+    Box::loadBoxIMG();
 
     // Load map
     Map.loadFromFile(FindRes::getPath("img", "T002.png"));
     Game0.LoadMap();
 
-    Box::loadBoxIMG();
 
     return success;
 }
