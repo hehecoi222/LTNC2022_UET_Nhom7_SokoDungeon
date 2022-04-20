@@ -41,6 +41,7 @@ public:
 };
 
 template <class T> int checkCollisionwithMap(int** level, T& obj, int direction) {
+    if (direction == obj.NOT_MOVE) return direction;
     int objX = obj.getCurX()/obj.BLOCK_WIDTH;
     int objY = obj.getCurY()/obj.BLOCK_WIDTH;
     switch (direction) {

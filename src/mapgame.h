@@ -8,6 +8,7 @@ class MapGame
 public:
     //load the map
     void LoadMap();
+    void preLoadMap();
     //Map level0
     static int** level0;
 private:    

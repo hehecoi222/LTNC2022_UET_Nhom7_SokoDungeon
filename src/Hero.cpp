@@ -1,5 +1,5 @@
 #include "Hero.h"
-
+#include "Box.h"
 #include "Game.h"
 #include "find_res.h"
 #include "mapgame.h"
@@ -50,24 +50,28 @@ int Hero::heroHandleEvent(SDL_Event& e) {
             case SDLK_w:
             case SDLK_UP:
                 way = checkCollisionwithMap(MapGame::level0, *this, MOVE_UP);
+                way = Box::hitBox(*this, way);
                 Move(way);
                 return way;
                 break;
             case SDLK_s:
             case SDLK_DOWN:
                 way = checkCollisionwithMap(MapGame::level0, *this, MOVE_DOWN);
+                way = Box::hitBox(*this, way);
                 Move(way);
                 return way;
                 break;
             case SDLK_a:
             case SDLK_LEFT:
                 way = checkCollisionwithMap(MapGame::level0, *this, MOVE_LEFT);
+                way = Box::hitBox(*this, way);
                 Move(way);
                 return way;
                 break;
             case SDLK_d:
             case SDLK_RIGHT:
                 way = checkCollisionwithMap(MapGame::level0, *this, MOVE_RIGHT);
+                way = Box::hitBox(*this, way);
                 Move(way);
                 return way;
                 break;

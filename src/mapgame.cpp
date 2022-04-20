@@ -7,7 +7,7 @@
 
 int** MapGame::level0 = nullptr;
 
-void MapGame::LoadMap() {
+void MapGame::preLoadMap() {
     // load the map
     ifstream file(FindRes::getPath("map", "level0.smap"));
     level0 = new int*[20];
@@ -15,6 +15,7 @@ void MapGame::LoadMap() {
         level0[i] = new int[25];
         for (int j = 0; j < 25; j++) {
             file >> level0[i][j];
+            if (level0[i][j] == 5) Box::layerBox[i][j] = new Box(j * 32, i * 32);
         }
     }
     file.close();
@@ -29,6 +30,9 @@ void MapGame::LoadMap() {
     nen3.loadFromFile(FindRes::getPath("img", "nen3.png"));
     gate.loadFromFile(FindRes::getPath("img", "gate.png"));
     chest.loadFromFile(FindRes::getPath("img", "chest.png"));
+}
+
+void MapGame::LoadMap() {
     for (int i = 0; i < 20; i++) {
         for (int j = 0; j < 25; j++) {
             switch (level0[i][j]) {
@@ -42,10 +46,8 @@ void MapGame::LoadMap() {
                     wall3.render(j * 32, i * 32, nullptr, &des0);
                     break;
                 case 5:
-                    Box::layerBox[i][j] = new Box(j * 32, i * 32);
                 case 12:
                     nen1.render(j * 32, i * 32, nullptr, &des0);
-                    if (Box::layerBox[i][j]) Box::layerBox[i][j]->boxRender();
                     break;
                 case 0:
                     nen2.render(j * 32, i * 32, nullptr, &des0);

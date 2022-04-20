@@ -30,7 +30,7 @@ void Box::loadBoxIMG() {
     layerBox = new Box**[20];
     for (int i = 0; i < 20; i++) {
         layerBox[i] = new Box*[25];
-        for (int j = 0; j < 25;j++) {
+        for (int j = 0; j < 25; j++) {
             layerBox[i][j] = nullptr;
         }
     }
@@ -39,6 +39,8 @@ void Box::loadBoxIMG() {
 void Box::Move(int direction) {
     switch (direction) {
         case MOVE_LEFT:
+            layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH) - 1] = layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)];
+            layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)] = nullptr;
             bDesPosX -= BLOCK_WIDTH;
             while (bCurPosX != bDesPosX) {
                 bCurPosX -= BOX_VEL;
@@ -46,6 +48,8 @@ void Box::Move(int direction) {
             }
             break;
         case MOVE_RIGHT:
+            layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH) + 1] = layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)];
+            layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)] = nullptr;
             bDesPosX += BLOCK_WIDTH;
             while (bCurPosX != bDesPosX) {
                 bCurPosX += BOX_VEL;
@@ -53,6 +57,8 @@ void Box::Move(int direction) {
             }
             break;
         case MOVE_UP:
+            layerBox[(bDesPosY / BLOCK_WIDTH) - 1][(bDesPosX / BLOCK_WIDTH)] = layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)];
+            layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)] = nullptr;
             bDesPosY -= BLOCK_WIDTH;
             while (bCurPosY != bDesPosY) {
                 bCurPosY -= BOX_VEL;
@@ -60,6 +66,8 @@ void Box::Move(int direction) {
             }
             break;
         case MOVE_DOWN:
+            layerBox[(bDesPosY / BLOCK_WIDTH) + 1][(bDesPosX / BLOCK_WIDTH)] = layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)];
+            layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)] = nullptr;
             bDesPosY += BLOCK_WIDTH;
             while (bCurPosY != bDesPosY) {
                 bCurPosY += BOX_VEL;
@@ -71,6 +79,14 @@ void Box::Move(int direction) {
 
 void Box::boxRender() {
     Box::box.render(bCurPosX, bCurPosY, &bRectClip, &bRectDest);
+}
+
+void Box::layerBoxRender() {
+    for (int i = 0; i < 20; i++) {
+        for (int j = 0; j < 25; j++) {
+            if (layerBox[i][j]) layerBox[i][j]->boxRender();
+        }
+    }
 }
 
 Box::~Box() {}
