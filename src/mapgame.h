@@ -6,6 +6,9 @@
 class MapGame
 {
 public:
+    //The dimensions of the map
+    static const int GRID_BLOCK_WIDTH = 32;
+    
     //load the map
     void LoadMap();
     void preLoadMap();

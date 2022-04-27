@@ -97,7 +97,6 @@ bool Game::loadMedia() {
     Map.loadFromFile(FindRes::getPath("img", "T002.png"));
     Game0.preLoadMap();
 
-
     return success;
 }
 
@@ -114,7 +113,11 @@ void Game::handleEvents() {
         }
     }
 }
-void Game::update() {}
+void Game::update() {
+    if (Box::winLevel()) {
+        isRunning = false;
+    }
+}
 
 void Game::render() {
     // Clear screen
@@ -143,7 +146,15 @@ void Game::close() {
     gWindow = NULL;
     gRenderer = NULL;
     Box::box.free();
-
+    for (int i = 0; i < 20; i++) {
+        for (int j = 0; j < 25; j++) {
+            delete Box::layerBox[i][j];
+        }
+        delete[] Box::layerBox[i];
+        delete[] MapGame::level0[i];
+    }
+    delete[] Box::layerBox;
+    delete[] MapGame::level0;
     // Quit SDL subsystems
     SDL_Quit();
     cout << "Game clear";

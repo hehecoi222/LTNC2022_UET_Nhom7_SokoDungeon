@@ -24,6 +24,15 @@ class Box {
     // Box layer
     static Box*** layerBox;
 
+    // Flush box layer
+    static void flushBoxLayer();
+
+    // Box count, Box win count
+    static int boxCount, boxWinCount;
+
+    // Winning the level
+    static bool winLevel() {return boxWinCount == boxCount;}
+
     // Load box img
     static void loadBoxIMG();
 
@@ -64,37 +73,6 @@ class Box {
         way = hitBox(*this, way);
         Move(way);
         return way;
-        //  else if (bCurPosX < obj.getCurX() + Hero::HERO_WIDTH &&
-        //            bCurPosX >= obj.getCurX() && bCurPosY <= obj.getCurY() &&
-        //            bCurPosY + BOX_HEIGHT > obj.getCurY() &&
-        //            direction == MOVE_RIGHT) {
-        //     int way = checkCollisionwithMap(MapGame::level0, *this,
-        //     MOVE_RIGHT); way = Box::hitBox(*this, MOVE_RIGHT); Move(way);
-        //     return way;
-        // } else if (bCurPosX + BOX_WIDTH > obj.getCurX() &&
-        //            bCurPosX + BOX_WIDTH <= obj.getCurX() + Hero::HERO_WIDTH
-        //            && bCurPosY <= obj.getCurY() && bCurPosY + BOX_HEIGHT >
-        //            obj.getCurY() && direction == MOVE_LEFT) {
-        //     int way = checkCollisionwithMap(MapGame::level0, *this,
-        //     MOVE_LEFT); way = Box::hitBox(*this, MOVE_LEFT); Move(way);
-        //     return way;
-        // } else if (bCurPosY < obj.getCurY() + Hero::HERO_HEIGHT &&
-        //            bCurPosY >= obj.getCurY() && bCurPosX <= obj.getCurX() &&
-        //            bCurPosX + BOX_WIDTH > obj.getCurX() &&
-        //            direction == MOVE_DOWN) {
-        //     int way = checkCollisionwithMap(MapGame::level0, *this,
-        //     MOVE_DOWN); way = Box::hitBox(*this, MOVE_DOWN); Move(way);
-        //     return way;
-        // } else if (bCurPosY + BOX_HEIGHT > obj.getCurY() &&
-        //            bCurPosY + BOX_HEIGHT <= obj.getCurY() + Hero::HERO_HEIGHT
-        //            && bCurPosX <= obj.getCurX() && bCurPosX + BOX_WIDTH >
-        //            obj.getCurX() && direction == MOVE_UP) {
-        //     int way = checkCollisionwithMap(MapGame::level0, *this, MOVE_UP);
-        //     way = Box::hitBox(*this, MOVE_UP);
-        //     Move(way);
-        //     return way;
-        // }
-        return NOT_MOVE;
     }
 
     // Move the box according to collision
@@ -124,6 +102,15 @@ class Box {
 
     // The velocity of the box
     int bVelX, bVelY;
+
+    // Winning state
+    bool bWin = false;
+
+    // Check winning state
+    void checkWin(int**);
+
+    // Add up in boxCount
+    void addBoxCount();
 
     // Rectangle to represent the box
     SDL_Rect bRectDest;

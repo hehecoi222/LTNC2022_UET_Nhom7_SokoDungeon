@@ -15,13 +15,16 @@ void MapGame::preLoadMap() {
         level0[i] = new int[25];
         for (int j = 0; j < 25; j++) {
             file >> level0[i][j];
-            if (level0[i][j] == 5) Box::layerBox[i][j] = new Box(j * 32, i * 32);
+            if (level0[i][j] == 5) {
+                Box::layerBox[i][j] = new Box(j * Box::BLOCK_WIDTH, i * Box::BLOCK_WIDTH);
+                Box::boxCount++;
+            }
         }
     }
     file.close();
     // load nen
     des0.x = des0.y = 0;
-    des0.w = des0.h = 32;
+    des0.w = des0.h = GRID_BLOCK_WIDTH;
     wall1.loadFromFile(FindRes::getPath("img", "wall1.png"));
     wall2.loadFromFile(FindRes::getPath("img", "wall2.png"));
     wall3.loadFromFile(FindRes::getPath("img", "wall3.png"));
@@ -37,26 +40,27 @@ void MapGame::LoadMap() {
         for (int j = 0; j < 25; j++) {
             switch (level0[i][j]) {
                 case 1:
-                    wall1.render(j * 32, i * 32, nullptr, &des0);
+                    wall1.render(j * GRID_BLOCK_WIDTH, i * GRID_BLOCK_WIDTH, nullptr, &des0);
                     break;
                 case 2:
-                    wall2.render(j * 32, i * 32, nullptr, &des0);
+                    wall2.render(j * GRID_BLOCK_WIDTH, i * GRID_BLOCK_WIDTH, nullptr, &des0);
                     break;
                 case 3:
-                    wall3.render(j * 32, i * 32, nullptr, &des0);
+                    wall3.render(j * GRID_BLOCK_WIDTH, i * GRID_BLOCK_WIDTH, nullptr, &des0);
                     break;
                 case 5:
+                case 10:
                 case 12:
-                    nen1.render(j * 32, i * 32, nullptr, &des0);
+                    nen1.render(j * GRID_BLOCK_WIDTH, i * GRID_BLOCK_WIDTH, nullptr, &des0);
                     break;
                 case 0:
-                    nen2.render(j * 32, i * 32, nullptr, &des0);
+                    nen2.render(j * GRID_BLOCK_WIDTH, i * GRID_BLOCK_WIDTH, nullptr, &des0);
                     break;
                 case 13:
-                    nen3.render(j * 32, i * 32, nullptr, &des0);
+                    nen3.render(j * GRID_BLOCK_WIDTH, i * GRID_BLOCK_WIDTH, nullptr, &des0);
                     break;
                 case 20:
-                    gate.render(j * 32, i * 32, nullptr, &des0);
+                    gate.render(j * GRID_BLOCK_WIDTH, i * GRID_BLOCK_WIDTH, nullptr, &des0);
                     break;
             }
         }

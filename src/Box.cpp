@@ -3,9 +3,11 @@
 #include <stdio.h>
 
 #include "find_res.h"
+#include "mapgame.h"
 
 LTexture Box::box;
 Box*** Box::layerBox = nullptr;
+int Box::boxCount = 0, Box::boxWinCount = 0;
 
 Box::Box() {
     // Initialize the variables
@@ -36,44 +38,85 @@ void Box::loadBoxIMG() {
     }
 }
 
+void Box::flushBoxLayer() {
+    for (int i = 0; i < 20; i++) {
+        for (int j = 0; j < 25; j++) {
+            if (layerBox[i][j] != nullptr) {
+                delete layerBox[i][j];
+                layerBox[i][j] = nullptr;
+            }
+        }
+    }
+}
+
 void Box::Move(int direction) {
     switch (direction) {
         case MOVE_LEFT:
-            layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH) - 1] = layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)];
-            layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)] = nullptr;
+            layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH) - 1] =
+                layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)];
+            layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)] =
+                nullptr;
             bDesPosX -= BLOCK_WIDTH;
             while (bCurPosX != bDesPosX) {
                 bCurPosX -= BOX_VEL;
                 boxRender();
             }
+            addBoxCount();
             break;
         case MOVE_RIGHT:
-            layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH) + 1] = layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)];
-            layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)] = nullptr;
+            layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH) + 1] =
+                layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)];
+            layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)] =
+                nullptr;
             bDesPosX += BLOCK_WIDTH;
             while (bCurPosX != bDesPosX) {
                 bCurPosX += BOX_VEL;
                 boxRender();
             }
+            addBoxCount();
             break;
         case MOVE_UP:
-            layerBox[(bDesPosY / BLOCK_WIDTH) - 1][(bDesPosX / BLOCK_WIDTH)] = layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)];
-            layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)] = nullptr;
+            layerBox[(bDesPosY / BLOCK_WIDTH) - 1][(bDesPosX / BLOCK_WIDTH)] =
+                layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)];
+            layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)] =
+                nullptr;
             bDesPosY -= BLOCK_WIDTH;
             while (bCurPosY != bDesPosY) {
                 bCurPosY -= BOX_VEL;
                 boxRender();
             }
+            addBoxCount();
             break;
         case MOVE_DOWN:
-            layerBox[(bDesPosY / BLOCK_WIDTH) + 1][(bDesPosX / BLOCK_WIDTH)] = layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)];
-            layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)] = nullptr;
+            layerBox[(bDesPosY / BLOCK_WIDTH) + 1][(bDesPosX / BLOCK_WIDTH)] =
+                layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)];
+            layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)] =
+                nullptr;
             bDesPosY += BLOCK_WIDTH;
             while (bCurPosY != bDesPosY) {
                 bCurPosY += BOX_VEL;
                 boxRender();
             }
+            addBoxCount();
             break;
+    }
+}
+
+void Box::checkWin(int** level) {
+    if (level[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)] == 10) {
+        bWin = true;
+    } else {
+        bWin = false;
+    }
+}
+
+void Box::addBoxCount() {
+    bool temp = bWin;
+    checkWin(MapGame::level0);
+    if (temp != bWin && bWin) {
+        boxWinCount++;
+    } else if (temp != bWin && !bWin) {
+        boxWinCount--;
     }
 }
 
