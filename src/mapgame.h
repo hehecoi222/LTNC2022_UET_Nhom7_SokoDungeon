@@ -8,9 +8,9 @@ class MapGame
 public:
     //load the map
     void LoadMap();
-
-
-private:
+    //Map level0
+    static inline int** level0 = nullptr;
+private:    
     //destination to render
     SDL_Rect des0;
 
@@ -31,6 +31,5 @@ private:
     //ve chest
     LTexture chest;
 };
-
 
 #endif // MAP_H_INCLUDED
