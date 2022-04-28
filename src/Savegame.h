@@ -27,7 +27,7 @@ class Savegame {
     }
 
     // Record move
-    void recodeMove(int direction);
+    void recordMove(int direction);
 
     // Undo move
     void undoMove(Hero& hero);

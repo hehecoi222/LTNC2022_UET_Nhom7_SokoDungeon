@@ -5,6 +5,7 @@
 #include "Texture.h"
 #include "find_res.h"
 #include "mapgame.h"
+#include "Savegame.h"
 
 SDL_Renderer* Game::gRenderer = nullptr;
 TTF_Font* Game::gFont = nullptr;
@@ -16,6 +17,7 @@ Hero mainHero;
 LTexture Map;
 MapGame Game0;
 SDL_Rect Mapblock;
+Savegame save;
 
 Game::Game() {}
 Game::~Game() {}
@@ -93,6 +95,9 @@ bool Game::loadMedia() {
     // load Box img
     Box::loadBoxIMG();
 
+    // Initialize save function
+    save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
+
     // Load map
     Map.loadFromFile(FindRes::getPath("img", "T002.png"));
     Game0.preLoadMap();
@@ -108,8 +113,10 @@ void Game::handleEvents() {
         // User requests quit
         if (e.type == SDL_QUIT) {
             isRunning = false;
+        } else if (e.key.keysym.sym == SDLK_r) {
+            save.undoMove(mainHero);
         } else {
-            mainHero.heroHandleEvent(e);
+            save.recordMove(mainHero.heroHandleEvent(e));
         }
     }
 }

@@ -30,7 +30,7 @@ int Savegame::pop() {
     return data;
 }
 
-void Savegame::recodeMove(int direction) {
+void Savegame::recordMove(int direction) {
     switch (direction) {
         case NOT_MOVE:
             break;
