@@ -5,6 +5,8 @@
 #ifndef SAVE_GAME_H
 #define SAVE_GAME_H
 
+#include "Hero.h"
+
 // Struct node to represent in Stack
 struct Node {
     int data;
