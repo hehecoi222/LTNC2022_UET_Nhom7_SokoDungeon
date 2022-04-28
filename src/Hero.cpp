@@ -10,7 +10,7 @@ Hero::Hero() {
 
     hDesPosX = hCurPosX;
     hDesPoxY = hCurPosY;
-
+   
     hVelX = 0;
     hVelY = 0;
 
