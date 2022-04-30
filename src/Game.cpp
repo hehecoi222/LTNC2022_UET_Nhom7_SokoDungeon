@@ -113,7 +113,7 @@ void Game::handleEvents() {
         // User requests quit
         if (e.type == SDL_QUIT) {
             isRunning = false;
-        } else if (e.key.keysym.sym == SDLK_r) {
+        } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_r && e.key.repeat == 0) {
             save.undoMove(mainHero);
         } else {
             save.recordMove(mainHero.heroHandleEvent(e));

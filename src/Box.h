@@ -59,14 +59,13 @@ class Box {
                 return direction;
         }
         if (layerBox[objY][objX]) {
-            return layerBox[objY][objX]->collision(obj, direction);
+            return layerBox[objY][objX]->collision(direction);
         } else
             return direction;
     }
 
-    // Found the collision
-    template <class T>
-    int collision(T& obj, int direction) {
+    // Found the collision between box
+    int collision(int direction) {
         // If the box is colliding with the obj in the left direction
         if (direction == NOT_MOVE) return direction;
         int way = checkCollisionwithMap(MapGame::level0, *this, direction);
