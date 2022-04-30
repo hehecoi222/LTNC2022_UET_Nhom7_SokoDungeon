@@ -17,13 +17,15 @@ Savegame::~Savegame() {
 void Savegame::push(int data) {
     Node* newNode = new Node;
     newNode->data = data;
+    newNode->isMoved = Box::isMoved;
     newNode->next = movesStack;
     movesStack = newNode;
 }
 
-int Savegame::pop() {
+int Savegame::pop(bool& isMoved) {
     if (movesStack == nullptr) return 0;
     int data = movesStack->data;
+    isMoved = movesStack->isMoved;
     Node* temp = movesStack;
     movesStack = movesStack->next;
     delete temp;
@@ -54,81 +56,90 @@ void Savegame::recordMove(int direction) {
 }
 
 void Savegame::undoMove(Hero& hero) {
-    int direction = pop();
+    bool boxIsMoved;
+    int direction = pop(boxIsMoved);
     switch (direction) {
         case NOT_MOVE:
             break;
         case MOVE_UP:
             direction = MOVE_DOWN;
-            shiftDown(hero);
+            shiftDown(hero,boxIsMoved);
             break;
         case MOVE_DOWN:
             direction = MOVE_UP;
-            shiftUp(hero);
+            shiftUp(hero,boxIsMoved);
             break;
         case MOVE_LEFT:
             direction = MOVE_RIGHT;
-            shiftRight(hero);
+            shiftRight(hero, boxIsMoved);
             break;
         case MOVE_RIGHT:
             direction = MOVE_LEFT;
-            shiftLeft(hero);
+            shiftLeft(hero, boxIsMoved);
             break;
     }
 }
 
-void Savegame::shiftUp(Hero& hero) {
+void Savegame::shiftUp(Hero& hero, bool isMoved) {
     hero.Move(MOVE_UP);
-    int i;
-    for (i = heroY + 1; i < 20; i++) {
-        if (!Box::layerBox[i][heroX]) {
-            break;
+    if (isMoved) {
+        int i;
+        for (i = heroY + 1; i < 20; i++) {
+            if (!Box::layerBox[i][heroX]) {
+                break;
+            }
         }
-    }
-    for (int j = heroY + 1; j < i; j++) {
-        Box::layerBox[j][heroX]->Move(MOVE_UP);
+        for (int j = heroY + 1; j < i; j++) {
+            Box::layerBox[j][heroX]->Move(MOVE_UP);
+        }
     }
     heroY--;
 }
 
-void Savegame::shiftDown(Hero& hero) {
+void Savegame::shiftDown(Hero& hero, bool isMoved) {
     hero.Move(MOVE_DOWN);
-    int i;
-    for (i = heroY - 1; i >= 0; i--) {
-        if (!Box::layerBox[i][heroX]) {
-            break;
+    if (isMoved) {
+        int i;
+        for (i = heroY - 1; i >= 0; i--) {
+            if (!Box::layerBox[i][heroX]) {
+                break;
+            }
         }
-    }
-    for (int j = heroY - 1; j > i; j--) {
-        Box::layerBox[j][heroX]->Move(MOVE_DOWN);
+        for (int j = heroY - 1; j > i; j--) {
+            Box::layerBox[j][heroX]->Move(MOVE_DOWN);
+        }
     }
     heroY++;
 }
 
-void Savegame::shiftLeft(Hero& hero) {
+void Savegame::shiftLeft(Hero& hero, bool isMoved) {
     hero.Move(MOVE_LEFT);
-    int i;
-    for (i = heroX + 1; i < 20; i++) {
-        if (!Box::layerBox[heroY][i]) {
-            break;
+    if (isMoved) {
+        int i;
+        for (i = heroX + 1; i < 20; i++) {
+            if (!Box::layerBox[heroY][i]) {
+                break;
+            }
         }
-    }
-    for (int j = heroX + 1; j < i; j++) {
-        Box::layerBox[heroY][j]->Move(MOVE_LEFT);
+        for (int j = heroX + 1; j < i; j++) {
+            Box::layerBox[heroY][j]->Move(MOVE_LEFT);
+        }
     }
     heroX--;
 }
 
-void Savegame::shiftRight(Hero& hero) {
+void Savegame::shiftRight(Hero& hero, bool isMoved) {
     hero.Move(MOVE_RIGHT);
-    int i;
-    for (i = heroX - 1; i >= 0; i--) {
-        if (!Box::layerBox[heroY][i]) {
-            break;
+    if (isMoved) {
+        int i;
+        for (i = heroX - 1; i >= 0; i--) {
+            if (!Box::layerBox[heroY][i]) {
+                break;
+            }
         }
-    }
-    for (int j = heroX - 1; j > i; j--) {
-        Box::layerBox[heroY][j]->Move(MOVE_RIGHT);
+        for (int j = heroX - 1; j > i; j--) {
+            Box::layerBox[heroY][j]->Move(MOVE_RIGHT);
+        }
     }
     heroX++;
 }

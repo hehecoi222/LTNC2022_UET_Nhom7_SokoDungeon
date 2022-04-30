@@ -1,7 +1,3 @@
-// TODO: Create struct to save position in every step
-// Breakdown: What to save: Moves & Map
-// How: an 2D Map which save position of hero and boxes, and stack to save step
-
 #ifndef SAVE_GAME_H
 #define SAVE_GAME_H
 
@@ -10,6 +6,7 @@
 // Struct node to represent in Stack
 struct Node {
     int data;
+    bool isMoved;
     Node* next;
 };
 
@@ -43,16 +40,16 @@ class Savegame {
     // Push to stack
     void push(int data);
     // Pop from stack
-    int pop();
+    int pop(bool&);
     
     // Position of Hero in grid
     int heroX, heroY;
 
     // Shift position
-    void shiftUp(Hero& hero);
-    void shiftDown(Hero& hero);
-    void shiftLeft(Hero& hero);
-    void shiftRight(Hero& hero);
+    void shiftUp(Hero& hero, bool);
+    void shiftDown(Hero& hero, bool);
+    void shiftLeft(Hero& hero, bool);
+    void shiftRight(Hero& hero, bool);
 };
 
 #endif

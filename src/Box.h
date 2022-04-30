@@ -65,14 +65,10 @@ class Box {
     }
 
     // Found the collision between box
-    int collision(int direction) {
-        // If the box is colliding with the obj in the left direction
-        if (direction == NOT_MOVE) return direction;
-        int way = checkCollisionwithMap(MapGame::level0, *this, direction);
-        way = hitBox(*this, way);
-        Move(way);
-        return way;
-    }
+    int collision(int direction);
+
+    // Found the move of this box
+    static bool isMoved;
 
     // Move the box according to collision
     void Move(int direction);

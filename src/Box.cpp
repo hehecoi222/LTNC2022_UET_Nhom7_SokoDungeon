@@ -8,6 +8,7 @@
 LTexture Box::box;
 Box*** Box::layerBox = nullptr;
 int Box::boxCount = 0, Box::boxWinCount = 0;
+bool Box::isMoved = false;
 
 Box::Box() {
     // Initialize the variables
@@ -49,6 +50,15 @@ void Box::flushBoxLayer() {
     }
 }
 
+int Box::collision(int direction) {
+    // If the box is colliding with the obj in the left direction
+    if (direction == NOT_MOVE) return direction;
+    int way = checkCollisionwithMap(MapGame::level0, *this, direction);
+    way = hitBox(*this, way);
+    Move(way);
+    return way;
+}
+
 void Box::Move(int direction) {
     switch (direction) {
         case MOVE_LEFT:
@@ -62,6 +72,7 @@ void Box::Move(int direction) {
                 boxRender();
             }
             addBoxCount();
+            isMoved = true;
             break;
         case MOVE_RIGHT:
             layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH) + 1] =
@@ -74,6 +85,7 @@ void Box::Move(int direction) {
                 boxRender();
             }
             addBoxCount();
+            isMoved = true;
             break;
         case MOVE_UP:
             layerBox[(bDesPosY / BLOCK_WIDTH) - 1][(bDesPosX / BLOCK_WIDTH)] =
@@ -86,6 +98,7 @@ void Box::Move(int direction) {
                 boxRender();
             }
             addBoxCount();
+            isMoved = true;
             break;
         case MOVE_DOWN:
             layerBox[(bDesPosY / BLOCK_WIDTH) + 1][(bDesPosX / BLOCK_WIDTH)] =
@@ -98,6 +111,7 @@ void Box::Move(int direction) {
                 boxRender();
             }
             addBoxCount();
+            isMoved = true;
             break;
     }
 }
