@@ -8,8 +8,9 @@
 ## Đang chờ trong pull request
 - Collision map, box, hero
 - Winning state
+- Nút Undo
 
 ## Đang làm
 - Menu (Vượng)
 - Chuyển map (Dũng)
-- Save game (Hiếu)
+- Save game ra file (Hiếu)

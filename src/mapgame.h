@@ -6,11 +6,15 @@
 class MapGame
 {
 public:
+    //The dimensions of the map
+    static const int GRID_BLOCK_WIDTH = 32;
+    
     //load the map
     void LoadMap();
-
-
-private:
+    void preLoadMap();
+    //Map level0
+    static int** level0;
+private:    
     //destination to render
     SDL_Rect des0;
 
@@ -31,6 +35,5 @@ private:
     //ve chest
     LTexture chest;
 };
-
 
 #endif // MAP_H_INCLUDED

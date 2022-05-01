@@ -23,10 +23,10 @@ class Hero
 		void loadHeroIMG();
 
 		//Takes key presses and adjusts the hero's velocity
-		void heroHandleEvent( SDL_Event& e );
+		int heroHandleEvent( SDL_Event& e );
 
 		//Moves the hero according to key
-		void heroMove(int direction);
+		void Move(int direction);
 
 		//Shows the hero on the screen
 		void heroRender();
@@ -45,10 +45,13 @@ class Hero
 		LTexture *playerCurrentTex = &idleUp;
 
 		//Hero directions
-		int MOVE_RIGHT = 1;
-		int MOVE_LEFT = 2;
-		int MOVE_UP = 3;
-		int MOVE_DOWN = 4;
+		enum {
+			NOT_MOVE,
+			MOVE_UP,
+			MOVE_DOWN,
+			MOVE_LEFT,
+			MOVE_RIGHT
+		};
 
 		//player sprites frames
 		static const int PLAYER_FRAMES = 4;
@@ -70,7 +73,7 @@ class Hero
 		bool isMoving = false;
 		bool isAlive = true;
 
-
+		SDL_Rect playerRectDest;
 
 };
 #endif 
