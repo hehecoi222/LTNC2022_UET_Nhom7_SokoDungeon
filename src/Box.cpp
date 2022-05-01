@@ -4,11 +4,13 @@
 
 #include "find_res.h"
 #include "mapgame.h"
+#include "Game.h"
+#include "Savegame.h"
 
 LTexture Box::box;
 Box*** Box::layerBox = nullptr;
 int Box::boxCount = 0, Box::boxWinCount = 0;
-bool Box::isMoved = false;
+extern Savegame save;
 
 Box::Box() {
     // Initialize the variables
@@ -56,7 +58,12 @@ int Box::collision(int direction) {
     int way = checkCollisionwithMap(MapGame::level0, *this, direction);
     way = hitBox(*this, way);
     Move(way);
+    if (way) saveBoxinsave();
     return way;
+}
+
+void Box::saveBoxinsave() {
+    save.boxPush(bDesPosX/BLOCK_WIDTH, bDesPosY/BLOCK_WIDTH);
 }
 
 void Box::Move(int direction) {
@@ -72,7 +79,6 @@ void Box::Move(int direction) {
                 boxRender();
             }
             addBoxCount();
-            isMoved = true;
             break;
         case MOVE_RIGHT:
             layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH) + 1] =
@@ -85,7 +91,6 @@ void Box::Move(int direction) {
                 boxRender();
             }
             addBoxCount();
-            isMoved = true;
             break;
         case MOVE_UP:
             layerBox[(bDesPosY / BLOCK_WIDTH) - 1][(bDesPosX / BLOCK_WIDTH)] =
@@ -98,7 +103,6 @@ void Box::Move(int direction) {
                 boxRender();
             }
             addBoxCount();
-            isMoved = true;
             break;
         case MOVE_DOWN:
             layerBox[(bDesPosY / BLOCK_WIDTH) + 1][(bDesPosX / BLOCK_WIDTH)] =
@@ -111,7 +115,6 @@ void Box::Move(int direction) {
                 boxRender();
             }
             addBoxCount();
-            isMoved = true;
             break;
     }
 }

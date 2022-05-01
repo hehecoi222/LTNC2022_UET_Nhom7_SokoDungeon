@@ -67,11 +67,11 @@ class Box {
     // Found the collision between box
     int collision(int direction);
 
-    // Found the move of this box
-    static bool isMoved;
-
     // Move the box according to collision
     void Move(int direction);
+
+    // Return move to save game
+    void saveBoxinsave();
 
     // Shows the box on the screen
     void boxRender();

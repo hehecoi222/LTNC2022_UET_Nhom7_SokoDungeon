@@ -123,6 +123,7 @@ void Game::handleEvents() {
 void Game::update() {
     if (Box::winLevel()) {
         isRunning = false;
+        save.clear();
     }
 }
 

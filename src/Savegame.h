@@ -3,10 +3,16 @@
 
 #include "Hero.h"
 
+// NodeBox to save boxes that has collision
+struct NodeBox {
+    int x, y;
+    NodeBox* next;
+};
+
 // Struct node to represent in Stack
 struct Node {
-    int data;
-    bool isMoved;
+    int direction;
+    NodeBox* boxes;
     Node* next;
 };
 
@@ -19,6 +25,9 @@ class Savegame {
     Savegame();
     ~Savegame();
 
+    // Clear save game
+    void clear();
+
     // Get hero position to save
     void saveHeroPosition(int x, int y) {
         heroX = x/BLOCK_WIDTH;
@@ -27,6 +36,9 @@ class Savegame {
 
     // Record move
     void recordMove(int direction);
+
+    // Push to stack boxes
+    void boxPush(int x, int y);
 
     // Undo move
     void undoMove(Hero& hero);
@@ -37,19 +49,19 @@ class Savegame {
    private:
     // Stack to save step
     Node* movesStack;
+    // Temp boxes
+    NodeBox* tempBoxes;
     // Push to stack
-    void push(int data);
+    void push(int direction);
     // Pop from stack
-    int pop(bool&);
-    
+    int pop();
+    // Pop from stack boxes
+    void popBoxes();
     // Position of Hero in grid
     int heroX, heroY;
 
     // Shift position
-    void shiftUp(Hero& hero, bool);
-    void shiftDown(Hero& hero, bool);
-    void shiftLeft(Hero& hero, bool);
-    void shiftRight(Hero& hero, bool);
+    void shift(Hero& hero, int direction);
 };
 
 #endif
