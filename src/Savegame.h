@@ -25,6 +25,12 @@ class Savegame {
     Savegame();
     ~Savegame();
 
+    // To file all moves
+    void toFile(const char* filename);
+
+    // Load savefile
+    void loadSavefile(const char* filename, Hero& hero);
+
     // Clear save game
     void clear();
 

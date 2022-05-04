@@ -97,6 +97,7 @@ bool Game::loadMedia() {
 
     // Initialize save function
     save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
+    save.loadSavefile(FindRes::getPath("savefile","level0.skbsf"), mainHero);
 
     // Load map
     Map.loadFromFile(FindRes::getPath("img", "T002.png"));
@@ -163,6 +164,7 @@ void Game::close() {
     }
     delete[] Box::layerBox;
     delete[] MapGame::level0;
+    save.toFile(FindRes::getPath("savefile", "level0.skbsf"));
     // Quit SDL subsystems
     SDL_Quit();
     cout << "Game clear";

@@ -1,6 +1,9 @@
 #include "Savegame.h"
 
+#include <fstream>
+
 #include "Box.h"
+#include "Game.h"
 #include "Hero.h"
 #include "mapgame.h"
 
@@ -10,8 +13,38 @@ Savegame::Savegame() {
     heroX = heroY = 0;
 }
 
-Savegame::~Savegame() {
-    clear();
+Savegame::~Savegame() { clear(); }
+
+// Function reverse print stack to file
+void reversePrintStack(Node* stack, std::ostream& file) {
+    if (stack == nullptr) return;
+    reversePrintStack(stack->next, file);
+    file << stack->direction << " ";
+}
+
+void Savegame::toFile(const char* filename) {
+    std::ofstream fileSaveOut(filename);
+    if (fileSaveOut.is_open()) {
+        reversePrintStack(movesStack, fileSaveOut);
+    }
+    fileSaveOut.close();
+}
+
+void Savegame::loadSavefile(const char* filename, Hero& hero) {
+    std::ifstream fileSaveIn(filename);
+    if (fileSaveIn.is_open()) {
+        while (!fileSaveIn.eof()) {
+            int direction;
+            if (fileSaveIn) {
+                fileSaveIn >> direction;
+                direction =
+                    checkCollisionwithMap(MapGame::level0, hero, direction);
+                direction = Box::hitBox(hero, direction);
+                hero.Move(direction);
+                recordMove(direction);
+            }
+        }
+    }
 }
 
 void Savegame::clear() {
@@ -86,7 +119,7 @@ void Savegame::recordMove(int direction) {
 }
 
 void Savegame::undoMove(Hero& hero) {
-    int direction = (movesStack ? movesStack->direction : 0 );
+    int direction = (movesStack ? movesStack->direction : 0);
     switch (direction) {
         case NOT_MOVE:
             break;
