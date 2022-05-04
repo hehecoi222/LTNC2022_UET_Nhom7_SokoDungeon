@@ -14,7 +14,7 @@ extern Savegame save;
 
 Box::Box() {
     // Initialize the variables
-    bCurPosX = bDesPosX = 32;
+    bCurPosX = bDesPosX = 0;
     bCurPosY = bDesPosY = 0;
     bVelX = 0;
     bVelY = 0;
@@ -32,18 +32,18 @@ Box::Box(int x, int y) {
 
 void Box::loadBoxIMG() {
     Box::box.loadFromFile(FindRes::getPath("img", "box.png"));
-    layerBox = new Box**[20];
-    for (int i = 0; i < 20; i++) {
-        layerBox[i] = new Box*[25];
-        for (int j = 0; j < 25; j++) {
+    layerBox = new Box**[Game::GRID_HEIGHT];
+    for (int i = 0; i < Game::GRID_HEIGHT; i++) {
+        layerBox[i] = new Box*[Game::GRID_WIDTH];
+        for (int j = 0; j < Game::GRID_WIDTH; j++) {
             layerBox[i][j] = nullptr;
         }
     }
 }
 
 void Box::flushBoxLayer() {
-    for (int i = 0; i < 20; i++) {
-        for (int j = 0; j < 25; j++) {
+    for (int i = 0; i < Game::GRID_HEIGHT; i++) {
+        for (int j = 0; j < Game::GRID_WIDTH; j++) {
             if (layerBox[i][j] != nullptr) {
                 delete layerBox[i][j];
                 layerBox[i][j] = nullptr;
@@ -63,17 +63,17 @@ int Box::collision(int direction) {
 }
 
 void Box::saveBoxinsave() {
-    save.boxPush(bDesPosX/BLOCK_WIDTH, bDesPosY/BLOCK_WIDTH);
+    save.boxPush(bDesPosX/Game::BLOCK_WIDTH, bDesPosY/Game::BLOCK_WIDTH);
 }
 
 void Box::Move(int direction) {
     switch (direction) {
         case MOVE_LEFT:
-            layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH) - 1] =
-                layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)];
-            layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)] =
+            layerBox[(bDesPosY / Game::BLOCK_WIDTH)][(bDesPosX / Game::BLOCK_WIDTH) - 1] =
+                layerBox[(bDesPosY / Game::BLOCK_WIDTH)][(bDesPosX / Game::BLOCK_WIDTH)];
+            layerBox[(bDesPosY / Game::BLOCK_WIDTH)][(bDesPosX / Game::BLOCK_WIDTH)] =
                 nullptr;
-            bDesPosX -= BLOCK_WIDTH;
+            bDesPosX -= Game::BLOCK_WIDTH;
             while (bCurPosX != bDesPosX) {
                 bCurPosX -= BOX_VEL;
                 boxRender();
@@ -81,11 +81,11 @@ void Box::Move(int direction) {
             addBoxCount();
             break;
         case MOVE_RIGHT:
-            layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH) + 1] =
-                layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)];
-            layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)] =
+            layerBox[(bDesPosY / Game::BLOCK_WIDTH)][(bDesPosX / Game::BLOCK_WIDTH) + 1] =
+                layerBox[(bDesPosY / Game::BLOCK_WIDTH)][(bDesPosX / Game::BLOCK_WIDTH)];
+            layerBox[(bDesPosY / Game::BLOCK_WIDTH)][(bDesPosX / Game::BLOCK_WIDTH)] =
                 nullptr;
-            bDesPosX += BLOCK_WIDTH;
+            bDesPosX += Game::BLOCK_WIDTH;
             while (bCurPosX != bDesPosX) {
                 bCurPosX += BOX_VEL;
                 boxRender();
@@ -93,11 +93,11 @@ void Box::Move(int direction) {
             addBoxCount();
             break;
         case MOVE_UP:
-            layerBox[(bDesPosY / BLOCK_WIDTH) - 1][(bDesPosX / BLOCK_WIDTH)] =
-                layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)];
-            layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)] =
+            layerBox[(bDesPosY / Game::BLOCK_WIDTH) - 1][(bDesPosX / Game::BLOCK_WIDTH)] =
+                layerBox[(bDesPosY / Game::BLOCK_WIDTH)][(bDesPosX / Game::BLOCK_WIDTH)];
+            layerBox[(bDesPosY / Game::BLOCK_WIDTH)][(bDesPosX / Game::BLOCK_WIDTH)] =
                 nullptr;
-            bDesPosY -= BLOCK_WIDTH;
+            bDesPosY -= Game::BLOCK_WIDTH;
             while (bCurPosY != bDesPosY) {
                 bCurPosY -= BOX_VEL;
                 boxRender();
@@ -105,11 +105,11 @@ void Box::Move(int direction) {
             addBoxCount();
             break;
         case MOVE_DOWN:
-            layerBox[(bDesPosY / BLOCK_WIDTH) + 1][(bDesPosX / BLOCK_WIDTH)] =
-                layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)];
-            layerBox[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)] =
+            layerBox[(bDesPosY / Game::BLOCK_WIDTH) + 1][(bDesPosX / Game::BLOCK_WIDTH)] =
+                layerBox[(bDesPosY / Game::BLOCK_WIDTH)][(bDesPosX / Game::BLOCK_WIDTH)];
+            layerBox[(bDesPosY / Game::BLOCK_WIDTH)][(bDesPosX / Game::BLOCK_WIDTH)] =
                 nullptr;
-            bDesPosY += BLOCK_WIDTH;
+            bDesPosY += Game::BLOCK_WIDTH;
             while (bCurPosY != bDesPosY) {
                 bCurPosY += BOX_VEL;
                 boxRender();
@@ -120,7 +120,7 @@ void Box::Move(int direction) {
 }
 
 void Box::checkWin(int** level) {
-    if (level[(bDesPosY / BLOCK_WIDTH)][(bDesPosX / BLOCK_WIDTH)] == 10) {
+    if (level[(bDesPosY / Game::BLOCK_WIDTH)][(bDesPosX / Game::BLOCK_WIDTH)] == 10) {
         bWin = true;
     } else {
         bWin = false;
@@ -142,8 +142,8 @@ void Box::boxRender() {
 }
 
 void Box::layerBoxRender() {
-    for (int i = 0; i < 20; i++) {
-        for (int j = 0; j < 25; j++) {
+    for (int i = 0; i < Game::GRID_HEIGHT; i++) {
+        for (int j = 0; j < Game::GRID_WIDTH; j++) {
             if (layerBox[i][j]) layerBox[i][j]->boxRender();
         }
     }

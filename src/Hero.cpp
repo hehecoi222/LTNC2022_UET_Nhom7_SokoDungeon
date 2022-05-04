@@ -5,8 +5,8 @@
 #include "mapgame.h"
 
 Hero::Hero() {
-    hCurPosX = 32;
-    hCurPosY = 32;
+    hCurPosX = Game::BLOCK_WIDTH;
+    hCurPosY = Game::BLOCK_WIDTH;
 
     hDesPosX = hCurPosX;
     hDesPoxY = hCurPosY;
@@ -14,7 +14,7 @@ Hero::Hero() {
     hVelX = 0;
     hVelY = 0;
 
-    playerRectDest = {0, 0, HERO_WIDTH * 2, HERO_HEIGHT * 2};
+    playerRectDest = {0, 0, Game::BLOCK_WIDTH * 2, Game::BLOCK_WIDTH * 2};
 
     playerCurrentTex = new LTexture();
     playerCurrentTex = &idleDown;
@@ -86,7 +86,7 @@ int Hero::heroHandleEvent(SDL_Event& e) {
 void Hero::Move(int direction) {
     switch (direction) {
         case MOVE_RIGHT:
-            hDesPosX += BLOCK_WIDTH;
+            hDesPosX += Game::BLOCK_WIDTH;
             playerCurrentTex = &walkRight;
             while (hCurPosX != hDesPosX) {
                 hCurPosX += HERO_VEL;
@@ -95,7 +95,7 @@ void Hero::Move(int direction) {
             playerCurrentTex = &idleRight;
             break;
         case MOVE_LEFT:
-            hDesPosX -= BLOCK_WIDTH;
+            hDesPosX -= Game::BLOCK_WIDTH;
             playerCurrentTex = &walkLeft;
             while (hCurPosX != hDesPosX) {
                 hCurPosX -= HERO_VEL;
@@ -104,7 +104,7 @@ void Hero::Move(int direction) {
             playerCurrentTex = &idleLeft;
             break;
         case MOVE_UP:
-            hDesPoxY -= BLOCK_WIDTH;
+            hDesPoxY -= Game::BLOCK_WIDTH;
             playerCurrentTex = &walkUp;
             while (hCurPosY != hDesPoxY) {
                 hCurPosY -= HERO_VEL;
@@ -113,7 +113,7 @@ void Hero::Move(int direction) {
             playerCurrentTex = &idleUp;
             break;
         case MOVE_DOWN:
-            hDesPoxY += BLOCK_WIDTH;
+            hDesPoxY += Game::BLOCK_WIDTH;
             playerCurrentTex = &walkDown;
             while (hCurPosY != hDesPoxY) {
                 hCurPosY += HERO_VEL;

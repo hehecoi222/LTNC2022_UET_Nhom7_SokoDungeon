@@ -9,13 +9,11 @@ using namespace std;
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
-class Game{
-private:
+class Game {
+   private:
     int cnt =0;
     bool isRunning = true;
     SDL_Window* gWindow = NULL;
-    int SCREEN_WIDTH = 800;
-    int SCREEN_HEIGHT = 640;
 
 public:
     Game();
@@ -36,14 +34,20 @@ public:
 
     static TTF_Font* gFont;
 
-    int getScreenW(){return SCREEN_WIDTH;}
-    int getScreenH() {return SCREEN_HEIGHT;}
+    int getScreenW(){return WINDOW_WIDTH;}
+    int getScreenH() {return WINDOW_HEIGHT;}
+
+    static const int GRID_WIDTH = 20;
+    static const int GRID_HEIGHT = 20;
+    static const int BLOCK_WIDTH = 32;
+    static const int WINDOW_WIDTH = GRID_WIDTH*BLOCK_WIDTH;
+    static const int WINDOW_HEIGHT = GRID_HEIGHT*BLOCK_WIDTH;
 };
 
 template <class T> int checkCollisionwithMap(int** level, T& obj, int direction) {
     if (direction == obj.NOT_MOVE) return direction;
-    int objX = obj.getCurX()/obj.BLOCK_WIDTH;
-    int objY = obj.getCurY()/obj.BLOCK_WIDTH;
+    int objX = obj.getCurX()/Game::BLOCK_WIDTH;
+    int objY = obj.getCurY()/Game::BLOCK_WIDTH;
     switch (direction) {
         case obj.MOVE_LEFT:
             objX--;
