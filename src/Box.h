@@ -101,7 +101,7 @@ class Box {
     bool bWin = false;
 
     // Check winning state
-    void checkWin(int**);
+    void checkWin(char**);
 
     // Add up in boxCount
     void addBoxCount();

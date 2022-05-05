@@ -119,8 +119,8 @@ void Box::Move(int direction) {
     }
 }
 
-void Box::checkWin(int** level) {
-    if (level[(bDesPosY / Game::BLOCK_WIDTH)][(bDesPosX / Game::BLOCK_WIDTH)] == 10) {
+void Box::checkWin(char** level) {
+    if (level[(bDesPosY / Game::BLOCK_WIDTH)][(bDesPosX / Game::BLOCK_WIDTH)] == '.') {
         bWin = true;
     } else {
         bWin = false;

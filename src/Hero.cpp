@@ -5,8 +5,8 @@
 #include "mapgame.h"
 
 Hero::Hero() {
-    hCurPosX = Game::BLOCK_WIDTH;
-    hCurPosY = Game::BLOCK_WIDTH;
+    hCurPosX = 4*Game::BLOCK_WIDTH;
+    hCurPosY = 2*Game::BLOCK_WIDTH;
 
     hDesPosX = hCurPosX;
     hDesPoxY = hCurPosY;

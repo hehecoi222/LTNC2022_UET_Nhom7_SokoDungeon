@@ -10,7 +10,7 @@ public:
     void LoadMap();
     void preLoadMap();
     //Map level0
-    static int** level0;
+    static char** level0;
 private:    
     //destination to render
     SDL_Rect des0;
