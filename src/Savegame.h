@@ -2,6 +2,7 @@
 #define SAVE_GAME_H
 
 #include "Hero.h"
+#include "Game.h"
 
 // NodeBox to save boxes that has collision
 struct NodeBox {
@@ -18,9 +19,6 @@ struct Node {
 
 class Savegame {
    public:
-    // Width of a block
-    static const int BLOCK_WIDTH = 32;
-
     // Initialize the stack
     Savegame();
     ~Savegame();
@@ -36,8 +34,8 @@ class Savegame {
 
     // Get hero position to save
     void saveHeroPosition(int x, int y) {
-        heroX = x/BLOCK_WIDTH;
-        heroY = y/BLOCK_WIDTH;
+        heroX = x/Game::BLOCK_WIDTH;
+        heroY = y/Game::BLOCK_WIDTH;
     }
 
     // Record move
