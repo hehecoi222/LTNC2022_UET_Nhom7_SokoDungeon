@@ -5,17 +5,15 @@
 using namespace std;
 //Using SDL, SDL_image, standard IO, and strings
 
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_ttf.h>
-#include <SDL_mixer.h>
-class Game{
-private:
-    int cnt =0;
+#include <SDL2\SDL.h>
+#include <SDL2\SDL_image.h>
+#include <SDL2\SDL_ttf.h>
+#include <SDL2\SDL_mixer.h>
+class Game {
+   private:
+    int cnt = 0;
     bool isRunning = true;
     SDL_Window* gWindow = NULL;
-    int SCREEN_WIDTH = 800;
-    int SCREEN_HEIGHT = 640;
 
 public:
     Game();
@@ -36,14 +34,20 @@ public:
 
     static TTF_Font* gFont;
 
-    int getScreenW(){return SCREEN_WIDTH;}
-    int getScreenH() {return SCREEN_HEIGHT;}
+    int getScreenW(){return WINDOW_WIDTH;}
+    int getScreenH() {return WINDOW_HEIGHT;}
+
+    static const int GRID_WIDTH = 15;
+    static const int GRID_HEIGHT = 15;
+    static const int BLOCK_WIDTH = 32;
+    static const int WINDOW_WIDTH = GRID_WIDTH*BLOCK_WIDTH;
+    static const int WINDOW_HEIGHT = GRID_HEIGHT*BLOCK_WIDTH;
 };
 
 template <class T> int checkCollisionwithMap(char** level, T& obj, int direction) {
     if (direction == obj.NOT_MOVE) return direction;
-    int objX = obj.getCurX()/obj.BLOCK_WIDTH;
-    int objY = obj.getCurY()/obj.BLOCK_WIDTH;
+    int objX = obj.getCurX()/Game::BLOCK_WIDTH;
+    int objY = obj.getCurY()/Game::BLOCK_WIDTH;
     switch (direction) {
         case obj.MOVE_LEFT:
             objX--;
@@ -61,10 +65,7 @@ template <class T> int checkCollisionwithMap(char** level, T& obj, int direction
             return direction;
     }
     switch (level[objY][objX]) {
-        case 1:
-        case 2:
-        case 20:
-        case 3:
+        case '#':
             return obj.NOT_MOVE;
             break;
         default:
