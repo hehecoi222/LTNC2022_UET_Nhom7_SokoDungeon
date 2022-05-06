@@ -10,7 +10,7 @@ Hero::Hero() {
 
     hDesPosX = hCurPosX;
     hDesPoxY = hCurPosY;
-
+   
     hVelX = 0;
     hVelY = 0;
 
@@ -32,6 +32,7 @@ void Hero::loadHeroIMG() {
     walkUp.loadFromFile(FindRes::getPath("img", "wUp.png"));
     walkLeft.loadFromFile(FindRes::getPath("img", "wLeft.png"));
     walkRight.loadFromFile(FindRes::getPath("img", "wRight.png"));
+    
     for (int i = 0; i < PLAYER_FRAMES; i++) {
         playerCurrentFrame[i].x = (i * 64) + 16;
         playerCurrentFrame[i].y = 16;
