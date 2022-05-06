@@ -17,6 +17,7 @@ Hero mainHero;
 LTexture Map;
 MapGame Game0;
 SDL_Rect Mapblock;
+
 Savegame save;
 
 Game::Game() {}
@@ -38,8 +39,8 @@ bool Game::init() {
 
         // Create window
         gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED,
-                                   SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
-                                   SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+                                   SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH,
+                                   WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
         if (gWindow == NULL) {
             printf("Window could not be created! %s\n", SDL_GetError());
             success = false;
@@ -99,9 +100,7 @@ bool Game::loadMedia() {
     save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
 
     // Load map
-    Map.loadFromFile(FindRes::getPath("img", "T002.png"));
     Game0.preLoadMap();
-    save.loadSavefile(FindRes::getPath("savefile","level0.skbsf"), mainHero);
 
     return success;
 }
@@ -116,6 +115,10 @@ void Game::handleEvents() {
             isRunning = false;
         } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_r && e.key.repeat == 0) {
             save.undoMove(mainHero);
+        } else if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_SPACE && e.key.repeat == 0) {
+            Game0.NextMap();
+            loadMedia();
+            render();
         } else {
             save.recordMove(mainHero.heroHandleEvent(e));
         }
@@ -124,7 +127,6 @@ void Game::handleEvents() {
 void Game::update() {
     if (Box::winLevel()) {
         isRunning = false;
-        save.clear();
     }
 }
 
@@ -135,7 +137,6 @@ void Game::render() {
 
     // render map
     Map.render(300, 300, &Mapblock);
-
     // Load Mapgame0
     Game0.LoadMap();
     // Render player
@@ -155,8 +156,8 @@ void Game::close() {
     gWindow = NULL;
     gRenderer = NULL;
     Box::box.free();
-    for (int i = 0; i < 20; i++) {
-        for (int j = 0; j < 25; j++) {
+    for (int i = 0; i < 15; i++) {
+        for (int j = 0; j < 15; j++) {
             delete Box::layerBox[i][j];
         }
         delete[] Box::layerBox[i];
@@ -164,7 +165,6 @@ void Game::close() {
     }
     delete[] Box::layerBox;
     delete[] MapGame::level0;
-    save.toFile(FindRes::getPath("savefile", "level0.skbsf"));
     // Quit SDL subsystems
     SDL_Quit();
     cout << "Game clear";
