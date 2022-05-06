@@ -6,14 +6,11 @@
 class MapGame
 {
 public:
-    //The dimensions of the map
-    static const int GRID_BLOCK_WIDTH = 32;
-    
     //load the map
     void LoadMap();
     void preLoadMap();
     //Map level0
-    static int** level0;
+    static char** level0;
 private:    
     //destination to render
     SDL_Rect des0;

@@ -14,7 +14,6 @@ TTF_Font* Game::gFont = nullptr;
 Hero mainHero;
 
 // Map
-LTexture Map;
 MapGame Game0;
 SDL_Rect Mapblock;
 Savegame save;
@@ -38,8 +37,8 @@ bool Game::init() {
 
         // Create window
         gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED,
-                                   SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
-                                   SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+                                   SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH,
+                                   WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
         if (gWindow == NULL) {
             printf("Window could not be created! %s\n", SDL_GetError());
             success = false;
@@ -99,7 +98,6 @@ bool Game::loadMedia() {
     save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
 
     // Load map
-    Map.loadFromFile(FindRes::getPath("img", "T002.png"));
     Game0.preLoadMap();
     save.loadSavefile(FindRes::getPath("savefile","level0.skbsf"), mainHero);
 
@@ -133,9 +131,6 @@ void Game::render() {
     SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
     SDL_RenderClear(gRenderer);
 
-    // render map
-    Map.render(300, 300, &Mapblock);
-
     // Load Mapgame0
     Game0.LoadMap();
     // Render player
@@ -155,8 +150,8 @@ void Game::close() {
     gWindow = NULL;
     gRenderer = NULL;
     Box::box.free();
-    for (int i = 0; i < 20; i++) {
-        for (int j = 0; j < 25; j++) {
+    for (int i = 0; i < GRID_HEIGHT; i++) {
+        for (int j = 0; j < GRID_WIDTH; j++) {
             delete Box::layerBox[i][j];
         }
         delete[] Box::layerBox[i];

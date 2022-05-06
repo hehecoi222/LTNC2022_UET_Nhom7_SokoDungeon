@@ -12,7 +12,6 @@ class Hero
 		static const int HERO_HEIGHT = 32;
 
 		//Maximum axis velocity of the HERO
-		static const int BLOCK_WIDTH = 32;
 		static const int HERO_VEL = 4;
 
 		//Initializes the variables

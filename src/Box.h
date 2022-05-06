@@ -13,7 +13,6 @@ class Box {
     static const int BOX_HEIGHT = 32;
 
     // Maximum axis velocity of the BOX
-    static const int BLOCK_WIDTH = 32;
     static const int BOX_VEL = 4;
 
     // Initializes the variables
@@ -40,8 +39,8 @@ class Box {
     template <class T>
     static int hitBox(T& obj, int direction) {
         if (direction == obj.NOT_MOVE) return direction;
-        int objX = obj.getCurX() / obj.BLOCK_WIDTH;
-        int objY = obj.getCurY() / obj.BLOCK_WIDTH;
+        int objX = obj.getCurX() / Game::BLOCK_WIDTH;
+        int objY = obj.getCurY() / Game::BLOCK_WIDTH;
         switch (direction) {
             case obj.MOVE_LEFT:
                 objX--;
@@ -102,7 +101,7 @@ class Box {
     bool bWin = false;
 
     // Check winning state
-    void checkWin(int**);
+    void checkWin(char**);
 
     // Add up in boxCount
     void addBoxCount();
