@@ -3,7 +3,7 @@
 #include "Game.h"
 #include "Texture.h"
 #include "find_res.h"
-
+#include "utility"
 class Hero
 {
     public:
@@ -64,7 +64,7 @@ class Hero
 		int hCurPosX, hCurPosY;
 
 		//The hero destination position after moving
-		int hDesPosX, hDesPoxY;
+		int hDesPosX, hDesPosY;
 
 		//The velocity of the hero
 		int hVelX, hVelY;
