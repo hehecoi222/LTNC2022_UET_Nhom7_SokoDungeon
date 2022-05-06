@@ -3,13 +3,11 @@
 #include "Game.h"
 #include "find_res.h"
 #include "mapgame.h"
+ 
 
 Hero::Hero() {
-    hCurPosX = 32;
-    hCurPosY = 32;
-
-    hDesPosX = hCurPosX;
-    hDesPoxY = hCurPosY;
+    hCurPosX = hDesPosX = 5*32;
+    hCurPosY = hDesPosY = 2*32;
 
     hVelX = 0;
     hVelY = 0;
@@ -45,7 +43,6 @@ int Hero::heroHandleEvent(SDL_Event& e) {
     if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
         // Adjust the velocity
         switch (e.key.keysym.sym)
-
         {
             case SDLK_w:
             case SDLK_UP:
@@ -104,18 +101,18 @@ void Hero::Move(int direction) {
             playerCurrentTex = &idleLeft;
             break;
         case MOVE_UP:
-            hDesPoxY -= BLOCK_WIDTH;
+            hDesPosY -= BLOCK_WIDTH;
             playerCurrentTex = &walkUp;
-            while (hCurPosY != hDesPoxY) {
+            while (hCurPosY != hDesPosY) {
                 hCurPosY -= HERO_VEL;
                 heroRender();
             }
             playerCurrentTex = &idleUp;
             break;
         case MOVE_DOWN:
-            hDesPoxY += BLOCK_WIDTH;
+            hDesPosY += BLOCK_WIDTH;
             playerCurrentTex = &walkDown;
-            while (hCurPosY != hDesPoxY) {
+            while (hCurPosY != hDesPosY) {
                 hCurPosY += HERO_VEL;
                 heroRender();
             }
