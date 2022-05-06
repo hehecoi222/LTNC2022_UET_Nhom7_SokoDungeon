@@ -3,7 +3,7 @@
 #include "Game.h"
 #include "Texture.h"
 #include "find_res.h"
-#include "utility"
+
 class Hero
 {
     public:
