@@ -4,10 +4,12 @@
 #include "find_res.h"
 #include "mapgame.h"
  
+int Hero::pos_x = 0;
+int Hero::pos_y = 0;
 
 Hero::Hero() {
-    hCurPosX = hDesPosX = 5*32;
-    hCurPosY = hDesPosY = 2*32;
+    hCurPosX = hDesPosX = pos_x;
+    hCurPosY = hDesPosY = pos_y;
 
     hVelX = 0;
     hVelY = 0;
@@ -18,6 +20,11 @@ Hero::Hero() {
     playerCurrentTex = &idleDown;
 }
 
+void Hero::setpos()
+{
+    hCurPosX = hDesPosX = pos_x;
+    hCurPosY = hDesPosY = pos_y;
+}
 void Hero::loadHeroIMG() {
     idleDown.loadFromFile(FindRes::getPath("img", "idown.png"));
     idleDown.loadFromFile(FindRes::getPath("img", "idown.png"));
@@ -87,6 +94,7 @@ void Hero::Move(int direction) {
             playerCurrentTex = &walkRight;
             while (hCurPosX != hDesPosX) {
                 hCurPosX += HERO_VEL;
+                Mix_PlayChannel(-1, Game::gHero, 0);
                 heroRender();
             }
             playerCurrentTex = &idleRight;
@@ -96,6 +104,7 @@ void Hero::Move(int direction) {
             playerCurrentTex = &walkLeft;
             while (hCurPosX != hDesPosX) {
                 hCurPosX -= HERO_VEL;
+                Mix_PlayChannel(-1, Game::gHero, 0);
                 heroRender();
             }
             playerCurrentTex = &idleLeft;
@@ -105,6 +114,7 @@ void Hero::Move(int direction) {
             playerCurrentTex = &walkUp;
             while (hCurPosY != hDesPosY) {
                 hCurPosY -= HERO_VEL;
+                Mix_PlayChannel(-1, Game::gHero, 0);
                 heroRender();
             }
             playerCurrentTex = &idleUp;
@@ -114,6 +124,7 @@ void Hero::Move(int direction) {
             playerCurrentTex = &walkDown;
             while (hCurPosY != hDesPosY) {
                 hCurPosY += HERO_VEL;
+                Mix_PlayChannel(-1, Game::gHero, 0);
                 heroRender();
             }
             playerCurrentTex = &idleDown;
