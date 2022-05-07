@@ -5,19 +5,20 @@
 #include "find_res.h"
 #include "Hero.h"
 
+
 char** MapGame::level0 = nullptr;
 MapGame::MapGame()
 {
     //Initialize variable of the level0
-    currentmap = 0;
+    current_map = 0;
     map = "level0.smap";
     //destination x, y position of the image to render
     des0.x = des0.y = 0;
-    des0.w = des0.h = GRID_BLOCK_WIDTH;
+    des0.w = des0.h = GRID_BLOCK_WIDTH;    
 }
 void MapGame::preLoadMap() {
     // load the current map
-    switch(currentmap)
+    switch(current_map)
     {
         case 0:
             map[5] = '0';
@@ -43,10 +44,11 @@ void MapGame::preLoadMap() {
                 Box::layerBox[i][j] = new Box(j * Box::BOX_WIDTH, i * Box::BOX_WIDTH);
                 Box::boxCount++;
             }
-       /*     else if(level0[i][j] == '@')
+            else if(level0[i][j] == '@')
             {
-                
-            }*/
+                Hero::pos_x = j * GRID_BLOCK_WIDTH;
+                Hero::pos_y = i * GRID_BLOCK_WIDTH;
+            }
         }
         char temp;
         file.read(&temp, 1);
@@ -59,7 +61,8 @@ void MapGame::preLoadMap() {
 }
 
 void MapGame::LoadMap() {
-    for (int i = 0; i < 15; i++) {
+   
+   for (int i = 0; i < 15; i++) {
         for (int j = 0; j < 15; j++) {
             switch (level0[i][j]) {
                 case '#': 
@@ -79,12 +82,14 @@ void MapGame::LoadMap() {
 void MapGame::NextMap()
 {
     //increase the map level
-    currentmap++;
-    cout<<currentmap;
+    current_map++;
+    cout<<current_map;
 }
 
-void MapGame::PrevMap()
+void MapGame::PresVic()
 {
-    //decrease the map level
-    currentmap--;
+    des1.x = des1.y = 0;
+    des1.w = des1.h = GRID_BLOCK_WIDTH * 15;
+    Victory.loadFromFile(FindRes::getPath("img", "Victory.png"));
+    Victory.render(0, 0, nullptr, &des1);
 }
