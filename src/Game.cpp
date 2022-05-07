@@ -9,7 +9,10 @@
 
 SDL_Renderer* Game::gRenderer = nullptr;
 TTF_Font* Game::gFont = nullptr;
-
+Mix_Music* Game::gVictory = nullptr;
+Mix_Music* Game::gMusic = nullptr;
+Mix_Chunk* Game::gBox = NULL;
+Mix_Chunk* Game::gHero = NULL;
 // init main character
 Hero mainHero;
 
@@ -38,7 +41,7 @@ bool Game::init() {
         }
 
         // Create window
-        gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED,
+        gWindow = SDL_CreateWindow("Sokoban", SDL_WINDOWPOS_UNDEFINED,
                                    SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH,
                                    WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
         if (gWindow == NULL) {
@@ -88,9 +91,13 @@ bool Game::init() {
 bool Game::loadMedia() {
     bool success = true;
 
-    Game::gFont = TTF_OpenFont("font/AV.ttf", 28);
+    Game::gFont = TTF_OpenFont(FindRes::getPath("font", "lazy.ttf"), 28);
     SDL_Color textColor = {0, 0, 0, 255};
-
+    //Load sound
+    gVictory = Mix_LoadMUS(FindRes::getPath("audio", "Victory.wav"));
+    gHero = Mix_LoadWAV(FindRes::getPath("audio", "Footsteps.wav"));
+    gBox = Mix_LoadWAV(FindRes::getPath("audio", "box.wav"));
+    gMusic = Mix_LoadMUS(FindRes::getPath("", ""));
     // load Hero img
     mainHero.loadHeroIMG();
     // load Box img
@@ -101,7 +108,7 @@ bool Game::loadMedia() {
 
     // Load map
     Game0.preLoadMap();
-
+    mainHero.setpos();
     return success;
 }
 
@@ -115,10 +122,6 @@ void Game::handleEvents() {
             isRunning = false;
         } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_r && e.key.repeat == 0) {
             save.undoMove(mainHero);
-        } else if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_SPACE && e.key.repeat == 0) {
-            Game0.NextMap();
-            loadMedia();
-            render();
         } else {
             save.recordMove(mainHero.heroHandleEvent(e));
         }
@@ -126,7 +129,13 @@ void Game::handleEvents() {
 }
 void Game::update() {
     if (Box::winLevel()) {
-        isRunning = false;
+        Game0.NextMap();
+        Game0.PresVic();
+        SDL_RenderPresent(gRenderer);
+        Mix_PlayMusic(gVictory, -1);
+        SDL_Delay(2000);
+        Mix_HaltMusic();
+        loadMedia();
     }
 }
 
@@ -134,9 +143,7 @@ void Game::render() {
     // Clear screen
     SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
     SDL_RenderClear(gRenderer);
-
-    // render map
-    Map.render(300, 300, &Mapblock);
+    
     // Load Mapgame0
     Game0.LoadMap();
     // Render player
@@ -144,7 +151,7 @@ void Game::render() {
 
     // Render box
     Box::layerBoxRender();
-
+    
     // Update Screen
     SDL_RenderPresent(gRenderer);
 }
@@ -153,6 +160,12 @@ void Game::close() {
     // Destroy window
     SDL_DestroyRenderer(gRenderer);
     SDL_DestroyWindow(gWindow);
+    // Free the sound effects
+    Mix_FreeMusic(gVictory);
+    Mix_FreeChunk(gHero);
+    Mix_FreeChunk(gBox);
+    gVictory = NULL;
+    gHero = gBox =NULL;
     gWindow = NULL;
     gRenderer = NULL;
     Box::box.free();
