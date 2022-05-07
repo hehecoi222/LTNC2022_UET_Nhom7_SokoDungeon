@@ -17,27 +17,26 @@ public:
     static char** level0;
     //Change to the Next Map
     void NextMap();
-    //Change to the previous Map
-    void PrevMap();
     //Current map of game
-    int currentmap;
+    int current_map;
     //name of the level
     string map;
+    //Present Victory
+    void PresVic();
     
 private:    
-    //destination to render
+    //destination x, y and width, height of the floor, wall, Goal
     SDL_Rect des0;
-
+    //destination x, y and width, height of the Victory image
+    SDL_Rect des1;
     //Draw the floor 
     LTexture floor;
-
     //Draw the wall
     LTexture wall;
-
     //Draw goal position of the box to win 
     LTexture Goal;
-
-    
+    //Draw Victory image
+    LTexture Victory;
 };
 
 #endif // MAP_H_INCLUDED
