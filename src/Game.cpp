@@ -162,5 +162,5 @@ void Game::close() {
     save.toFile(FindRes::getPath("savefile", "level0.skbsf"));
     // Quit SDL subsystems
     SDL_Quit();
-    cout << "Game clear";
+    cout << "Game clear" << endl;
 }
