@@ -3,7 +3,8 @@
 ## Đã hoàn thành:
 - Load Game
 - Map hiển thị
-- Có Hero
+- Hero (thiếu âm thanh)
+- Box + Cơ chế hoạt động 
 
 ## Đang chờ trong pull request
 - Collision map, box, hero
