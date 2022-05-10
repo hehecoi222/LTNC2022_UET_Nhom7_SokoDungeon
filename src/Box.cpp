@@ -18,7 +18,7 @@ Box::Box() {
     bCurPosY = bDesPosY = 0;
     bVelX = 0;
     bVelY = 0;
-    bRectDest = {0, 0, BOX_WIDTH, BOX_HEIGHT};
+    bRectDest = {0, 0, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
 }
 
 Box::Box(int x, int y) {
@@ -27,7 +27,7 @@ Box::Box(int x, int y) {
     bCurPosY = bDesPosY = y;
     bVelX = 0;
     bVelY = 0;
-    bRectDest = {0, 0, BOX_WIDTH, BOX_HEIGHT};
+    bRectDest = {0, 0, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
 }
 
 void Box::loadBoxIMG() {
