@@ -50,6 +50,7 @@ void Box::flushBoxLayer() {
             }
         }
     }
+    boxCount = boxWinCount = 0;  
 }
 
 int Box::collision(int direction) {

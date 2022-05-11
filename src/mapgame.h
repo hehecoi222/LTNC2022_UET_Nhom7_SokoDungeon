@@ -21,6 +21,9 @@ public:
     string map;
     //Present Victory
     void PresVic();
+
+    // clear map
+    void clear();
     
 private:    
     //destination x, y and width, height of the floor, wall, Goal

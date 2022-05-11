@@ -121,6 +121,9 @@ void Game::handleEvents() {
             isRunning = false;
         } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_r && e.key.repeat == 0) {
             save.undoMove(mainHero);
+        } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_n && e.key.repeat == 0) {
+            Game0.NextMap();
+            loadMedia();
         } else {
             save.recordMove(mainHero.heroHandleEvent(e));
         }

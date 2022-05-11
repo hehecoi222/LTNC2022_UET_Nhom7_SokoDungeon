@@ -17,6 +17,7 @@ MapGame::MapGame()
     des0.w = des0.h = Game::BLOCK_WIDTH;    
 }
 void MapGame::preLoadMap() {
+    clear();
     // load the current map
     switch(current_map)
     {
@@ -31,6 +32,8 @@ void MapGame::preLoadMap() {
             break;
         case 3:
             map[5] = '3';
+            break;
+        default:
             break;
     }
     //using file operation to load
@@ -52,6 +55,7 @@ void MapGame::preLoadMap() {
         }
         char temp;
         file.read(&temp, 1);
+        if (current_map != 0 ) file.read(&temp, 1);
     }
     file.close();
     //load image from folder img
@@ -84,12 +88,26 @@ void MapGame::NextMap()
     //increase the map level
     current_map++;
     cout<<current_map;
+    clear();
+}
+
+void MapGame::clear() {
+    if (!level0) {
+        return;
+    }
+    for (int i = 0; i < Game::GRID_HEIGHT; i++) {
+        delete[] level0[i];
+    }
+    delete[] level0;
+    level0 = nullptr;
+    Box::flushBoxLayer();
 }
 
 void MapGame::PresVic()
 {
     des1.x = des1.y = 0;
-    des1.w = des1.h = GRID_BLOCK_WIDTH * 15;
+    des1.w = Game::BLOCK_WIDTH * Game::GRID_WIDTH;
+    des1.h = Game::BLOCK_WIDTH * Game::GRID_HEIGHT;
     Victory.loadFromFile(FindRes::getPath("img", "Victory.png"));
     Victory.render(0, 0, nullptr, &des1);
 }
