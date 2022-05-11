@@ -3,7 +3,7 @@
 #include "Game.h"
 #include "Texture.h"
 #include "find_res.h"
-
+#include "utility"
 class Hero
 {
     public:
@@ -57,13 +57,18 @@ class Hero
 		SDL_Rect playerCurrentFrame[PLAYER_FRAMES];
 		int frame = 0;
 
+		//Initial Position of Hero
+		static int pos_x;
+		static int pos_y;
+		//set position for each level
+		void setpos();
     private:
 
 		//The X and Y offsets of the hero
 		int hCurPosX, hCurPosY;
 
 		//The hero destination position after moving
-		int hDesPosX, hDesPoxY;
+		int hDesPosX, hDesPosY;
 
 		//The velocity of the hero
 		int hVelX, hVelY;

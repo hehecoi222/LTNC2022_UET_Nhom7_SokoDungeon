@@ -3,13 +3,13 @@
 #include "Game.h"
 #include "find_res.h"
 #include "mapgame.h"
+ 
+int Hero::pos_x = 0;
+int Hero::pos_y = 0;
 
 Hero::Hero() {
-    hCurPosX = 4*Game::BLOCK_WIDTH;
-    hCurPosY = 2*Game::BLOCK_WIDTH;
-
-    hDesPosX = hCurPosX;
-    hDesPoxY = hCurPosY;
+    hCurPosX = hDesPosX = pos_x;
+    hCurPosY = hDesPosY = pos_y;
 
     hVelX = 0;
     hVelY = 0;
@@ -20,6 +20,11 @@ Hero::Hero() {
     playerCurrentTex = &idleDown;
 }
 
+void Hero::setpos()
+{
+    hCurPosX = hDesPosX = pos_x;
+    hCurPosY = hDesPosY = pos_y;
+}
 void Hero::loadHeroIMG() {
     idleDown.loadFromFile(FindRes::getPath("img", "idown.png"));
     idleDown.loadFromFile(FindRes::getPath("img", "idown.png"));
@@ -45,7 +50,6 @@ int Hero::heroHandleEvent(SDL_Event& e) {
     if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
         // Adjust the velocity
         switch (e.key.keysym.sym)
-
         {
             case SDLK_w:
             case SDLK_UP:
@@ -90,6 +94,7 @@ void Hero::Move(int direction) {
             playerCurrentTex = &walkRight;
             while (hCurPosX != hDesPosX) {
                 hCurPosX += HERO_VEL;
+                Mix_PlayChannel(-1, Game::gHero, 0);
                 heroRender();
             }
             playerCurrentTex = &idleRight;
@@ -99,24 +104,27 @@ void Hero::Move(int direction) {
             playerCurrentTex = &walkLeft;
             while (hCurPosX != hDesPosX) {
                 hCurPosX -= HERO_VEL;
+                Mix_PlayChannel(-1, Game::gHero, 0);
                 heroRender();
             }
             playerCurrentTex = &idleLeft;
             break;
         case MOVE_UP:
-            hDesPoxY -= Game::BLOCK_WIDTH;
+            hDesPosY -= Game::BLOCK_WIDTH;
             playerCurrentTex = &walkUp;
-            while (hCurPosY != hDesPoxY) {
+            while (hCurPosY != hDesPosY) {
                 hCurPosY -= HERO_VEL;
+                Mix_PlayChannel(-1, Game::gHero, 0);
                 heroRender();
             }
             playerCurrentTex = &idleUp;
             break;
         case MOVE_DOWN:
-            hDesPoxY += Game::BLOCK_WIDTH;
+            hDesPosY += Game::BLOCK_WIDTH;
             playerCurrentTex = &walkDown;
-            while (hCurPosY != hDesPoxY) {
+            while (hCurPosY != hDesPosY) {
                 hCurPosY += HERO_VEL;
+                Mix_PlayChannel(-1, Game::gHero, 0);
                 heroRender();
             }
             playerCurrentTex = &idleDown;
