@@ -19,6 +19,12 @@ Hero::Hero() {
     cout << "Init Hero" << endl;
 }
 
+Hero::~Hero() {
+    cout << "Clear Hero" << endl;
+    playerCurrentTex->free();
+    playerCurrentTex = nullptr;
+}
+
 void Hero::loadHeroIMG() {
     //Load hero idle texture
     idleDown.loadFromFile(FindRes::getPath("img", "idown.png"));
@@ -34,7 +40,7 @@ void Hero::loadHeroIMG() {
 
 
     for (int i = 0; i < PLAYER_FRAMES; i++) {
-        playerCurrentFrame[i].x = (i * SPRITE_WIDTH ) + Game::BLOCK_WIDTH/2;
+        playerCurrentFrame[i].x = (i * HERO_CLIP_WIDTH ) + Game::BLOCK_WIDTH/2;
         playerCurrentFrame[i].y = Game::BLOCK_WIDTH/2;
         playerCurrentFrame[i].w = playerCurrentFrame[i].h = Game::BLOCK_WIDTH;
     }
@@ -132,8 +138,3 @@ void Hero::heroRender() {
     if (frame / 8 >= PLAYER_FRAMES) frame = 0;
 }
 
-Hero::~Hero() {
-    cout << "Clear Hero" << endl;
-    playerCurrentTex->free();
-    playerCurrentTex = nullptr;
-}

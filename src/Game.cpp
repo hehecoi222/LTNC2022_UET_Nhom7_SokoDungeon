@@ -6,11 +6,19 @@
 #include "find_res.h"
 #include "mapgame.h"
 #include "Savegame.h"
+#include "Menu.h"
 
 SDL_Renderer* Game::gRenderer = nullptr;
 TTF_Font* Game::gFont = nullptr;
 
-// init main character
+//Create different render viewport
+const SDL_Rect fullSizeViewPort = {0, 0, Game::WINDOW_WIDTH, Game::WINDOW_HEIGHT};
+const SDL_Rect subViewport = {Game::WINDOW_WIDTH/2 - Game::BLOCK_WIDTH*Game::GRID_WIDTH/2, Game::WINDOW_HEIGHT/2 - Game::BLOCK_WIDTH*Game::GRID_HEIGHT/2, 480, 480};
+
+//Menu
+Menu gMenu;
+
+//Main character
 Hero mainHero;
 
 // Map
@@ -36,17 +44,13 @@ bool Game::init() {
         }
 
         // Create window
-        gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED,
-                                   SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH,
-                                   WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
+        gWindow = SDL_CreateWindow("SoKoDungeon", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
         if (gWindow == NULL) {
             printf("Window could not be created! %s\n", SDL_GetError());
             success = false;
         } else {
             // Create renderer for window
-            gRenderer = SDL_CreateRenderer(
-                gWindow, -1,
-                SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+            gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
             if (gRenderer == NULL) {
                 printf("Renderer could not be created! SDL Error: %s\n",
                        SDL_GetError());
@@ -86,18 +90,26 @@ bool Game::init() {
 bool Game::loadMedia() {
     bool success = true;
 
-    Game::gFont = TTF_OpenFont("font/AV.ttf", 28);
-    SDL_Color textColor = {0, 0, 0, 255};
+    Game::gFont = TTF_OpenFont(FindRes::getPath("font","Pixel2.ttf"), 28);
+    if( gFont == NULL )
+    {
+        cout << "Failed to load gFont" << TTF_GetError() << endl;
+        success = false;
+    }
 
-    // load Hero img
+    //Load menu texture
+    gMenu.loadMenu();
+
+    //Load Hero img
     mainHero.loadHeroIMG();
+
     // load Box img
     Box::loadBoxIMG();
 
-    // Initialize save function
+    //Initialize save function
     save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
 
-    // Load map
+    //Load map
     Game0.preLoadMap();
     save.loadSavefile(FindRes::getPath("savefile","level0.skbsf"), mainHero);
 
@@ -112,9 +124,14 @@ void Game::handleEvents() {
         // User requests quit
         if (e.type == SDL_QUIT) {
             isRunning = false;
-        } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_r && e.key.repeat == 0) {
+        }
+        else if(gMenu.getMenuState()){
+            gMenu.menuHandleEvent(e, isRunning);
+        }
+        else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_r && e.key.repeat == 0) {
             save.undoMove(mainHero);
-        } else {
+        } 
+        else {
             save.recordMove(mainHero.heroHandleEvent(e));
         }
     }
@@ -128,8 +145,11 @@ void Game::update() {
 
 void Game::render() {
     // Clear screen
-    SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
+    SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
     SDL_RenderClear(gRenderer);
+
+    //Change render viewport
+    SDL_RenderSetViewport(gRenderer, &subViewport);
 
     // Load Mapgame0
     Game0.LoadMap();
@@ -138,6 +158,12 @@ void Game::render() {
 
     // Render box
     Box::layerBoxRender();
+
+    //set renderer to menu viewport
+    SDL_RenderSetViewport(gRenderer, &fullSizeViewPort);
+
+    //render menu
+    gMenu.menuRender();
 
     // Update Screen
     SDL_RenderPresent(gRenderer);

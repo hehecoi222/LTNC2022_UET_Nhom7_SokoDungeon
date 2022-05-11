@@ -43,15 +43,14 @@ class Hero
 
     private:
 		//The dimensions of the hero
-		static const int HERO_WIDTH = Game::BLOCK_WIDTH;
-		static const int HERO_HEIGHT = Game::BLOCK_WIDTH;
+		const int HERO_WIDTH = Game::BLOCK_WIDTH;
+		const int HERO_HEIGHT = Game::BLOCK_WIDTH;
 
 		//Hero animation sprites's size
-		const int SPRITE_WIDTH = 64;
-		const int SPRITE_HEIGHT = 64;
+		const int HERO_CLIP_WIDTH = 64;
 
 		//Maximum axis velocity of the HERO
-		static const int HERO_VEL = 32;
+		const int HERO_VEL = 32;
 
 		//The X and Y offsets of the hero
 		int hCurPosX, hCurPosY;
