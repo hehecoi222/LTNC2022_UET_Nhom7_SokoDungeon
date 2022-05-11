@@ -10,71 +10,70 @@ Hero::Hero() {
 
     hDesPosX = hCurPosX;
     hDesPoxY = hCurPosY;
-   
-    hVelX = 0;
-    hVelY = 0;
 
-    playerRectDest = {0, 0, Game::BLOCK_WIDTH * 2, Game::BLOCK_WIDTH * 2};
+    hDestRect = {0, 0, HERO_WIDTH * 2, HERO_HEIGHT * 2};
 
-    playerCurrentTex = new LTexture();
+    playerCurrentTex = new Texture();
     playerCurrentTex = &idleDown;
+
+    cout << "Init Hero" << endl;
 }
 
 void Hero::loadHeroIMG() {
-    idleDown.loadFromFile(FindRes::getPath("img", "idown.png"));
-    idleDown.loadFromFile(FindRes::getPath("img", "idown.png"));
+    //Load hero idle texture
     idleDown.loadFromFile(FindRes::getPath("img", "idown.png"));
     idleUp.loadFromFile(FindRes::getPath("img", "iup.png"));
     idleLeft.loadFromFile(FindRes::getPath("img", "ileft.png"));
     idleRight.loadFromFile(FindRes::getPath("img", "iright.png"));
 
+    //Load hero walking texture
     walkDown.loadFromFile(FindRes::getPath("img", "wDown.png"));
     walkUp.loadFromFile(FindRes::getPath("img", "wUp.png"));
     walkLeft.loadFromFile(FindRes::getPath("img", "wLeft.png"));
     walkRight.loadFromFile(FindRes::getPath("img", "wRight.png"));
-    
+
+
     for (int i = 0; i < PLAYER_FRAMES; i++) {
-        playerCurrentFrame[i].x = (i * 64) + 16;
-        playerCurrentFrame[i].y = 16;
-        playerCurrentFrame[i].w = playerCurrentFrame[i].h = 32;
+        playerCurrentFrame[i].x = (i * SPRITE_WIDTH ) + Game::BLOCK_WIDTH/2;
+        playerCurrentFrame[i].y = Game::BLOCK_WIDTH/2;
+        playerCurrentFrame[i].w = playerCurrentFrame[i].h = Game::BLOCK_WIDTH;
     }
 }
 
 int Hero::heroHandleEvent(SDL_Event& e) {
+    int hNextDirection;
     // If a key was pressed
-    int way;
     if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
-        // Adjust the velocity
+        //Determine hero direction
         switch (e.key.keysym.sym)
-
         {
             case SDLK_w:
             case SDLK_UP:
-                way = checkCollisionwithMap(MapGame::level0, *this, MOVE_UP);
-                way = Box::hitBox(*this, way);
-                Move(way);
-                return way;
+                hNextDirection = checkCollisionwithMap(MapGame::level0, *this, MOVE_UP);
+                hNextDirection = Box::hitBox(*this, hNextDirection);
+                Move(hNextDirection);
+                return hNextDirection;
                 break;
             case SDLK_s:
             case SDLK_DOWN:
-                way = checkCollisionwithMap(MapGame::level0, *this, MOVE_DOWN);
-                way = Box::hitBox(*this, way);
-                Move(way);
-                return way;
+                hNextDirection = checkCollisionwithMap(MapGame::level0, *this, MOVE_DOWN);
+                hNextDirection = Box::hitBox(*this, hNextDirection);
+                Move(hNextDirection);
+                return hNextDirection;
                 break;
             case SDLK_a:
             case SDLK_LEFT:
-                way = checkCollisionwithMap(MapGame::level0, *this, MOVE_LEFT);
-                way = Box::hitBox(*this, way);
-                Move(way);
-                return way;
+                hNextDirection = checkCollisionwithMap(MapGame::level0, *this, MOVE_LEFT);
+                hNextDirection = Box::hitBox(*this, hNextDirection);
+                Move(hNextDirection);
+                return hNextDirection;
                 break;
             case SDLK_d:
             case SDLK_RIGHT:
-                way = checkCollisionwithMap(MapGame::level0, *this, MOVE_RIGHT);
-                way = Box::hitBox(*this, way);
-                Move(way);
-                return way;
+                hNextDirection = checkCollisionwithMap(MapGame::level0, *this, MOVE_RIGHT);
+                hNextDirection = Box::hitBox(*this, hNextDirection);
+                Move(hNextDirection);
+                return hNextDirection;
                 break;
             default:
                 return NOT_MOVE;
@@ -126,16 +125,15 @@ void Hero::Move(int direction) {
 }
 
 void Hero::heroRender() {
-    // SDL_RenderClear( Game::gRenderer );
     SDL_Rect* currentClip = &playerCurrentFrame[frame / 8];
-    playerCurrentTex->render(hCurPosX - 16, hCurPosY - 16, currentClip,
-                             &playerRectDest);
-    // SDL_RenderPresent( Game::gRenderer );
+    playerCurrentTex->render(hCurPosX - 16, hCurPosY - 16, currentClip, &hDestRect);            
     frame++;
+    //Reset animation frame
     if (frame / 8 >= PLAYER_FRAMES) frame = 0;
 }
 
 Hero::~Hero() {
+    cout << "Clear Hero" << endl;
     playerCurrentTex->free();
     playerCurrentTex = nullptr;
 }

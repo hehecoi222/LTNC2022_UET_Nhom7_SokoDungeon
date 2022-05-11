@@ -1,13 +1,11 @@
-#include "Box.h"
-
 #include <stdio.h>
-
+#include "Box.h"
 #include "find_res.h"
 #include "mapgame.h"
 #include "Game.h"
 #include "Savegame.h"
 
-LTexture Box::box;
+Texture Box::box;
 Box*** Box::layerBox = nullptr;
 int Box::boxCount = 0, Box::boxWinCount = 0;
 extern Savegame save;

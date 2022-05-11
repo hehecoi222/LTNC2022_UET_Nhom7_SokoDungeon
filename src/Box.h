@@ -82,7 +82,7 @@ class Box {
     int getCurY() { return bCurPosY; }
 
     // Simple Texture
-    static LTexture box;
+    static Texture box;
 
     // Box direction
     enum { NOT_MOVE, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT };

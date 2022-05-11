@@ -2,14 +2,14 @@
 #define Texture_h
 #include "Game.h"
 
-class LTexture
+class Texture
 {
 	public:
 		//Initializes variables
-		LTexture();
+		Texture();
 
 		//Deallocates memory
-		~LTexture();
+		~Texture();
 
 		//Loads image at specified path
 		bool loadFromFile( std::string path );

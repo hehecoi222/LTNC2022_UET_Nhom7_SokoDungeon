@@ -16,21 +16,21 @@ private:
     SDL_Rect des0;
 
     //ve nen
-    LTexture nen1;
-    LTexture nen2;
-    LTexture nen3;
+    Texture nen1;
+    Texture nen2;
+    Texture nen3;
 
 
     //ve tuong
-    LTexture wall1;
-    LTexture wall2;
-    LTexture wall3;
+    Texture wall1;
+    Texture wall2;
+    Texture wall3;
 
     //ve cong
-    LTexture gate;
+    Texture gate;
 
     //ve chest
-    LTexture chest;
+    Texture chest;
 };
 
 #endif // MAP_H_INCLUDED
