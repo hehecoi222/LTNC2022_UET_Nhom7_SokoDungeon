@@ -44,7 +44,7 @@ void Hero::loadHeroIMG() {
     }
 }
 
-int Hero::heroHandleEvent(SDL_Event& e) {
+int Hero::heroHandleEvent(SDL_Event& e, Enemy& mainEnemy) {
     // If a key was pressed
     int way;
     // Adjust the velocity
@@ -53,6 +53,7 @@ int Hero::heroHandleEvent(SDL_Event& e) {
         case SDLK_w:
         case SDLK_UP:
             way = checkCollisionwithMap(MapGame::level0, *this, MOVE_UP);
+            way = mainEnemy.checkCollisionWithThis(hDesPosX, hDesPosY, way);
             way = Box::hitBox(*this, way);
             Move(way);
             return way;

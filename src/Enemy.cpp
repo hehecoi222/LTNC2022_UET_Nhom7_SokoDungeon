@@ -73,24 +73,49 @@ int Enemy::findPath(int desireX, int desireY) {
                    Box::layerBox[eCurPosY / Game::BLOCK_WIDTH]
                                 [eCurPosX / Game::BLOCK_WIDTH - 1] == nullptr) {
             return MOVE_LEFT;
+        } else if (disY > 0 &&
+                   checkCollisionwithMap(MapGame::level0, *this, MOVE_DOWN) &&
+                   Box::layerBox[eCurPosY / Game::BLOCK_WIDTH + 1]
+                                [eCurPosX / Game::BLOCK_WIDTH] == nullptr) {
+            return MOVE_DOWN;
+        } else if (disY < 0 &&
+                   checkCollisionwithMap(MapGame::level0, *this, MOVE_UP) &&
+                   Box::layerBox[eCurPosY / Game::BLOCK_WIDTH - 1]
+                                [eCurPosX / Game::BLOCK_WIDTH] == nullptr) {
+            return MOVE_UP;
         }
     }
     if (abs(disY) >= abs(disX)) {
-        if (disY > 0 && checkCollisionwithMap(MapGame::level0, *this, MOVE_DOWN) &&
+        if (disY > 0 &&
+            checkCollisionwithMap(MapGame::level0, *this, MOVE_DOWN) &&
             Box::layerBox[eCurPosY / Game::BLOCK_WIDTH + 1]
-                        [eCurPosX / Game::BLOCK_WIDTH] == nullptr) {
+                         [eCurPosX / Game::BLOCK_WIDTH] == nullptr) {
             return MOVE_DOWN;
         } else if (disY < 0 &&
-                checkCollisionwithMap(MapGame::level0, *this, MOVE_UP) &&
-                Box::layerBox[eCurPosY / Game::BLOCK_WIDTH - 1]
+                   checkCollisionwithMap(MapGame::level0, *this, MOVE_UP) &&
+                   Box::layerBox[eCurPosY / Game::BLOCK_WIDTH - 1]
                                 [eCurPosX / Game::BLOCK_WIDTH] == nullptr) {
             return MOVE_UP;
+        } else if (disX > 0 &&
+                   checkCollisionwithMap(MapGame::level0, *this, MOVE_RIGHT) &&
+                   Box::layerBox[eCurPosY / Game::BLOCK_WIDTH]
+                                [eCurPosX / Game::BLOCK_WIDTH + 1] == nullptr) {
+            return MOVE_RIGHT;
+        } else if (disX < 0 &&
+                   checkCollisionwithMap(MapGame::level0, *this, MOVE_LEFT) &&
+                   Box::layerBox[eCurPosY / Game::BLOCK_WIDTH]
+                                [eCurPosX / Game::BLOCK_WIDTH - 1] == nullptr) {
+            return MOVE_LEFT;
         }
     }
     return NOT_MOVE;
 }
 
-void Enemy::Move(int direction) {
+int Enemy::Move(int direction, int objX, int objY) {
+    objX = abs(objX - eCurPosX);
+    objY = abs(objY - eCurPosY);
+    if (objX == Game::BLOCK_WIDTH || objY == Game::BLOCK_WIDTH)
+        direction = NOT_MOVE;
     switch (direction) {
         case MOVE_UP:
             eCurPosY -= Game::BLOCK_WIDTH;
@@ -110,4 +135,47 @@ void Enemy::Move(int direction) {
     eRectDest.x = eCurPosX;
     eRectDest.y = eCurPosY;
     eCurState = direction;
+    return direction;
+}
+
+int Enemy::checkCollisionWithThis(int objX, int objY, int direction) {
+    if (direction == NOT_MOVE) return direction;
+    objX = objX / Game::BLOCK_WIDTH;
+    objY = objY / Game::BLOCK_WIDTH;
+    int eTempX = eCurPosX / Game::BLOCK_WIDTH;
+    int eTempY = eCurPosY / Game::BLOCK_WIDTH;
+    switch (findPath(objX, objY)) {
+        case MOVE_LEFT:
+            eTempX--;
+            break;
+        case MOVE_RIGHT:
+            eTempX++;
+            break;
+        case MOVE_UP:
+            eTempY--;
+            break;
+        case MOVE_DOWN:
+            eTempY++;
+            break;
+        default:
+            return NOT_MOVE;
+    }
+    switch (direction) {
+        case MOVE_LEFT:
+            objX--;
+            break;
+        case MOVE_RIGHT:
+            objX++;
+            break;
+        case MOVE_UP:
+            objY--;
+            break;
+        case MOVE_DOWN:
+            objY++;
+            break;
+        default:
+            return direction;
+    }
+    if (objX == eTempX && objY == eTempY) return NOT_MOVE;
+    return direction;
 }

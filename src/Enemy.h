@@ -4,7 +4,6 @@
 #define ENEMY_H
 
 #include "Texture.h"
-#include "Hero.h"
 class Enemy {
    public:
     // Initializer
@@ -29,7 +28,10 @@ class Enemy {
     int findPath(int desireX, int desireY);
 
     // Move enemy
-    void Move(int direction);
+    int Move(int direction, int objX, int objY);
+
+    // Check collision
+    int checkCollisionWithThis(int objX, int objY, int direction);
 
     // Set enemy direction
     enum { NOT_MOVE, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT };

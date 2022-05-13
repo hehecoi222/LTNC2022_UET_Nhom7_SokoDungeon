@@ -126,8 +126,8 @@ void Game::handleEvents() {
             loadMedia();
         } else {
             if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
-                save.recordMove(mainHero.heroHandleEvent(e));
-                mainEnemy.Move(mainEnemy.findPath(mainHero.getCurX()/BLOCK_WIDTH, mainHero.getCurY()/BLOCK_WIDTH));
+                save.recordMove(mainHero.heroHandleEvent(e, mainEnemy));
+                mainEnemy.Move(mainEnemy.findPath(mainHero.getCurX()/BLOCK_WIDTH, mainHero.getCurY()/BLOCK_WIDTH), mainHero.getCurX(), mainHero.getCurY());
             }
         }
     }

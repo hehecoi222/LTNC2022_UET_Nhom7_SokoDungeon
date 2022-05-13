@@ -2,6 +2,7 @@
 #define Hero_h
 #include "Game.h"
 #include "Texture.h"
+#include "Enemy.h"
 #include "find_res.h"
 #include "utility"
 class Hero
@@ -22,7 +23,7 @@ class Hero
 		void loadHeroIMG();
 
 		//Takes key presses and adjusts the hero's velocity
-		int heroHandleEvent( SDL_Event& e );
+		int heroHandleEvent( SDL_Event& e, Enemy& mainEnemy );
 
 		//Moves the hero according to key
 		void Move(int direction);
