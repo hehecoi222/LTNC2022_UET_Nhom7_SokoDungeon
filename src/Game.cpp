@@ -6,6 +6,7 @@
 #include "find_res.h"
 #include "mapgame.h"
 #include "Savegame.h"
+#include "Enemy.h"
 
 SDL_Renderer* Game::gRenderer = nullptr;
 TTF_Font* Game::gFont = nullptr;
@@ -15,6 +16,7 @@ Mix_Chunk* Game::gBox = NULL;
 Mix_Chunk* Game::gHero = NULL;
 // init main character
 Hero mainHero;
+Enemy mainEnemy(4*Game::BLOCK_WIDTH, 2*Game::BLOCK_WIDTH);
 
 // Map
 MapGame Game0;
@@ -99,6 +101,7 @@ bool Game::loadMedia() {
     gMusic = Mix_LoadMUS(FindRes::getPath("", ""));
     // load Hero img
     mainHero.loadHeroIMG();
+    mainEnemy.loadEnemyIMG();
     // load Box img
     Box::loadBoxIMG();
 
@@ -122,7 +125,10 @@ void Game::handleEvents() {
             Game0.NextMap();
             loadMedia();
         } else {
-            save.recordMove(mainHero.heroHandleEvent(e));
+            if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
+                save.recordMove(mainHero.heroHandleEvent(e));
+                mainEnemy.Move(mainEnemy.findPath(mainHero.getCurX()/BLOCK_WIDTH, mainHero.getCurY()/BLOCK_WIDTH));
+            }
         }
     }
 }
@@ -151,6 +157,8 @@ void Game::render() {
     Game0.LoadMap();
     // Render player
     mainHero.heroRender();
+
+    mainEnemy.enemyRender();
 
     // Render box
     Box::layerBoxRender();
