@@ -1,26 +1,25 @@
 #include "mapgame.h"
+
 #include <fstream>
 
 #include "Box.h"
 #include "Game.h"
-#include "find_res.h"
 #include "Hero.h"
+#include "find_res.h"
 
 char** MapGame::level0 = nullptr;
-MapGame::MapGame()
-{
-    //Initialize variable of the level0
+MapGame::MapGame() {
+    // Initialize variable of the level0
     current_map = 0;
     map = "level0.smap";
-    //destination x, y position of the image to render
+    // destination x, y position of the image to render
     des0.x = des0.y = 0;
-    des0.w = des0.h = Game::BLOCK_WIDTH;    
+    des0.w = des0.h = Game::BLOCK_WIDTH;
 }
 void MapGame::preLoadMap() {
     clear();
     // load the current map
-    switch(current_map)
-    {
+    switch (current_map) {
         case 0:
             map[5] = '0';
             break;
@@ -36,7 +35,7 @@ void MapGame::preLoadMap() {
         default:
             break;
     }
-    //using file operation to load
+    // using file operation to load
     ifstream file(FindRes::getPath("map", map));
     level0 = new char*[Game::GRID_HEIGHT];
     for (int i = 0; i < Game::GRID_HEIGHT; i++) {
@@ -44,50 +43,69 @@ void MapGame::preLoadMap() {
         for (int j = 0; j < Game::GRID_WIDTH; j++) {
             file.read(&level0[i][j], 1);
             if (level0[i][j] == '$') {
-                Box::layerBox[i][j] = new Box(j * Game::BLOCK_WIDTH, i * Game::BLOCK_WIDTH);
+                Box::layerBox[i][j] =
+                    new Box(j * Game::BLOCK_WIDTH, i * Game::BLOCK_WIDTH);
                 Box::boxCount++;
-            }
-            else if(level0[i][j] == '@')
-            {
+            } else if (level0[i][j] == '@') {
                 Hero::pos_x = j * Game::BLOCK_WIDTH;
                 Hero::pos_y = i * Game::BLOCK_WIDTH;
             }
         }
         char temp;
         file.read(&temp, 1);
-        if (current_map != 0 ) file.read(&temp, 1);
+        // if (current_map != 0) file.read(&temp, 1);
     }
     file.close();
-    //load image from folder img
-    wall.loadFromFile(FindRes::getPath("img", "wall1.png"));
-    floor.loadFromFile(FindRes::getPath("img", "nen1.png"));
+    // load image from folder img
+    wall[0].loadFromFile(FindRes::getPath("img", "wall1.png"));
+    wall[1].loadFromFile(FindRes::getPath("img", "wall2.png"));
+    wall[2].loadFromFile(FindRes::getPath("img", "wall3.png"));
+    floor[0].loadFromFile(FindRes::getPath("img", "nen1.png"));
+    floor[1].loadFromFile(FindRes::getPath("img", "nen2.png"));
+    floor[2].loadFromFile(FindRes::getPath("img", "nen3.png"));
     Goal.loadFromFile(FindRes::getPath("img", "Goal.png"));
 }
 
 void MapGame::LoadMap() {
-   
-   for (int i = 0; i < Game::GRID_HEIGHT; i++) {
+    for (int i = 0; i < Game::GRID_HEIGHT; i++) {
         for (int j = 0; j < Game::GRID_WIDTH; j++) {
             switch (level0[i][j]) {
-                case '#': 
-                    wall.render(j * Game::BLOCK_WIDTH, i * Game::BLOCK_WIDTH, nullptr, &des0);
+                case '#':
+                    wall[(i + j) % 3].render(j * Game::BLOCK_WIDTH,
+                                              i * Game::BLOCK_WIDTH, nullptr,
+                                              &des0);
                     break;
-                case ' ': case '$': case '@':
-                    floor.render(j * Game::BLOCK_WIDTH, i * Game::BLOCK_WIDTH, nullptr, &des0);
+                case ' ':
+                case '$':
+                case '@':
+                    floor[(i + j) % 3].render(j * Game::BLOCK_WIDTH,
+                                               i * Game::BLOCK_WIDTH, nullptr,
+                                               &des0);
                     break;
                 case '.':
-                    Goal.render(j * Game::BLOCK_WIDTH, i * Game::BLOCK_WIDTH, nullptr, &des0);
+                    floor[(i + j) % 3].render(j * Game::BLOCK_WIDTH,
+                                               i * Game::BLOCK_WIDTH, nullptr,
+                                               &des0);
+                    goalClicked(j, i);
                     break;
             }
         }
     }
 }
 
-void MapGame::NextMap()
-{
-    //increase the map level
+void MapGame::goalClicked(int gridX, int gridY) {
+    SDL_Rect clip{0, 0, 16, 16};
+    if (Box::layerBox[gridY][gridX] != nullptr) {
+        clip.x = 16;
+    }
+    Goal.render(gridX * Game::BLOCK_WIDTH, gridY * Game::BLOCK_WIDTH, &clip,
+                &des0);
+}
+
+void MapGame::NextMap() {
+    // increase the map level
     current_map++;
-    cout<<current_map;
+    cout << current_map;
     clear();
 }
 
@@ -103,8 +121,7 @@ void MapGame::clear() {
     Box::flushBoxLayer();
 }
 
-void MapGame::PresVic()
-{
+void MapGame::PresVic() {
     des1.x = des1.y = 0;
     des1.w = Game::BLOCK_WIDTH * Game::GRID_WIDTH;
     des1.h = Game::BLOCK_WIDTH * Game::GRID_HEIGHT;

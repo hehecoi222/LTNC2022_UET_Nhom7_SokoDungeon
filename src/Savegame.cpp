@@ -25,18 +25,31 @@ void reversePrintStack(Node* stack, std::ostream& file) {
 void Savegame::toFile(const char* filename) {
     std::ofstream fileSaveOut(filename);
     if (fileSaveOut.is_open()) {
+        fileSaveOut << mapSave << " ";
         reversePrintStack(movesStack, fileSaveOut);
     }
     fileSaveOut.close();
 }
 
-void Savegame::loadSavefile(const char* filename, Hero& hero) {
+void Savegame::setMap(Hero& hero, MapGame& map) {
+    map.setMap(mapSave);
+    map.preLoadMap();
+    hero.setpos();
+}
+
+void Savegame::loadSavefile(const char* filename, Hero& hero, MapGame& map) {
     std::ifstream fileSaveIn(filename);
     if (fileSaveIn.is_open()) {
+        if (!fileSaveIn.eof()) {
+            fileSaveIn >> mapSave;
+            setMap(hero, map);
+        } else {
+            mapSave = 0;
+            setMap(hero, map);
+        }
         while (!fileSaveIn.eof()) {
             int direction;
-            if (fileSaveIn) {
-                fileSaveIn >> direction;
+            if (fileSaveIn >> direction) {
                 direction =
                     checkCollisionwithMap(MapGame::level0, hero, direction);
                 direction = Box::hitBox(hero, direction);

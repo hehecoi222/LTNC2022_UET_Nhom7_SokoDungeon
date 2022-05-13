@@ -102,12 +102,9 @@ bool Game::loadMedia() {
     // load Box img
     Box::loadBoxIMG();
 
-    // Initialize save function
-    save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
-
     // Load map
-    Game0.preLoadMap();
-    mainHero.setpos();
+    save.loadSavefile(FindRes::getPath("savefile","level0.skbsf"), mainHero, Game0);
+    save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
     return success;
 }
 
@@ -137,7 +134,11 @@ void Game::update() {
         Mix_PlayMusic(gVictory, -1);
         SDL_Delay(2000);
         Mix_HaltMusic();
-        loadMedia();
+        save.clear();
+        Game0.preLoadMap();
+        mainHero.setpos();
+        save.setMapInt(Game0.current_map);
+        save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
     }
 }
 
@@ -180,6 +181,7 @@ void Game::close() {
     }
     delete[] Box::layerBox;
     delete[] MapGame::level0;
+    save.toFile(FindRes::getPath("savefile","level0.skbsf"));
     // Quit SDL subsystems
     SDL_Quit();
     cout << "Game clear";

@@ -9,6 +9,8 @@ public:
     MapGame();
     //load the map
     void LoadMap();
+    // set map
+    void setMap(int curMap) { current_map = curMap; };
     //Load image, position of box, hero
     void preLoadMap();
     //Map level0
@@ -31,11 +33,13 @@ private:
     //destination x, y and width, height of the Victory image
     SDL_Rect des1;
     //Draw the floor 
-    LTexture floor;
+    LTexture floor[3];
     //Draw the wall
-    LTexture wall;
+    LTexture wall[3];
     //Draw goal position of the box to win 
     LTexture Goal;
+    // Render goal position
+    void goalClicked(int gridX, int gridY);
     //Draw Victory image
     LTexture Victory;
 };

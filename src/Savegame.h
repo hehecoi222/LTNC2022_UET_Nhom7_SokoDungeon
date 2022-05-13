@@ -2,6 +2,7 @@
 #define SAVE_GAME_H
 
 #include "Hero.h"
+#include "mapgame.h"
 #include "Game.h"
 
 // NodeBox to save boxes that has collision
@@ -27,7 +28,11 @@ class Savegame {
     void toFile(const char* filename);
 
     // Load savefile
-    void loadSavefile(const char* filename, Hero& hero);
+    void loadSavefile(const char* filename, Hero& hero, MapGame& map);
+
+    // Set current map
+    void setMap(Hero& hero, MapGame& map);
+    void setMapInt(int currentMap) { mapSave = currentMap; };
 
     // Clear save game
     void clear();
@@ -63,6 +68,8 @@ class Savegame {
     void popBoxes();
     // Position of Hero in grid
     int heroX, heroY;
+    // Current map
+    int mapSave = 0;
 
     // Shift position
     void shift(Hero& hero, int direction);

@@ -143,7 +143,13 @@ void Box::addBoxCount() {
 }
 
 void Box::boxRender() {
-    Box::box.render(bCurPosX, bCurPosY, &bRectClip, &bRectDest);
+    if (bWin) {
+        Box::box.setColor(127, 127, 255);
+        Box::box.render(bCurPosX, bCurPosY, &bRectClip, &bRectDest);
+        Box::box.setColor(255, 255, 255);
+    } else {
+        Box::box.render(bCurPosX, bCurPosY, &bRectClip, &bRectDest);
+    }
 }
 
 void Box::layerBoxRender() {
