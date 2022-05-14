@@ -4,14 +4,12 @@
 - Load Game
 - Map hiển thị
 - Hero (thiếu âm thanh)
-- Box + Cơ chế hoạt động 
+- Box + Cơ chế hoạt động
 
 ## Đang chờ trong pull request
-- Collision map, box, hero
-- Winning state
-- Nút Undo
+- Nhạc
 
 ## Đang làm
 - Menu (Vượng)
-- Chuyển map (Dũng)
-- Save game ra file (Hiếu)
+- Khớp chuyển map (Dũng)
+- High scores (Hiếu)
