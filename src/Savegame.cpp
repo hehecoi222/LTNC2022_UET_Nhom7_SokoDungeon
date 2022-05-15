@@ -5,7 +5,7 @@
 #include "Box.h"
 #include "Game.h"
 #include "Hero.h"
-#include "mapgame.h"
+#include "Map.h"
 
 Savegame::Savegame() {
     movesStack = nullptr;
@@ -38,7 +38,7 @@ void Savegame::loadSavefile(const char* filename, Hero& hero) {
             if (fileSaveIn) {
                 fileSaveIn >> direction;
                 direction =
-                    checkCollisionwithMap(MapGame::level0, hero, direction);
+                    checkCollisionwithMap(Map::level0, hero, direction);
                 direction = Box::hitBox(hero, direction);
                 hero.Move(direction);
                 recordMove(direction);

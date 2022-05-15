@@ -4,23 +4,31 @@
 #include "Hero.h"
 #include "Texture.h"
 #include "find_res.h"
-#include "mapgame.h"
+#include "Map.h"
 #include "Savegame.h"
+#include "Menu.h"
 
 SDL_Renderer* Game::gRenderer = nullptr;
 TTF_Font* Game::gFont = nullptr;
-Mix_Music* Game::gVictory = nullptr;
-Mix_Music* Game::gMusic = nullptr;
-Mix_Chunk* Game::gBox = NULL;
-Mix_Chunk* Game::gHero = NULL;
+
+//Music and sound effects will be used
+Mix_Music* Game::gVictory = NULL, *Game::gMusic = NULL, *Game::gTheme = NULL;
+Mix_Chunk* Game::gBox = NULL, *Game::gHero = NULL, *Game::gMouse = NULL;
+
+
+
+//Create different render viewport
+const SDL_Rect fullSizeViewPort = {0, 0, Game::WINDOW_WIDTH, Game::WINDOW_HEIGHT};
+const SDL_Rect subViewport = {Game::WINDOW_WIDTH/2 - Game::BLOCK_WIDTH*Game::GRID_WIDTH/2, Game::WINDOW_HEIGHT/2 - Game::BLOCK_WIDTH*Game::GRID_HEIGHT/2, 480, 480};
+
+//Menu
+Menu gMenu;
+
 // init main character
 Hero mainHero;
 
 // Map
-LTexture Map;
-MapGame Game0;
-SDL_Rect Mapblock;
-
+Map Game0;
 Savegame save;
 
 Game::Game() {}
@@ -41,17 +49,13 @@ bool Game::init() {
         }
 
         // Create window
-        gWindow = SDL_CreateWindow("Sokoban", SDL_WINDOWPOS_UNDEFINED,
-                                   SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH,
-                                   WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
+        gWindow = SDL_CreateWindow("SoKoDungeon", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
         if (gWindow == NULL) {
             printf("Window could not be created! %s\n", SDL_GetError());
             success = false;
         } else {
             // Create renderer for window
-            gRenderer = SDL_CreateRenderer(
-                gWindow, -1,
-                SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+            gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
             if (gRenderer == NULL) {
                 printf("Renderer could not be created! SDL Error: %s\n",
                        SDL_GetError());
@@ -91,15 +95,33 @@ bool Game::init() {
 bool Game::loadMedia() {
     bool success = true;
 
-    Game::gFont = TTF_OpenFont(FindRes::getPath("font", "lazy.ttf"), 28);
-    SDL_Color textColor = {0, 0, 0, 255};
-    //Load sound
+    Game::gFont = TTF_OpenFont(FindRes::getPath("font", "Pixel2.ttf"), 28);
+    if( gFont == NULL )
+    {
+        cout << "Failed to load gFont" << TTF_GetError() << endl;
+        success = false;
+    }
+
+    //Load menu texture
+    gMenu.loadMenu();
+    
+
+    //Load music and sound effect
     gVictory = Mix_LoadMUS(FindRes::getPath("audio", "Victory.wav"));
+    gMusic = Mix_LoadMUS(FindRes::getPath("audio", "Soundtrack.wav"));
+    gTheme = Mix_LoadMUS(FindRes::getPath("audio", "Theme Song.wav"));
     gHero = Mix_LoadWAV(FindRes::getPath("audio", "Footsteps.wav"));
     gBox = Mix_LoadWAV(FindRes::getPath("audio", "box.wav"));
-    gMusic = Mix_LoadMUS(FindRes::getPath("", ""));
+    gMouse = Mix_LoadWAV(FindRes::getPath("audio", "MouseClick.wav"));    
+    
+    if(gMenu.getMenuState())
+        Mix_PlayMusic(gTheme, -1);
+    else
+        //Play gMusic
+        Mix_PlayMusic(gMusic, -1);
     // load Hero img
     mainHero.loadHeroIMG();
+
     // load Box img
     Box::loadBoxIMG();
 
@@ -109,6 +131,9 @@ bool Game::loadMedia() {
     // Load map
     Game0.preLoadMap();
     mainHero.setpos();
+    save.loadSavefile(FindRes::getPath("savefile","level0.skbsf"), mainHero);
+    
+
     return success;
 }
 
@@ -120,18 +145,24 @@ void Game::handleEvents() {
         // User requests quit
         if (e.type == SDL_QUIT) {
             isRunning = false;
-        } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_r && e.key.repeat == 0) {
+        }
+        else if(gMenu.getMenuState()){
+            gMenu.menuHandleEvent(e, isRunning);
+        }
+        else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_r && e.key.repeat == 0) {
             save.undoMove(mainHero);
-        } else {
+        } 
+        else {
             save.recordMove(mainHero.heroHandleEvent(e));
         }
     }
 }
 void Game::update() {
     if (Box::winLevel()) {
+        save.clear();
         Game0.NextMap();
         Game0.PresVic();
-        SDL_RenderPresent(gRenderer);
+        render();
         Mix_PlayMusic(gVictory, -1);
         SDL_Delay(2000);
         Mix_HaltMusic();
@@ -140,18 +171,28 @@ void Game::update() {
 }
 
 void Game::render() {
-    // Clear screen
-    SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
-    SDL_RenderClear(gRenderer);
-    
-    // Load Mapgame0
-    Game0.LoadMap();
-    // Render player
-    mainHero.heroRender();
+    if(!Box::winLevel())
+    {
+        // Clear screen
+        SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
+        SDL_RenderClear(gRenderer);
 
-    // Render box
-    Box::layerBoxRender();
-    
+        //Change render viewport
+        SDL_RenderSetViewport(gRenderer, &subViewport);
+        // Load Map0
+        Game0.LoadMap();
+        // Render player
+        mainHero.heroRender();
+
+        // Render box
+        Box::layerBoxRender();
+
+        //set renderer to menu viewport
+        SDL_RenderSetViewport(gRenderer, &fullSizeViewPort);
+
+        //render menu
+        gMenu.menuRender();
+    }
     // Update Screen
     SDL_RenderPresent(gRenderer);
 }
@@ -160,12 +201,17 @@ void Game::close() {
     // Destroy window
     SDL_DestroyRenderer(gRenderer);
     SDL_DestroyWindow(gWindow);
-    // Free the sound effects
+
+    // Free the sound effects and sound
     Mix_FreeMusic(gVictory);
     Mix_FreeChunk(gHero);
     Mix_FreeChunk(gBox);
-    gVictory = NULL;
-    gHero = gBox =NULL;
+    Mix_FreeMusic(gTheme);
+    Mix_FreeMusic(gMusic);
+    Mix_FreeChunk(gMouse);
+    gVictory = gTheme = gMusic = NULL;
+    gHero = gBox = gMouse = NULL;
+
     gWindow = NULL;
     gRenderer = NULL;
     Box::box.free();
@@ -174,10 +220,11 @@ void Game::close() {
             delete Box::layerBox[i][j];
         }
         delete[] Box::layerBox[i];
-        delete[] MapGame::level0[i];
+        delete[] Map::level0[i];
     }
     delete[] Box::layerBox;
-    delete[] MapGame::level0;
+    delete[] Map::level0;
+    save.toFile(FindRes::getPath("savefile", "level0.skbsf"));
     // Quit SDL subsystems
     SDL_Quit();
     cout << "Game clear";

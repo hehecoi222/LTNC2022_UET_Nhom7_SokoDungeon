@@ -3,11 +3,11 @@
 #include <stdio.h>
 
 #include "find_res.h"
-#include "mapgame.h"
+#include "Map.h"
 #include "Game.h"
 #include "Savegame.h"
 
-LTexture Box::box;
+Texture Box::box;
 Box*** Box::layerBox = nullptr;
 int Box::boxCount = 0, Box::boxWinCount = 0;
 extern Savegame save;
@@ -55,7 +55,7 @@ void Box::flushBoxLayer() {
 int Box::collision(int direction) {
     // If the box is colliding with the obj in the left direction
     if (direction == NOT_MOVE) return direction;
-    int way = checkCollisionwithMap(MapGame::level0, *this, direction);
+    int way = checkCollisionwithMap(Map::level0, *this, direction);
     way = hitBox(*this, way);
     Move(way);
     if (way) saveBoxinsave();
@@ -133,7 +133,7 @@ void Box::checkWin(char** level) {
 
 void Box::addBoxCount() {
     bool temp = bWin;
-    checkWin(MapGame::level0);
+    checkWin(Map::level0);
     if (temp != bWin && bWin) {
         boxWinCount++;
     } else if (temp != bWin && !bWin) {

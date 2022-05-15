@@ -36,13 +36,13 @@ class Hero
 		int getCurY(){return hCurPosY;}
 
 		//idle texture
-		LTexture idleUp, idleDown, idleRight, idleLeft;
+		Texture idleUp, idleDown, idleRight, idleLeft;
 
 		//walking texture;
-		LTexture walkUp, walkDown, walkRight, walkLeft;
+		Texture walkUp, walkDown, walkRight, walkLeft;
 
 		//current hero texture that will be rendered
-		LTexture *playerCurrentTex = &idleUp;
+		Texture *playerCurrentTex = &idleUp;
 
 		//Hero directions
 		enum {
@@ -59,8 +59,7 @@ class Hero
 		int frame = 0;
 
 		//Initial Position of Hero
-		static int pos_x;
-		static int pos_y;
+		static pair<int, int> pos;
 		//set position for each level
 		void setpos();
     private:

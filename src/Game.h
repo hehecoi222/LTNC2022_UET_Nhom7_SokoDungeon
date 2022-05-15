@@ -44,7 +44,11 @@ public:
     static Mix_Chunk* gHero;
     //Sound effect of Box
     static Mix_Chunk* gBox;
-
+    //Sound of main theme
+    static Mix_Music* gTheme;
+    //Sound effect of Mouse Click
+    static Mix_Chunk* gMouse;
+    
     int getScreenW(){return WINDOW_WIDTH;}
     int getScreenH() {return WINDOW_HEIGHT;}
 

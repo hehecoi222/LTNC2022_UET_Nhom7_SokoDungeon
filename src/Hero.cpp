@@ -2,28 +2,27 @@
 #include "Box.h"
 #include "Game.h"
 #include "find_res.h"
-#include "mapgame.h"
- 
-int Hero::pos_x = 0;
-int Hero::pos_y = 0;
+#include "Map.h"
+
+
 
 Hero::Hero() {
-    hCurPosX = hDesPosX = pos_x;
-    hCurPosY = hDesPosY = pos_y;
+    hCurPosX = hDesPosX = pos.first;
+    hCurPosY = hDesPosY = pos.second;
 
     hVelX = 0;
     hVelY = 0;
 
     playerRectDest = {0, 0, HERO_WIDTH * 2, HERO_HEIGHT * 2};
 
-    playerCurrentTex = new LTexture();
+    playerCurrentTex = new Texture();
     playerCurrentTex = &idleDown;
 }
 
 void Hero::setpos()
 {
-    hCurPosX = hDesPosX = pos_x;
-    hCurPosY = hDesPosY = pos_y;
+    hCurPosX = hDesPosX = pos.first;
+    hCurPosY = hDesPosY = pos.second;
 }
 void Hero::loadHeroIMG() {
     idleDown.loadFromFile(FindRes::getPath("img", "idown.png"));
@@ -53,28 +52,28 @@ int Hero::heroHandleEvent(SDL_Event& e) {
         {
             case SDLK_w:
             case SDLK_UP:
-                way = checkCollisionwithMap(MapGame::level0, *this, MOVE_UP);
+                way = checkCollisionwithMap(Map::level0, *this, MOVE_UP);
                 way = Box::hitBox(*this, way);
                 Move(way);
                 return way;
                 break;
             case SDLK_s:
             case SDLK_DOWN:
-                way = checkCollisionwithMap(MapGame::level0, *this, MOVE_DOWN);
+                way = checkCollisionwithMap(Map::level0, *this, MOVE_DOWN);
                 way = Box::hitBox(*this, way);
                 Move(way);
                 return way;
                 break;
             case SDLK_a:
             case SDLK_LEFT:
-                way = checkCollisionwithMap(MapGame::level0, *this, MOVE_LEFT);
+                way = checkCollisionwithMap(Map::level0, *this, MOVE_LEFT);
                 way = Box::hitBox(*this, way);
                 Move(way);
                 return way;
                 break;
             case SDLK_d:
             case SDLK_RIGHT:
-                way = checkCollisionwithMap(MapGame::level0, *this, MOVE_RIGHT);
+                way = checkCollisionwithMap(Map::level0, *this, MOVE_RIGHT);
                 way = Box::hitBox(*this, way);
                 Move(way);
                 return way;
