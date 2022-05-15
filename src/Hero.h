@@ -59,7 +59,7 @@ class Hero
 		int frame = 0;
 
 		//Initial Position of Hero
-		static pair<int, int> pos;
+		static std::pair<int, int> pos;
 		//set position for each level
 		void setpos();
     private:
