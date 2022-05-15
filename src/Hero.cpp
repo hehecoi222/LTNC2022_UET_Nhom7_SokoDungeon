@@ -3,8 +3,9 @@
 #include "Game.h"
 #include "find_res.h"
 #include "Map.h"
+#include <utility>
 
-
+std::pair<int, int> Hero::pos = std::make_pair(0, 0);
 
 Hero::Hero() {
     hCurPosX = hDesPosX = pos.first;
