@@ -140,7 +140,6 @@ int Enemy::Move(int direction, int objX, int objY) {
 }
 
 int Enemy::checkCollisionWithThis(int objX, int objY, int direction) {
-    if (direction == NOT_MOVE) return direction;
     objX = objX / Game::BLOCK_WIDTH;
     objY = objY / Game::BLOCK_WIDTH;
     int eTempX = eCurPosX / Game::BLOCK_WIDTH;

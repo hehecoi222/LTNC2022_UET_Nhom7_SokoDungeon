@@ -128,14 +128,13 @@ void Game::handleEvents() {
         } else {
             if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
                 save.recordMove(mainHero.heroHandleEvent(e, mainEnemy));
-                mainEnemy.Move(mainEnemy.findPath(mainHero.getCurX()/BLOCK_WIDTH, mainHero.getCurY()/BLOCK_WIDTH), mainHero.getCurX(), mainHero.getCurY());
             }
         }
     }
 }
 void Game::update() {
     if (Box::winLevel()) {
-        save.compareHighScore(FindRes::getPath("savefile","fileHighScore.skbhsf"));
+        save.compareHighScore(FindRes::getPath("savefile", "fileHighScore.skbhsf"));
         Game0.NextMap();
         Game0.PresVic();
         SDL_RenderPresent(gRenderer);

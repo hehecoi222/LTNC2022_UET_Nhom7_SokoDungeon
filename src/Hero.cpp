@@ -53,7 +53,7 @@ int Hero::heroHandleEvent(SDL_Event& e, Enemy& mainEnemy) {
         case SDLK_w:
         case SDLK_UP:
             way = checkCollisionwithMap(MapGame::level0, *this, MOVE_UP);
-            way = mainEnemy.checkCollisionWithThis(hDesPosX, hDesPosY, way);
+            // way = mainEnemy.checkCollisionWithThis(hDesPosX, hDesPosY, way);
             way = Box::hitBox(*this, way);
             Move(way);
             return way;
