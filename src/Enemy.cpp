@@ -57,6 +57,7 @@ void Enemy::enemyRender() {
 }
 
 int Enemy::findPath(int desireX, int desireY) {
+    return NOT_MOVE;
     int disX = desireX - eCurPosX / Game::BLOCK_WIDTH;
     int disY = desireY - eCurPosY / Game::BLOCK_WIDTH;
     if (disX == 0 && disY == 0) {

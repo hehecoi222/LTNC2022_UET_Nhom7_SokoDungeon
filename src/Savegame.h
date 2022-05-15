@@ -30,6 +30,12 @@ class Savegame {
     // Load savefile
     void loadSavefile(const char* filename, Hero& hero, MapGame& map);
 
+    // Load high score
+    void loadHighScore(const char* filename);
+
+    // Compare high score and rewrite
+    void compareHighScore(const char* filename);
+
     // Set current map
     void setMap(Hero& hero, MapGame& map);
     void setMapInt(int currentMap) { mapSave = currentMap; };
@@ -52,6 +58,9 @@ class Savegame {
     // Undo move
     void undoMove(Hero& hero);
 
+    // Get Move count:
+    int getMovesCount() { return movesCount; }
+
     // Direction
     enum { NOT_MOVE, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT };
 
@@ -73,6 +82,14 @@ class Savegame {
 
     // Shift position
     void shift(Hero& hero, int direction);
+
+    // Count how many moves
+    int movesCount = 0;
+    void addMovesCount() { movesCount++; }
+    void subMovesCount() { movesCount--; }
+
+    // Current high score
+    int currentHighScore = 0;
 };
 
 #endif

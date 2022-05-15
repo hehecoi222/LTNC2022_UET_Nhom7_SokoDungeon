@@ -1,4 +1,4 @@
-// TODO: Simple Texture, collision (block) hero, move arcording to hero
+// TODO: collision (block) hero, move arcording to hero
 
 #ifndef ENEMY_H
 #define ENEMY_H

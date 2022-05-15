@@ -60,6 +60,53 @@ void Savegame::loadSavefile(const char* filename, Hero& hero, MapGame& map) {
     }
 }
 
+void Savegame::loadHighScore(const char* filename) {
+    std::ifstream fileHighScoreIn(filename);
+    if (fileHighScoreIn.is_open()) {
+        std::string map = "level" + std::to_string(mapSave) + ".smap";
+        while (!fileHighScoreIn.eof()) {
+            std::string temp;
+            fileHighScoreIn >> temp;
+            if (temp == map) {
+                fileHighScoreIn >> currentHighScore;
+                break;
+            }
+        }
+    }
+    fileHighScoreIn.close();
+}
+
+void Savegame::compareHighScore(const char* filename) {
+    if (currentHighScore < movesCount) {
+        currentHighScore = movesCount;
+    }
+    std::ifstream fileHighScoreIn(filename);
+    std::ofstream fileHighScoreOut(filename);
+    std::string map = "level" + std::to_string(mapSave) + ".smap";
+    bool isWritten = false;
+    if (fileHighScoreIn.is_open()) {
+        while (!fileHighScoreIn.eof()) {
+            std::string mapName;
+            int highScore;
+            if (fileHighScoreIn >> mapName >> highScore) {
+                if (mapName == map) {
+                    fileHighScoreOut << mapName << " " << currentHighScore
+                                     << std::endl;
+                    isWritten = true;
+                } else {
+                    fileHighScoreOut << mapName << " " << highScore
+                                     << std::endl;
+                }
+            }
+        }
+        if (!isWritten) {
+            fileHighScoreOut << map << " " << currentHighScore << std::endl;
+        }
+    }
+    fileHighScoreIn.close();
+    fileHighScoreOut.close();
+}
+
 void Savegame::clear() {
     while (movesStack) {
         while (movesStack->boxes) {
@@ -84,6 +131,7 @@ void Savegame::boxPush(int x, int y) {
 }
 
 void Savegame::push(int direction) {
+    addMovesCount();
     Node* newNode = new Node;
     newNode->direction = direction;
     newNode->boxes = tempBoxes;
@@ -102,6 +150,7 @@ int Savegame::pop() {
 }
 
 void Savegame::popBoxes() {
+    subMovesCount();
     if (movesStack->boxes == nullptr) return;
     NodeBox* temp = movesStack->boxes;
     movesStack->boxes = movesStack->boxes->next;

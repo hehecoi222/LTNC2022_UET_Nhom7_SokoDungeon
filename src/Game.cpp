@@ -108,6 +108,7 @@ bool Game::loadMedia() {
     // Load map
     save.loadSavefile(FindRes::getPath("savefile","level0.skbsf"), mainHero, Game0);
     save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
+    save.loadHighScore(FindRes::getPath("savefile","fileHighScore.skbhsf"));
     return success;
 }
 
@@ -134,6 +135,7 @@ void Game::handleEvents() {
 }
 void Game::update() {
     if (Box::winLevel()) {
+        save.compareHighScore(FindRes::getPath("savefile","fileHighScore.skbhsf"));
         Game0.NextMap();
         Game0.PresVic();
         SDL_RenderPresent(gRenderer);
@@ -145,6 +147,7 @@ void Game::update() {
         mainHero.setpos();
         save.setMapInt(Game0.current_map);
         save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
+        save.loadHighScore(FindRes::getPath("savefile","fileHighScore.skbhsf"));
     }
 }
 
