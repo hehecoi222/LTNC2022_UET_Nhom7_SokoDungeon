@@ -18,7 +18,7 @@ Box::Box() {
     bCurPosY = bDesPosY = 0;
     bVelX = 0;
     bVelY = 0;
-    bRectDest = {0, 0, BOX_WIDTH, BOX_HEIGHT};
+    bRectDest = {0, 0, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
 }
 
 Box::Box(int x, int y) {
@@ -27,7 +27,7 @@ Box::Box(int x, int y) {
     bCurPosY = bDesPosY = y;
     bVelX = 0;
     bVelY = 0;
-    bRectDest = {0, 0, BOX_WIDTH, BOX_HEIGHT};
+    bRectDest = {0, 0, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
 }
 
 void Box::loadBoxIMG() {
@@ -50,6 +50,7 @@ void Box::flushBoxLayer() {
             }
         }
     }
+    boxCount = boxWinCount = 0;  
 }
 
 int Box::collision(int direction) {
@@ -145,7 +146,13 @@ void Box::addBoxCount() {
 }
 
 void Box::boxRender() {
-    Box::box.render(bCurPosX, bCurPosY, &bRectClip, &bRectDest);
+    if (bWin) {
+        Box::box.setColor(127, 127, 255);
+        Box::box.render(bCurPosX, bCurPosY, &bRectClip, &bRectDest);
+        Box::box.setColor(255, 255, 255);
+    } else {
+        Box::box.render(bCurPosX, bCurPosY, &bRectClip, &bRectDest);
+    }
 }
 
 void Box::layerBoxRender() {

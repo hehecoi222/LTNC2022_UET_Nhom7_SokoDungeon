@@ -14,7 +14,7 @@ Hero::Hero() {
     hVelX = 0;
     hVelY = 0;
 
-    playerRectDest = {0, 0, HERO_WIDTH * 2, HERO_HEIGHT * 2};
+    playerRectDest = {0, 0, Game::BLOCK_WIDTH * 2, Game::BLOCK_WIDTH * 2};
 
     playerCurrentTex = new Texture();
     playerCurrentTex = &idleDown;
@@ -44,45 +44,47 @@ void Hero::loadHeroIMG() {
     }
 }
 
-int Hero::heroHandleEvent(SDL_Event& e) {
+int Hero::heroHandleEvent(SDL_Event& e, Enemy& mainEnemy) {
     // If a key was pressed
     int way;
-    if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
-        // Adjust the velocity
-        switch (e.key.keysym.sym)
-        {
-            case SDLK_w:
-            case SDLK_UP:
-                way = checkCollisionwithMap(Map::level0, *this, MOVE_UP);
-                way = Box::hitBox(*this, way);
-                Move(way);
-                return way;
-                break;
-            case SDLK_s:
-            case SDLK_DOWN:
-                way = checkCollisionwithMap(Map::level0, *this, MOVE_DOWN);
-                way = Box::hitBox(*this, way);
-                Move(way);
-                return way;
-                break;
-            case SDLK_a:
-            case SDLK_LEFT:
-                way = checkCollisionwithMap(Map::level0, *this, MOVE_LEFT);
-                way = Box::hitBox(*this, way);
-                Move(way);
-                return way;
-                break;
-            case SDLK_d:
-            case SDLK_RIGHT:
-                way = checkCollisionwithMap(Map::level0, *this, MOVE_RIGHT);
-                way = Box::hitBox(*this, way);
-                Move(way);
-                return way;
-                break;
-            default:
-                return NOT_MOVE;
-                break;
-        }
+    // Adjust the velocity
+    switch (e.key.keysym.sym)
+    {
+        case SDLK_w:
+        case SDLK_UP:
+            way = checkCollisionwithMap(MapGame::level0, *this, MOVE_UP);
+            way = mainEnemy.checkCollisionWithThis(hDesPosX, hDesPosY, way);
+            way = Box::hitBox(*this, way);
+            Move(way);
+            return way;
+            break;
+        case SDLK_s:
+        case SDLK_DOWN:
+            way = checkCollisionwithMap(MapGame::level0, *this, MOVE_DOWN);
+            way = mainEnemy.checkCollisionWithThis(hDesPosX, hDesPosY, way);
+            way = Box::hitBox(*this, way);
+            Move(way);
+            return way;
+            break;
+        case SDLK_a:
+        case SDLK_LEFT:
+            way = checkCollisionwithMap(MapGame::level0, *this, MOVE_LEFT);
+            way = mainEnemy.checkCollisionWithThis(hDesPosX, hDesPosY, way);
+            way = Box::hitBox(*this, way);
+            Move(way);
+            return way;
+            break;
+        case SDLK_d:
+        case SDLK_RIGHT:
+            way = checkCollisionwithMap(MapGame::level0, *this, MOVE_RIGHT);
+            way = mainEnemy.checkCollisionWithThis(hDesPosX, hDesPosY, way);
+            way = Box::hitBox(*this, way);
+            Move(way);
+            return way;
+            break;
+        default:
+            return NOT_MOVE;
+            break;
     }
     return NOT_MOVE;
 }
@@ -90,7 +92,7 @@ int Hero::heroHandleEvent(SDL_Event& e) {
 void Hero::Move(int direction) {
     switch (direction) {
         case MOVE_RIGHT:
-            hDesPosX += BLOCK_WIDTH;
+            hDesPosX += Game::BLOCK_WIDTH;
             playerCurrentTex = &walkRight;
             while (hCurPosX != hDesPosX) {
                 hCurPosX += HERO_VEL;
@@ -100,7 +102,7 @@ void Hero::Move(int direction) {
             playerCurrentTex = &idleRight;
             break;
         case MOVE_LEFT:
-            hDesPosX -= BLOCK_WIDTH;
+            hDesPosX -= Game::BLOCK_WIDTH;
             playerCurrentTex = &walkLeft;
             while (hCurPosX != hDesPosX) {
                 hCurPosX -= HERO_VEL;
@@ -110,7 +112,7 @@ void Hero::Move(int direction) {
             playerCurrentTex = &idleLeft;
             break;
         case MOVE_UP:
-            hDesPosY -= BLOCK_WIDTH;
+            hDesPosY -= Game::BLOCK_WIDTH;
             playerCurrentTex = &walkUp;
             while (hCurPosY != hDesPosY) {
                 hCurPosY -= HERO_VEL;
@@ -120,7 +122,7 @@ void Hero::Move(int direction) {
             playerCurrentTex = &idleUp;
             break;
         case MOVE_DOWN:
-            hDesPosY += BLOCK_WIDTH;
+            hDesPosY += Game::BLOCK_WIDTH;
             playerCurrentTex = &walkDown;
             while (hCurPosY != hDesPosY) {
                 hCurPosY += HERO_VEL;
@@ -135,7 +137,7 @@ void Hero::Move(int direction) {
 void Hero::heroRender() {
     // SDL_RenderClear( Game::gRenderer );
     SDL_Rect* currentClip = &playerCurrentFrame[frame / 8];
-    playerCurrentTex->render(hCurPosX - 16, hCurPosY - 16, currentClip,
+    playerCurrentTex->render(hCurPosX - Game::BLOCK_WIDTH/2, hCurPosY - Game::BLOCK_WIDTH/2, currentClip,
                              &playerRectDest);
     // SDL_RenderPresent( Game::gRenderer );
     frame++;

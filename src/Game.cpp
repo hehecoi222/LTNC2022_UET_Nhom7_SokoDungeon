@@ -6,6 +6,7 @@
 #include "Map.h"
 #include "Savegame.h"
 #include "Menu.h"
+#include "Enemy.h"
 
 SDL_Renderer* Game::gRenderer = nullptr;
 TTF_Font* Game::gFont = nullptr;
@@ -25,6 +26,7 @@ Menu gMenu;
 
 // init main character
 Hero mainHero;
+Enemy mainEnemy(4*Game::BLOCK_WIDTH, 2*Game::BLOCK_WIDTH);
 
 // Map
 Map Game0;
@@ -119,18 +121,14 @@ bool Game::loadMedia() {
         Mix_PlayMusic(gMusic, -1);
     // load Hero img
     mainHero.loadHeroIMG();
-
+    mainEnemy.loadEnemyIMG();
     // load Box img
     Box::loadBoxIMG();
 
-    // Initialize save function
-    save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
-
     // Load map
-    Game0.preLoadMap();
-    mainHero.setpos();
-    save.loadSavefile(FindRes::getPath("savefile","level0.skbsf"), mainHero);
-    
+    save.loadSavefile(FindRes::getPath("savefile","level0.skbsf"), mainHero, mainEnemy, Game0);
+    save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
+    save.loadHighScore(FindRes::getPath("savefile","fileHighScore.skbhsf"));
     return success;
 }
 
@@ -147,7 +145,7 @@ void Game::handleEvents() {
             gMenu.menuHandleEvent(e, isRunning);
         }
         else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_r && e.key.repeat == 0) {
-            save.undoMove(mainHero);
+            save.undoMove(mainHero, mainEnemy);
         } 
         else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_LEFTBRACKET)
         {
@@ -162,20 +160,29 @@ void Game::handleEvents() {
             loadMedia();
         }
         else {
-            save.recordMove(mainHero.heroHandleEvent(e));
+            if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
+                save.recordMove(mainHero.heroHandleEvent(e, mainEnemy));
+                save.recordEnemyMove(mainEnemy.Move(
+                    mainEnemy.findPathToHero(mainHero.getCurX(), mainHero.getCurY())));
+            }
         }
     }
 }
 void Game::update() {
     if (Box::winLevel()) {
-        save.clear();
+        save.compareHighScore(FindRes::getPath("savefile", "fileHighScore.skbhsf"));
         Game0.NextMap();
         Game0.PresVic();
         render();
         Mix_PlayMusic(gVictory, -1);
         SDL_Delay(2000);
         Mix_HaltMusic();
-        loadMedia();
+        save.clear();
+        Game0.preLoadMap();
+        mainHero.setpos();
+        save.setMapInt(Game0.current_map);
+        save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
+        save.loadHighScore(FindRes::getPath("savefile","fileHighScore.skbhsf"));
     }
 }
 
@@ -192,6 +199,9 @@ void Game::render() {
         Game0.LoadMap();
         // Render player
         mainHero.heroRender();
+
+        // Render enemy
+        mainEnemy.enemyRender();
 
         // Render box
         Box::layerBoxRender();
@@ -224,8 +234,8 @@ void Game::close() {
     gWindow = NULL;
     gRenderer = NULL;
     Box::box.free();
-    for (int i = 0; i < 15; i++) {
-        for (int j = 0; j < 15; j++) {
+    for (int i = 0; i < GRID_HEIGHT; i++) {
+        for (int j = 0; j < GRID_WIDTH; j++) {
             delete Box::layerBox[i][j];
         }
         delete[] Box::layerBox[i];
