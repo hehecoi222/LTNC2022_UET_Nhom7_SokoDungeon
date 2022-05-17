@@ -52,7 +52,7 @@ int Hero::heroHandleEvent(SDL_Event& e, Enemy& mainEnemy) {
     {
         case SDLK_w:
         case SDLK_UP:
-            way = checkCollisionwithMap(MapGame::level0, *this, MOVE_UP);
+            way = checkCollisionwithMap(Map::level0, *this, MOVE_UP);
             way = mainEnemy.checkCollisionWithThis(hDesPosX, hDesPosY, way);
             way = Box::hitBox(*this, way);
             Move(way);
@@ -60,7 +60,7 @@ int Hero::heroHandleEvent(SDL_Event& e, Enemy& mainEnemy) {
             break;
         case SDLK_s:
         case SDLK_DOWN:
-            way = checkCollisionwithMap(MapGame::level0, *this, MOVE_DOWN);
+            way = checkCollisionwithMap(Map::level0, *this, MOVE_DOWN);
             way = mainEnemy.checkCollisionWithThis(hDesPosX, hDesPosY, way);
             way = Box::hitBox(*this, way);
             Move(way);
@@ -68,7 +68,7 @@ int Hero::heroHandleEvent(SDL_Event& e, Enemy& mainEnemy) {
             break;
         case SDLK_a:
         case SDLK_LEFT:
-            way = checkCollisionwithMap(MapGame::level0, *this, MOVE_LEFT);
+            way = checkCollisionwithMap(Map::level0, *this, MOVE_LEFT);
             way = mainEnemy.checkCollisionWithThis(hDesPosX, hDesPosY, way);
             way = Box::hitBox(*this, way);
             Move(way);
@@ -76,7 +76,7 @@ int Hero::heroHandleEvent(SDL_Event& e, Enemy& mainEnemy) {
             break;
         case SDLK_d:
         case SDLK_RIGHT:
-            way = checkCollisionwithMap(MapGame::level0, *this, MOVE_RIGHT);
+            way = checkCollisionwithMap(Map::level0, *this, MOVE_RIGHT);
             way = mainEnemy.checkCollisionWithThis(hDesPosX, hDesPosY, way);
             way = Box::hitBox(*this, way);
             Move(way);

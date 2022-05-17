@@ -53,7 +53,7 @@ public:
 
     static const int GRID_WIDTH = 15;
     static const int GRID_HEIGHT = 15;
-    static const int BLOCK_WIDTH = 64;
+    static const int BLOCK_WIDTH = 32;
     static const int WINDOW_WIDTH = GRID_WIDTH*BLOCK_WIDTH;
     static const int WINDOW_HEIGHT = GRID_HEIGHT*BLOCK_WIDTH;
 };

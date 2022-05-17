@@ -144,20 +144,33 @@ void Game::handleEvents() {
         else if(gMenu.getMenuState()){
             gMenu.menuHandleEvent(e, isRunning);
         }
-        else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_r && e.key.repeat == 0) {
+        else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_u && e.key.repeat == 0) {
             save.undoMove(mainHero, mainEnemy);
         } 
         else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_LEFTBRACKET)
         {
             Game0.NextMap();
             save.clear();
-            loadMedia();
+            Game0.preLoadMap();
+            mainHero.setpos();
+            save.setMapInt(Game0.current_map);
+            save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
+            save.loadHighScore(FindRes::getPath("savefile","fileHighScore.skbhsf"));
         }
         else if( e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RIGHTBRACKET)
         {
             Game0.PrevMap();
             save.clear();
-            loadMedia();
+            Game0.preLoadMap();
+            mainHero.setpos();
+            save.setMapInt(Game0.current_map);
+            save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
+            save.loadHighScore(FindRes::getPath("savefile","fileHighScore.skbhsf"));
+        }
+        else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_r) {
+            save.clear();
+            Game0.preLoadMap();
+            mainHero.setpos();
         }
         else {
             if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {

@@ -3,19 +3,19 @@
 #include "Box.h"
 #include "Game.h"
 #include "find_res.h"
-#include "mapgame.h"
+#include "Map.h"
 
 Enemy::Enemy() {
     eCurPosX = eCurPosY = 0;
     eRectDest = {0, 0, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
-    eTexture = new LTexture();
+    eTexture = new Texture();
 }
 
 Enemy::Enemy(int x, int y) {
     eCurPosX = x;
     eCurPosY = y;
     eRectDest = {x, y, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
-    eTexture = new LTexture();
+    eTexture = new Texture();
 }
 
 Enemy::~Enemy() { delete eTexture; }
@@ -45,7 +45,7 @@ void Enemy::enemyRender() {
             break;
     }
     eRectClip = {16 * clipDirection, 16 * frame, 16, 16};
-    eTexture->render(eRectDest.x, eRectDest.y, &eRectClip);
+    eTexture->render(eRectDest.x, eRectDest.y, &eRectClip, &eRectDest);
     frameCount++;
     if (frameCount % 12 == 0) {
         frameCount = 0;
@@ -64,22 +64,22 @@ int Enemy::findPathToHero(int desireX, int desireY) {
     }
     if (abs(disX) > abs(disY)) {
         if (disX > 0 &&
-            checkCollisionwithMap(MapGame::level0, *this, MOVE_RIGHT) &&
+            checkCollisionwithMap(Map::level0, *this, MOVE_RIGHT) &&
             Box::layerBox[eCurPosY / Game::BLOCK_WIDTH]
                          [eCurPosX / Game::BLOCK_WIDTH + 1] == nullptr) {
             return MOVE_RIGHT;
         } else if (disX < 0 &&
-                   checkCollisionwithMap(MapGame::level0, *this, MOVE_LEFT) &&
+                   checkCollisionwithMap(Map::level0, *this, MOVE_LEFT) &&
                    Box::layerBox[eCurPosY / Game::BLOCK_WIDTH]
                                 [eCurPosX / Game::BLOCK_WIDTH - 1] == nullptr) {
             return MOVE_LEFT;
         } else if (disY > 0 &&
-                   checkCollisionwithMap(MapGame::level0, *this, MOVE_DOWN) &&
+                   checkCollisionwithMap(Map::level0, *this, MOVE_DOWN) &&
                    Box::layerBox[eCurPosY / Game::BLOCK_WIDTH + 1]
                                 [eCurPosX / Game::BLOCK_WIDTH] == nullptr) {
             return MOVE_DOWN;
         } else if (disY < 0 &&
-                   checkCollisionwithMap(MapGame::level0, *this, MOVE_UP) &&
+                   checkCollisionwithMap(Map::level0, *this, MOVE_UP) &&
                    Box::layerBox[eCurPosY / Game::BLOCK_WIDTH - 1]
                                 [eCurPosX / Game::BLOCK_WIDTH] == nullptr) {
             return MOVE_UP;
@@ -87,22 +87,22 @@ int Enemy::findPathToHero(int desireX, int desireY) {
     }
     if (abs(disY) >= abs(disX)) {
         if (disY > 0 &&
-            checkCollisionwithMap(MapGame::level0, *this, MOVE_DOWN) &&
+            checkCollisionwithMap(Map::level0, *this, MOVE_DOWN) &&
             Box::layerBox[eCurPosY / Game::BLOCK_WIDTH + 1]
                          [eCurPosX / Game::BLOCK_WIDTH] == nullptr) {
             return MOVE_DOWN;
         } else if (disY < 0 &&
-                   checkCollisionwithMap(MapGame::level0, *this, MOVE_UP) &&
+                   checkCollisionwithMap(Map::level0, *this, MOVE_UP) &&
                    Box::layerBox[eCurPosY / Game::BLOCK_WIDTH - 1]
                                 [eCurPosX / Game::BLOCK_WIDTH] == nullptr) {
             return MOVE_UP;
         } else if (disX > 0 &&
-                   checkCollisionwithMap(MapGame::level0, *this, MOVE_RIGHT) &&
+                   checkCollisionwithMap(Map::level0, *this, MOVE_RIGHT) &&
                    Box::layerBox[eCurPosY / Game::BLOCK_WIDTH]
                                 [eCurPosX / Game::BLOCK_WIDTH + 1] == nullptr) {
             return MOVE_RIGHT;
         } else if (disX < 0 &&
-                   checkCollisionwithMap(MapGame::level0, *this, MOVE_LEFT) &&
+                   checkCollisionwithMap(Map::level0, *this, MOVE_LEFT) &&
                    Box::layerBox[eCurPosY / Game::BLOCK_WIDTH]
                                 [eCurPosX / Game::BLOCK_WIDTH - 1] == nullptr) {
             return MOVE_LEFT;

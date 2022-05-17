@@ -3,7 +3,7 @@
 
 #include "Hero.h"
 #include "Enemy.h"
-#include "mapgame.h"
+#include "Map.h"
 #include "Game.h"
 
 // NodeBox to save boxes that has collision
@@ -29,7 +29,7 @@ class Savegame {
     void toFile(const char* filename);
 
     // Load savefile
-    void loadSavefile(const char* filename, Hero& hero, Enemy& enemy, MapGame& map);
+    void loadSavefile(const char* filename, Hero& hero, Enemy& enemy, Map& map);
 
     // Load high score
     void loadHighScore(const char* filename);
@@ -38,7 +38,7 @@ class Savegame {
     void compareHighScore(const char* filename);
 
     // Set current map
-    void setMap(Hero& hero, MapGame& map);
+    void setMap(Hero& hero, Map& map);
     void setMapInt(int currentMap) { mapSave = currentMap; };
 
     // Clear save game

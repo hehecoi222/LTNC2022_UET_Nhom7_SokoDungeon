@@ -34,14 +34,14 @@ void Savegame::toFile(const char* filename) {
     fileSaveOut.close();
 }
 
-void Savegame::setMap(Hero& hero, MapGame& map) {
+void Savegame::setMap(Hero& hero, Map& map) {
     map.setMap(mapSave);
     map.preLoadMap();
     hero.setpos();
 }
 
 void Savegame::loadSavefile(const char* filename, Hero& hero, Enemy& enemy,
-                            MapGame& map) {
+                            Map& map) {
     std::ifstream fileSaveIn(filename);
     if (fileSaveIn.is_open()) {
         if (!fileSaveIn.eof()) {
@@ -55,7 +55,7 @@ void Savegame::loadSavefile(const char* filename, Hero& hero, Enemy& enemy,
             int direction;
             if (fileSaveIn >> direction) {
                 direction =
-                    checkCollisionwithMap(MapGame::level0, hero, direction);
+                    checkCollisionwithMap(Map::level0, hero, direction);
                 direction = enemy.checkCollisionWithThis(
                     hero.getCurX(), hero.getCurY(), direction);
                 direction = Box::hitBox(hero, direction);
@@ -142,6 +142,7 @@ void Savegame::clear() {
     movesStack = nullptr;
     tempBoxes = nullptr;
     enemyStack = nullptr;
+    movesCount = 0;
 }
 
 void Savegame::boxPush(int x, int y) {

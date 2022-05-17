@@ -35,11 +35,11 @@ private:
     //destination x, y and width, height of the Victory image
     SDL_Rect des1;
     //Draw the floor 
-    LTexture floor[3];
+    Texture floor[3];
     //Draw the wall
-    LTexture wall[3];
+    Texture wall[3];
     //Draw goal position of the box to win 
-    LTexture Goal;
+    Texture Goal;
     // Render goal position
     void goalClicked(int gridX, int gridY);
     //Draw Victory image

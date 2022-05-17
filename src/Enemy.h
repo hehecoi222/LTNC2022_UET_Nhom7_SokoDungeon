@@ -44,7 +44,7 @@ class Enemy {
     int eCurState = NOT_MOVE;
 
     // Enemy texture idle
-    LTexture* eTexture;
+    Texture* eTexture;
 
     // Enemy rectangle in screen
     SDL_Rect eRectDest;

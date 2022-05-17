@@ -133,7 +133,7 @@ void Map::PresVic()
     Victory.render(0, 0, nullptr, &des1);
 }
 
-void MapGame::clear() {
+void Map::clear() {
     if (!level0) {
         return;
     }
