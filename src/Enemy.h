@@ -25,10 +25,10 @@ class Enemy {
     void setCurY(int y) { eCurPosY = y; }
 
     // Find path to object
-    int findPath(int desireX, int desireY);
+    int findPathToHero(int desireX, int desireY);
 
     // Move enemy
-    int Move(int direction, int objX, int objY);
+    int Move(int direction);
 
     // Check collision
     int checkCollisionWithThis(int objX, int objY, int direction);

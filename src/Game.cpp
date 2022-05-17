@@ -128,6 +128,8 @@ void Game::handleEvents() {
         } else {
             if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
                 save.recordMove(mainHero.heroHandleEvent(e, mainEnemy));
+                mainEnemy.Move(
+                    mainEnemy.findPathToHero(mainHero.getCurX(), mainHero.getCurY()));
             }
         }
     }

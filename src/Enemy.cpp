@@ -56,10 +56,10 @@ void Enemy::enemyRender() {
     }
 }
 
-int Enemy::findPath(int desireX, int desireY) {
-    int disX = desireX - eCurPosX / Game::BLOCK_WIDTH;
-    int disY = desireY - eCurPosY / Game::BLOCK_WIDTH;
-    if (disX == 0 && disY == 0) {
+int Enemy::findPathToHero(int desireX, int desireY) {
+    int disX = desireX / Game::BLOCK_WIDTH - eCurPosX / Game::BLOCK_WIDTH;
+    int disY = desireY / Game::BLOCK_WIDTH - eCurPosY / Game::BLOCK_WIDTH;
+    if ((abs(disX) == 1 && disY == 0) || (abs(disY) == 1 && disX == 0)) {
         return NOT_MOVE;
     }
     if (abs(disX) > abs(disY)) {
@@ -111,11 +111,7 @@ int Enemy::findPath(int desireX, int desireY) {
     return NOT_MOVE;
 }
 
-int Enemy::Move(int direction, int objX, int objY) {
-    objX = abs(objX - eCurPosX);
-    objY = abs(objY - eCurPosY);
-    if (objX == Game::BLOCK_WIDTH || objY == Game::BLOCK_WIDTH)
-        direction = NOT_MOVE;
+int Enemy::Move(int direction) {
     switch (direction) {
         case MOVE_UP:
             eCurPosY -= Game::BLOCK_WIDTH;
@@ -143,22 +139,6 @@ int Enemy::checkCollisionWithThis(int objX, int objY, int direction) {
     objY = objY / Game::BLOCK_WIDTH;
     int eTempX = eCurPosX / Game::BLOCK_WIDTH;
     int eTempY = eCurPosY / Game::BLOCK_WIDTH;
-    switch (findPath(objX, objY)) {
-        case MOVE_LEFT:
-            eTempX--;
-            break;
-        case MOVE_RIGHT:
-            eTempX++;
-            break;
-        case MOVE_UP:
-            eTempY--;
-            break;
-        case MOVE_DOWN:
-            eTempY++;
-            break;
-        default:
-            return NOT_MOVE;
-    }
     switch (direction) {
         case MOVE_LEFT:
             objX--;
