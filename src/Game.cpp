@@ -90,7 +90,7 @@ bool Game::init() {
 bool Game::loadMedia() {
     bool success = true;
 
-    Game::gFont = TTF_OpenFont(FindRes::getPath("font","Pixel2.ttf"), 28);
+    gFont = TTF_OpenFont(FindRes::getPath("font","DungeonFont.ttf"), 36);
     if( gFont == NULL )
     {
         cout << "Failed to load gFont" << TTF_GetError() << endl;
