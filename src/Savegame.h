@@ -75,6 +75,8 @@ class Savegame {
     NodeBox* tempBoxes;
     // Stack to save enemy step
     Node* enemyStack;
+    // Current hero move state
+    int currentHeroMove = NOT_MOVE;
     // Push to stack
     void push(int direction);
     // Pop from stack

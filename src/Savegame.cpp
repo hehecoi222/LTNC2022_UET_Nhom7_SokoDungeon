@@ -3,13 +3,15 @@
 #include <fstream>
 
 #include "Box.h"
+#include "Enemy.h"
 #include "Game.h"
 #include "Hero.h"
-#include "Enemy.h"
 #include "mapgame.h"
 
 Savegame::Savegame() {
     movesStack = nullptr;
+    enemyStack = nullptr;
+    mapSave = 0;
     tempBoxes = nullptr;
     heroX = heroY = 0;
 }
@@ -38,7 +40,8 @@ void Savegame::setMap(Hero& hero, MapGame& map) {
     hero.setpos();
 }
 
-void Savegame::loadSavefile(const char* filename, Hero& hero, Enemy& enemy, MapGame& map) {
+void Savegame::loadSavefile(const char* filename, Hero& hero, Enemy& enemy,
+                            MapGame& map) {
     std::ifstream fileSaveIn(filename);
     if (fileSaveIn.is_open()) {
         if (!fileSaveIn.eof()) {
@@ -209,9 +212,12 @@ int Savegame::enemyUndoDirection(int direction) {
     return NOT_MOVE;
 }
 
-void Savegame::recordEnemyMove(int direction) { pushEnemy(direction); }
+void Savegame::recordEnemyMove(int direction) {
+    if (currentHeroMove == movesStack->direction) pushEnemy(direction);
+}
 
 void Savegame::recordMove(int direction) {
+    currentHeroMove = direction;
     switch (direction) {
         case NOT_MOVE:
             break;
