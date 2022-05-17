@@ -87,11 +87,17 @@ void Map::LoadMap() {
 
 void Map::NextMap()
 {
+    if(current_map < 5)
     //increase the map level
-    current_map++;
-    cout<<current_map;
+        current_map++;
 }
 
+void Map::PrevMap()
+{
+    if(current_map > 0)
+    //Decrease the map level
+    current_map--;
+}
 void Map::PresVic()
 {
     des1.x = des1.y = 0;

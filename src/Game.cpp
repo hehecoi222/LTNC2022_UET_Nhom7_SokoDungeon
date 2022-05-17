@@ -1,5 +1,4 @@
 #include "Game.h"
-
 #include "Box.h"
 #include "Hero.h"
 #include "Texture.h"
@@ -105,7 +104,6 @@ bool Game::loadMedia() {
     //Load menu texture
     gMenu.loadMenu();
     
-
     //Load music and sound effect
     gVictory = Mix_LoadMUS(FindRes::getPath("audio", "Victory.wav"));
     gMusic = Mix_LoadMUS(FindRes::getPath("audio", "Soundtrack.wav"));
@@ -113,7 +111,7 @@ bool Game::loadMedia() {
     gHero = Mix_LoadWAV(FindRes::getPath("audio", "Footsteps.wav"));
     gBox = Mix_LoadWAV(FindRes::getPath("audio", "box.wav"));
     gMouse = Mix_LoadWAV(FindRes::getPath("audio", "MouseClick.wav"));    
-    
+    //Play intro sound while being in Menu state
     if(gMenu.getMenuState())
         Mix_PlayMusic(gTheme, -1);
     else
@@ -133,7 +131,6 @@ bool Game::loadMedia() {
     mainHero.setpos();
     save.loadSavefile(FindRes::getPath("savefile","level0.skbsf"), mainHero);
     
-
     return success;
 }
 
@@ -152,6 +149,18 @@ void Game::handleEvents() {
         else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_r && e.key.repeat == 0) {
             save.undoMove(mainHero);
         } 
+        else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_LEFTBRACKET)
+        {
+            Game0.NextMap();
+            save.clear();
+            loadMedia();
+        }
+        else if( e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RIGHTBRACKET)
+        {
+            Game0.PrevMap();
+            save.clear();
+            loadMedia();
+        }
         else {
             save.recordMove(mainHero.heroHandleEvent(e));
         }

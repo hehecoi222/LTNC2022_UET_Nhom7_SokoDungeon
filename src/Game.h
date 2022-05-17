@@ -1,7 +1,7 @@
 #ifndef Game_h
 #define Game_h
 
-#include <bits/stdc++.h>
+#include <iostream>
 using namespace std;
 //Using SDL, SDL_image, standard IO, and strings
 
@@ -15,8 +15,7 @@ class Game {
     int cnt = 0;
     bool isRunning = true;
     SDL_Window* gWindow = NULL;
-    bool is_Win = false;
-    
+        
 public:
     Game();
     ~Game();

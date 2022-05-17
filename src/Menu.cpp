@@ -73,13 +73,12 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
 }
 
 int Menu::itemsFunction(bool isClicked[]){
+    Mix_PlayMusic(Game::gMusic, -1);
     if(isClicked[NEW_GAME]) {
-        inMenu = false;
-        Mix_PlayMusic(Game::gMusic, -1);
+        inMenu = false;        
         return NEW_GAME;
     }
     if(isClicked[CONTINUE_GAME]) {
-        Mix_PlayMusic(Game::gMusic, -1);
         inMenu = false;
         return CONTINUE_GAME;
     }

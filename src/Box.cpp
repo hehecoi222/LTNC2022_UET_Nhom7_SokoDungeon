@@ -58,7 +58,10 @@ int Box::collision(int direction) {
     int way = checkCollisionwithMap(Map::level0, *this, direction);
     way = hitBox(*this, way);
     Move(way);
-    if (way) saveBoxinsave();
+    if (way) {
+        
+        saveBoxinsave();
+    }
     return way;
 }
 

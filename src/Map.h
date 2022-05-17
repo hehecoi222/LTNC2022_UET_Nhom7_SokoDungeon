@@ -17,6 +17,8 @@ public:
     static char** level0;
     //Change to the Next Map
     void NextMap();
+    //Change to the Previous Map
+    void PrevMap();
     //Current map of game
     int current_map;
     //name of the level
