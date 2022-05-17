@@ -106,7 +106,7 @@ bool Game::loadMedia() {
     Box::loadBoxIMG();
 
     // Load map
-    save.loadSavefile(FindRes::getPath("savefile","level0.skbsf"), mainHero, Game0);
+    save.loadSavefile(FindRes::getPath("savefile","level0.skbsf"), mainHero, mainEnemy, Game0);
     save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
     save.loadHighScore(FindRes::getPath("savefile","fileHighScore.skbhsf"));
     return success;
@@ -121,15 +121,15 @@ void Game::handleEvents() {
         if (e.type == SDL_QUIT) {
             isRunning = false;
         } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_r && e.key.repeat == 0) {
-            save.undoMove(mainHero);
+            save.undoMove(mainHero, mainEnemy);
         } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_n && e.key.repeat == 0) {
             Game0.NextMap();
             loadMedia();
         } else {
             if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
                 save.recordMove(mainHero.heroHandleEvent(e, mainEnemy));
-                mainEnemy.Move(
-                    mainEnemy.findPathToHero(mainHero.getCurX(), mainHero.getCurY()));
+                save.recordEnemyMove(mainEnemy.Move(
+                    mainEnemy.findPathToHero(mainHero.getCurX(), mainHero.getCurY())));
             }
         }
     }

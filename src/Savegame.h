@@ -2,6 +2,7 @@
 #define SAVE_GAME_H
 
 #include "Hero.h"
+#include "Enemy.h"
 #include "mapgame.h"
 #include "Game.h"
 
@@ -28,7 +29,7 @@ class Savegame {
     void toFile(const char* filename);
 
     // Load savefile
-    void loadSavefile(const char* filename, Hero& hero, MapGame& map);
+    void loadSavefile(const char* filename, Hero& hero, Enemy& enemy, MapGame& map);
 
     // Load high score
     void loadHighScore(const char* filename);
@@ -52,11 +53,14 @@ class Savegame {
     // Record move
     void recordMove(int direction);
 
+    // Record enemy move
+    void recordEnemyMove(int direction);
+
     // Push to stack boxes
     void boxPush(int x, int y);
 
     // Undo move
-    void undoMove(Hero& hero);
+    void undoMove(Hero& hero, Enemy& enemy);
 
     // Get Move count:
     int getMovesCount() { return movesCount; }
@@ -69,19 +73,27 @@ class Savegame {
     Node* movesStack;
     // Temp boxes
     NodeBox* tempBoxes;
+    // Stack to save enemy step
+    Node* enemyStack;
     // Push to stack
     void push(int direction);
     // Pop from stack
     int pop();
     // Pop from stack boxes
     void popBoxes();
+    // Push to stack enemy
+    void pushEnemy(int direction);
+    // Pop from stack enemy
+    int popEnemy();
+    // Move direciton of enemy
+    int enemyUndoDirection(int direction);
     // Position of Hero in grid
     int heroX, heroY;
     // Current map
     int mapSave = 0;
 
     // Shift position
-    void shift(Hero& hero, int direction);
+    void shift(Hero& hero, Enemy& enemy, int direction);
 
     // Count how many moves
     int movesCount = 0;

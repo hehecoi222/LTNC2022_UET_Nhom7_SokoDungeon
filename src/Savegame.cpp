@@ -5,6 +5,7 @@
 #include "Box.h"
 #include "Game.h"
 #include "Hero.h"
+#include "Enemy.h"
 #include "mapgame.h"
 
 Savegame::Savegame() {
@@ -37,7 +38,7 @@ void Savegame::setMap(Hero& hero, MapGame& map) {
     hero.setpos();
 }
 
-void Savegame::loadSavefile(const char* filename, Hero& hero, MapGame& map) {
+void Savegame::loadSavefile(const char* filename, Hero& hero, Enemy& enemy, MapGame& map) {
     std::ifstream fileSaveIn(filename);
     if (fileSaveIn.is_open()) {
         if (!fileSaveIn.eof()) {
@@ -52,9 +53,13 @@ void Savegame::loadSavefile(const char* filename, Hero& hero, MapGame& map) {
             if (fileSaveIn >> direction) {
                 direction =
                     checkCollisionwithMap(MapGame::level0, hero, direction);
+                direction = enemy.checkCollisionWithThis(
+                    hero.getCurX(), hero.getCurY(), direction);
                 direction = Box::hitBox(hero, direction);
                 hero.Move(direction);
                 recordMove(direction);
+                recordEnemyMove(enemy.Move(
+                    enemy.findPathToHero(hero.getCurX(), hero.getCurY())));
             }
         }
     }
@@ -121,8 +126,19 @@ void Savegame::clear() {
         movesStack = movesStack->next;
         delete tmp;
     }
+    while (tempBoxes) {
+        NodeBox* temp = tempBoxes;
+        tempBoxes = tempBoxes->next;
+        delete temp;
+    }
+    while (enemyStack) {
+        Node* tmp = enemyStack;
+        enemyStack = enemyStack->next;
+        delete tmp;
+    }
     movesStack = nullptr;
     tempBoxes = nullptr;
+    enemyStack = nullptr;
 }
 
 void Savegame::boxPush(int x, int y) {
@@ -160,6 +176,41 @@ void Savegame::popBoxes() {
     delete temp;
 }
 
+void Savegame::pushEnemy(int direction) {
+    Node* newNode = new Node;
+    newNode->direction = direction;
+    newNode->boxes = nullptr;
+    newNode->next = enemyStack;
+    enemyStack = newNode;
+}
+
+int Savegame::popEnemy() {
+    if (enemyStack == nullptr) return 0;
+    int direction = enemyStack->direction;
+    Node* temp = enemyStack;
+    enemyStack = enemyStack->next;
+    delete temp;
+    return direction;
+}
+
+int Savegame::enemyUndoDirection(int direction) {
+    switch (direction) {
+        case NOT_MOVE:
+            break;
+        case MOVE_UP:
+            return MOVE_DOWN;
+        case MOVE_DOWN:
+            return MOVE_UP;
+        case MOVE_LEFT:
+            return MOVE_RIGHT;
+        case MOVE_RIGHT:
+            return MOVE_LEFT;
+    }
+    return NOT_MOVE;
+}
+
+void Savegame::recordEnemyMove(int direction) { pushEnemy(direction); }
+
 void Savegame::recordMove(int direction) {
     switch (direction) {
         case NOT_MOVE:
@@ -183,36 +234,36 @@ void Savegame::recordMove(int direction) {
     }
 }
 
-void Savegame::undoMove(Hero& hero) {
+void Savegame::undoMove(Hero& hero, Enemy& enemy) {
     int direction = (movesStack ? movesStack->direction : 0);
     switch (direction) {
         case NOT_MOVE:
             break;
         case MOVE_UP:
             direction = MOVE_DOWN;
-            shift(hero, direction);
+            shift(hero, enemy, direction);
             heroY++;
             break;
         case MOVE_DOWN:
             direction = MOVE_UP;
-            shift(hero, direction);
+            shift(hero, enemy, direction);
             heroY--;
             break;
         case MOVE_LEFT:
             direction = MOVE_RIGHT;
-            shift(hero, direction);
+            shift(hero, enemy, direction);
             heroX++;
             break;
         case MOVE_RIGHT:
             direction = MOVE_LEFT;
-            shift(hero, direction);
+            shift(hero, enemy, direction);
             heroX--;
             break;
     }
     pop();
 }
 
-void Savegame::shift(Hero& hero, int direction) {
+void Savegame::shift(Hero& hero, Enemy& enemy, int direction) {
     hero.Move(direction);
     while (movesStack->boxes) {
         int boxX = movesStack->boxes->x;
@@ -220,4 +271,5 @@ void Savegame::shift(Hero& hero, int direction) {
         Box::layerBox[boxY][boxX]->Move(direction);
         popBoxes();
     }
+    enemy.Move(enemyUndoDirection(popEnemy()));
 }
