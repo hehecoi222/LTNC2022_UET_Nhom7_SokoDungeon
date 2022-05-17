@@ -2,11 +2,15 @@
 #define Hero_h
 #include "Game.h"
 #include "Texture.h"
+#include "Enemy.h"
 #include "find_res.h"
-
+#include <utility>
 class Hero
 {
     public:
+		//Maximum axis velocity of the HERO
+		static const int HERO_VEL = 4;
+
 		//Initializes the variables
 		Hero();
 
@@ -17,7 +21,7 @@ class Hero
 		void loadHeroIMG();
 
 		//Takes key presses and adjusts the hero's velocity
-		int heroHandleEvent( SDL_Event& e );
+		int heroHandleEvent( SDL_Event& e, Enemy& mainEnemy );
 
 		//Moves the hero according to key
 		void Move(int direction);
@@ -29,8 +33,14 @@ class Hero
 		int getCurX(){return hCurPosX;}
 		int getCurY(){return hCurPosY;}
 
-		//Current rendered hero texture 
-		Texture *playerCurrentTex;
+		//idle texture
+		Texture idleUp, idleDown, idleRight, idleLeft;
+
+		//walking texture;
+		Texture walkUp, walkDown, walkRight, walkLeft;
+
+		//current hero texture that will be rendered
+		Texture *playerCurrentTex = &idleUp;
 
 		//Hero directions
 		enum {
@@ -41,6 +51,11 @@ class Hero
 			MOVE_RIGHT
 		};
 
+
+		//Initial Position of Hero
+		static std::pair<int, int> pos;
+		//set position for each level
+		void setpos();
     private:
 		//The dimensions of the hero
 		const int HERO_WIDTH = Game::BLOCK_WIDTH;
@@ -55,8 +70,8 @@ class Hero
 		//The X and Y offsets of the hero
 		int hCurPosX, hCurPosY;
 
-		//The hero position after moving
-		int hDesPosX, hDesPoxY;
+		//The hero destination position after moving
+		int hDesPosX, hDesPosY;
 
 		//Idle textures
 		Texture idleUp, idleDown, idleRight, idleLeft;

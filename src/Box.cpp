@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "Box.h"
 #include "find_res.h"
-#include "mapgame.h"
+#include "Map.h"
 #include "Game.h"
 #include "Savegame.h"
 
@@ -16,7 +16,7 @@ Box::Box() {
     bCurPosY = bDesPosY = 0;
     bVelX = 0;
     bVelY = 0;
-    bRectDest = {0, 0, BOX_WIDTH, BOX_HEIGHT};
+    bRectDest = {0, 0, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
 }
 
 Box::Box(int x, int y) {
@@ -25,7 +25,7 @@ Box::Box(int x, int y) {
     bCurPosY = bDesPosY = y;
     bVelX = 0;
     bVelY = 0;
-    bRectDest = {0, 0, BOX_WIDTH, BOX_HEIGHT};
+    bRectDest = {0, 0, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
 }
 
 void Box::loadBoxIMG() {
@@ -48,15 +48,19 @@ void Box::flushBoxLayer() {
             }
         }
     }
+    boxCount = boxWinCount = 0;  
 }
 
 int Box::collision(int direction) {
     // If the box is colliding with the obj in the left direction
     if (direction == NOT_MOVE) return direction;
-    int way = checkCollisionwithMap(MapGame::level0, *this, direction);
+    int way = checkCollisionwithMap(Map::level0, *this, direction);
     way = hitBox(*this, way);
     Move(way);
-    if (way) saveBoxinsave();
+    if (way) {
+        
+        saveBoxinsave();
+    }
     return way;
 }
 
@@ -74,6 +78,7 @@ void Box::Move(int direction) {
             bDesPosX -= Game::BLOCK_WIDTH;
             while (bCurPosX != bDesPosX) {
                 bCurPosX -= BOX_VEL;
+                Mix_PlayChannel(-1, Game::gBox, 0);
                 boxRender();
             }
             addBoxCount();
@@ -86,6 +91,7 @@ void Box::Move(int direction) {
             bDesPosX += Game::BLOCK_WIDTH;
             while (bCurPosX != bDesPosX) {
                 bCurPosX += BOX_VEL;
+                Mix_PlayChannel(-1, Game::gBox, 0);
                 boxRender();
             }
             addBoxCount();
@@ -98,6 +104,7 @@ void Box::Move(int direction) {
             bDesPosY -= Game::BLOCK_WIDTH;
             while (bCurPosY != bDesPosY) {
                 bCurPosY -= BOX_VEL;
+                Mix_PlayChannel(-1, Game::gBox, 0);
                 boxRender();
             }
             addBoxCount();
@@ -110,6 +117,7 @@ void Box::Move(int direction) {
             bDesPosY += Game::BLOCK_WIDTH;
             while (bCurPosY != bDesPosY) {
                 bCurPosY += BOX_VEL;
+                Mix_PlayChannel(-1, Game::gBox, 0);
                 boxRender();
             }
             addBoxCount();
@@ -127,7 +135,7 @@ void Box::checkWin(char** level) {
 
 void Box::addBoxCount() {
     bool temp = bWin;
-    checkWin(MapGame::level0);
+    checkWin(Map::level0);
     if (temp != bWin && bWin) {
         boxWinCount++;
     } else if (temp != bWin && !bWin) {
@@ -136,7 +144,13 @@ void Box::addBoxCount() {
 }
 
 void Box::boxRender() {
-    Box::box.render(bCurPosX, bCurPosY, &bRectClip, &bRectDest);
+    if (bWin) {
+        Box::box.setColor(127, 127, 255);
+        Box::box.render(bCurPosX, bCurPosY, &bRectClip, &bRectDest);
+        Box::box.setColor(255, 255, 255);
+    } else {
+        Box::box.render(bCurPosX, bCurPosY, &bRectClip, &bRectDest);
+    }
 }
 
 void Box::layerBoxRender() {

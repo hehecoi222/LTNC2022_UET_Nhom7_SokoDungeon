@@ -3,12 +3,15 @@
 #include <fstream>
 
 #include "Box.h"
+#include "Enemy.h"
 #include "Game.h"
 #include "Hero.h"
-#include "mapgame.h"
+#include "Map.h"
 
 Savegame::Savegame() {
     movesStack = nullptr;
+    enemyStack = nullptr;
+    mapSave = 0;
     tempBoxes = nullptr;
     heroX = heroY = 0;
 }
@@ -25,26 +28,94 @@ void reversePrintStack(Node* stack, std::ostream& file) {
 void Savegame::toFile(const char* filename) {
     std::ofstream fileSaveOut(filename);
     if (fileSaveOut.is_open()) {
+        fileSaveOut << mapSave << " ";
         reversePrintStack(movesStack, fileSaveOut);
     }
     fileSaveOut.close();
 }
 
-void Savegame::loadSavefile(const char* filename, Hero& hero) {
+void Savegame::setMap(Hero& hero, Map& map) {
+    map.setMap(mapSave);
+    map.preLoadMap();
+    hero.setpos();
+}
+
+void Savegame::loadSavefile(const char* filename, Hero& hero, Enemy& enemy,
+                            Map& map) {
     std::ifstream fileSaveIn(filename);
     if (fileSaveIn.is_open()) {
+        if (!fileSaveIn.eof()) {
+            fileSaveIn >> mapSave;
+            setMap(hero, map);
+        } else {
+            mapSave = 0;
+            setMap(hero, map);
+        }
         while (!fileSaveIn.eof()) {
             int direction;
-            if (fileSaveIn) {
-                fileSaveIn >> direction;
+            if (fileSaveIn >> direction) {
                 direction =
-                    checkCollisionwithMap(MapGame::level0, hero, direction);
+                    checkCollisionwithMap(Map::level0, hero, direction);
+                direction = enemy.checkCollisionWithThis(
+                    hero.getCurX(), hero.getCurY(), direction);
                 direction = Box::hitBox(hero, direction);
                 hero.Move(direction);
                 recordMove(direction);
+                recordEnemyMove(enemy.Move(
+                    enemy.findPathToHero(hero.getCurX(), hero.getCurY())));
             }
         }
     }
+}
+
+void Savegame::loadHighScore(const char* filename) {
+    std::ifstream fileHighScoreIn(filename);
+    if (fileHighScoreIn.is_open()) {
+        std::string map = "level" + std::to_string(mapSave) + ".smap";
+        while (!fileHighScoreIn.eof()) {
+            std::string temp;
+            fileHighScoreIn >> temp;
+            if (temp == map) {
+                fileHighScoreIn >> currentHighScore;
+                break;
+            }
+        }
+    }
+    fileHighScoreIn.close();
+}
+
+void Savegame::compareHighScore(const char* filename) {
+    if (currentHighScore > movesCount) {
+        currentHighScore = movesCount;
+    }
+    std::ifstream fileHighScoreIn(filename);
+    std::ofstream fileHighScoreOut(
+        FindRes::getPath("savefile", "fileHighScoreNew.skbhsf"));
+    std::string map = "level" + std::to_string(mapSave) + ".smap";
+    bool isWritten = false;
+    if (fileHighScoreIn.is_open()) {
+        while (!fileHighScoreIn.eof()) {
+            std::string mapName;
+            int highScore;
+            if (fileHighScoreIn >> mapName >> highScore) {
+                if (mapName == map) {
+                    fileHighScoreOut << mapName << " " << currentHighScore
+                                     << std::endl;
+                    isWritten = true;
+                } else {
+                    fileHighScoreOut << mapName << " " << highScore
+                                     << std::endl;
+                }
+            }
+        }
+        if (!isWritten) {
+            fileHighScoreOut << map << " " << currentHighScore << std::endl;
+        }
+    }
+    fileHighScoreIn.close();
+    fileHighScoreOut.close();
+    remove(filename);
+    rename(FindRes::getPath("savefile", "fileHighScoreNew.skbhsf"), filename);
 }
 
 void Savegame::clear() {
@@ -58,8 +129,20 @@ void Savegame::clear() {
         movesStack = movesStack->next;
         delete tmp;
     }
+    while (tempBoxes) {
+        NodeBox* temp = tempBoxes;
+        tempBoxes = tempBoxes->next;
+        delete temp;
+    }
+    while (enemyStack) {
+        Node* tmp = enemyStack;
+        enemyStack = enemyStack->next;
+        delete tmp;
+    }
     movesStack = nullptr;
     tempBoxes = nullptr;
+    enemyStack = nullptr;
+    movesCount = 0;
 }
 
 void Savegame::boxPush(int x, int y) {
@@ -71,6 +154,7 @@ void Savegame::boxPush(int x, int y) {
 }
 
 void Savegame::push(int direction) {
+    addMovesCount();
     Node* newNode = new Node;
     newNode->direction = direction;
     newNode->boxes = tempBoxes;
@@ -89,13 +173,52 @@ int Savegame::pop() {
 }
 
 void Savegame::popBoxes() {
+    subMovesCount();
     if (movesStack->boxes == nullptr) return;
     NodeBox* temp = movesStack->boxes;
     movesStack->boxes = movesStack->boxes->next;
     delete temp;
 }
 
+void Savegame::pushEnemy(int direction) {
+    Node* newNode = new Node;
+    newNode->direction = direction;
+    newNode->boxes = nullptr;
+    newNode->next = enemyStack;
+    enemyStack = newNode;
+}
+
+int Savegame::popEnemy() {
+    if (enemyStack == nullptr) return 0;
+    int direction = enemyStack->direction;
+    Node* temp = enemyStack;
+    enemyStack = enemyStack->next;
+    delete temp;
+    return direction;
+}
+
+int Savegame::enemyUndoDirection(int direction) {
+    switch (direction) {
+        case NOT_MOVE:
+            break;
+        case MOVE_UP:
+            return MOVE_DOWN;
+        case MOVE_DOWN:
+            return MOVE_UP;
+        case MOVE_LEFT:
+            return MOVE_RIGHT;
+        case MOVE_RIGHT:
+            return MOVE_LEFT;
+    }
+    return NOT_MOVE;
+}
+
+void Savegame::recordEnemyMove(int direction) {
+    if (currentHeroMove == movesStack->direction) pushEnemy(direction);
+}
+
 void Savegame::recordMove(int direction) {
+    currentHeroMove = direction;
     switch (direction) {
         case NOT_MOVE:
             break;
@@ -118,36 +241,36 @@ void Savegame::recordMove(int direction) {
     }
 }
 
-void Savegame::undoMove(Hero& hero) {
+void Savegame::undoMove(Hero& hero, Enemy& enemy) {
     int direction = (movesStack ? movesStack->direction : 0);
     switch (direction) {
         case NOT_MOVE:
             break;
         case MOVE_UP:
             direction = MOVE_DOWN;
-            shift(hero, direction);
+            shift(hero, enemy, direction);
             heroY++;
             break;
         case MOVE_DOWN:
             direction = MOVE_UP;
-            shift(hero, direction);
+            shift(hero, enemy, direction);
             heroY--;
             break;
         case MOVE_LEFT:
             direction = MOVE_RIGHT;
-            shift(hero, direction);
+            shift(hero, enemy, direction);
             heroX++;
             break;
         case MOVE_RIGHT:
             direction = MOVE_LEFT;
-            shift(hero, direction);
+            shift(hero, enemy, direction);
             heroX--;
             break;
     }
     pop();
 }
 
-void Savegame::shift(Hero& hero, int direction) {
+void Savegame::shift(Hero& hero, Enemy& enemy, int direction) {
     hero.Move(direction);
     while (movesStack->boxes) {
         int boxX = movesStack->boxes->x;
@@ -155,4 +278,5 @@ void Savegame::shift(Hero& hero, int direction) {
         Box::layerBox[boxY][boxX]->Move(direction);
         popBoxes();
     }
+    enemy.Move(enemyUndoDirection(popEnemy()));
 }

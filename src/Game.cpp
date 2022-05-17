@@ -1,15 +1,21 @@
 #include "Game.h"
-
 #include "Box.h"
 #include "Hero.h"
 #include "Texture.h"
 #include "find_res.h"
-#include "mapgame.h"
+#include "Map.h"
 #include "Savegame.h"
 #include "Menu.h"
+#include "Enemy.h"
 
 SDL_Renderer* Game::gRenderer = nullptr;
 TTF_Font* Game::gFont = nullptr;
+
+//Music and sound effects will be used
+Mix_Music* Game::gVictory = NULL, *Game::gMusic = NULL, *Game::gTheme = NULL;
+Mix_Chunk* Game::gBox = NULL, *Game::gHero = NULL, *Game::gMouse = NULL;
+
+
 
 //Create different render viewport
 const SDL_Rect fullSizeViewPort = {0, 0, Game::WINDOW_WIDTH, Game::WINDOW_HEIGHT};
@@ -20,10 +26,10 @@ Menu gMenu;
 
 //Main character
 Hero mainHero;
+Enemy mainEnemy(4*Game::BLOCK_WIDTH, 2*Game::BLOCK_WIDTH);
 
 // Map
-MapGame Game0;
-SDL_Rect Mapblock;
+Map Game0;
 Savegame save;
 
 Game::Game() {}
@@ -99,20 +105,30 @@ bool Game::loadMedia() {
 
     //Load menu texture
     gMenu.loadMenu();
-
-    //Load Hero img
+    
+    //Load music and sound effect
+    gVictory = Mix_LoadMUS(FindRes::getPath("audio", "Victory.wav"));
+    gMusic = Mix_LoadMUS(FindRes::getPath("audio", "Soundtrack.wav"));
+    gTheme = Mix_LoadMUS(FindRes::getPath("audio", "Theme Song.wav"));
+    gHero = Mix_LoadWAV(FindRes::getPath("audio", "Footsteps.wav"));
+    gBox = Mix_LoadWAV(FindRes::getPath("audio", "box.wav"));
+    gMouse = Mix_LoadWAV(FindRes::getPath("audio", "MouseClick.wav"));    
+    //Play intro sound while being in Menu state
+    if(gMenu.getMenuState())
+        Mix_PlayMusic(gTheme, -1);
+    else
+        //Play gMusic
+        Mix_PlayMusic(gMusic, -1);
+    // load Hero img
     mainHero.loadHeroIMG();
-
+    mainEnemy.loadEnemyIMG();
     // load Box img
     Box::loadBoxIMG();
 
-    //Initialize save function
+    // Load map
+    save.loadSavefile(FindRes::getPath("savefile","level0.skbsf"), mainHero, mainEnemy, Game0);
     save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
-
-    //Load map
-    Game0.preLoadMap();
-    save.loadSavefile(FindRes::getPath("savefile","level0.skbsf"), mainHero);
-
+    save.loadHighScore(FindRes::getPath("savefile","fileHighScore.skbhsf"));
     return success;
 }
 
@@ -128,18 +144,58 @@ void Game::handleEvents() {
         else if(gMenu.getMenuState()){
             gMenu.menuHandleEvent(e, isRunning);
         }
-        else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_r && e.key.repeat == 0) {
-            save.undoMove(mainHero);
+        else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_u && e.key.repeat == 0) {
+            save.undoMove(mainHero, mainEnemy);
         } 
+        else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_LEFTBRACKET)
+        {
+            Game0.NextMap();
+            save.clear();
+            Game0.preLoadMap();
+            mainHero.setpos();
+            save.setMapInt(Game0.current_map);
+            save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
+            save.loadHighScore(FindRes::getPath("savefile","fileHighScore.skbhsf"));
+        }
+        else if( e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RIGHTBRACKET)
+        {
+            Game0.PrevMap();
+            save.clear();
+            Game0.preLoadMap();
+            mainHero.setpos();
+            save.setMapInt(Game0.current_map);
+            save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
+            save.loadHighScore(FindRes::getPath("savefile","fileHighScore.skbhsf"));
+        }
+        else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_r) {
+            save.clear();
+            Game0.preLoadMap();
+            mainHero.setpos();
+        }
         else {
-            save.recordMove(mainHero.heroHandleEvent(e));
+            if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
+                save.recordMove(mainHero.heroHandleEvent(e, mainEnemy));
+                save.recordEnemyMove(mainEnemy.Move(
+                    mainEnemy.findPathToHero(mainHero.getCurX(), mainHero.getCurY())));
+            }
         }
     }
 }
 void Game::update() {
     if (Box::winLevel()) {
-        isRunning = false;
+        save.compareHighScore(FindRes::getPath("savefile", "fileHighScore.skbhsf"));
+        Game0.NextMap();
+        Game0.PresVic();
+        render();
+        Mix_PlayMusic(gVictory, -1);
+        SDL_Delay(2000);
+        Mix_HaltMusic();
         save.clear();
+        Game0.preLoadMap();
+        mainHero.setpos();
+        save.setMapInt(Game0.current_map);
+        save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
+        save.loadHighScore(FindRes::getPath("savefile","fileHighScore.skbhsf"));
     }
 }
 
@@ -148,23 +204,27 @@ void Game::render() {
     SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
     SDL_RenderClear(gRenderer);
 
-    //Change render viewport
-    SDL_RenderSetViewport(gRenderer, &subViewport);
+    if(!Box::winLevel())
+    {
+        //Change render viewport
+        SDL_RenderSetViewport(gRenderer, &subViewport);
+        // Load Map0
+        Game0.LoadMap();
+        // Render player
+        mainHero.heroRender();
 
-    // Load Mapgame0
-    Game0.LoadMap();
-    // Render player
-    mainHero.heroRender();
+        // Render enemy
+        mainEnemy.enemyRender();
 
-    // Render box
-    Box::layerBoxRender();
+        // Render box
+        Box::layerBoxRender();
 
-    //set renderer to menu viewport
-    SDL_RenderSetViewport(gRenderer, &fullSizeViewPort);
+        //set renderer to menu viewport
+        SDL_RenderSetViewport(gRenderer, &fullSizeViewPort);
 
-    //render menu
-    gMenu.menuRender();
-
+        //render menu
+        gMenu.menuRender();
+    }
     // Update Screen
     SDL_RenderPresent(gRenderer);
 }
@@ -173,6 +233,17 @@ void Game::close() {
     // Destroy window
     SDL_DestroyRenderer(gRenderer);
     SDL_DestroyWindow(gWindow);
+
+    // Free the sound effects and sound
+    Mix_FreeMusic(gVictory);
+    Mix_FreeChunk(gHero);
+    Mix_FreeChunk(gBox);
+    Mix_FreeMusic(gTheme);
+    Mix_FreeMusic(gMusic);
+    Mix_FreeChunk(gMouse);
+    gVictory = gTheme = gMusic = NULL;
+    gHero = gBox = gMouse = NULL;
+
     gWindow = NULL;
     gRenderer = NULL;
     Box::box.free();
@@ -181,10 +252,10 @@ void Game::close() {
             delete Box::layerBox[i][j];
         }
         delete[] Box::layerBox[i];
-        delete[] MapGame::level0[i];
+        delete[] Map::level0[i];
     }
     delete[] Box::layerBox;
-    delete[] MapGame::level0;
+    delete[] Map::level0;
     save.toFile(FindRes::getPath("savefile", "level0.skbsf"));
     // Quit SDL subsystems
     SDL_Quit();

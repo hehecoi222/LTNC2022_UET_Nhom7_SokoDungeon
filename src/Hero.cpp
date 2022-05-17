@@ -2,16 +2,18 @@
 #include "Box.h"
 #include "Game.h"
 #include "find_res.h"
-#include "mapgame.h"
+#include "Map.h"
+#include <utility>
+
+std::pair<int, int> Hero::pos = std::make_pair(0, 0);
 
 Hero::Hero() {
-    hCurPosX = 4*Game::BLOCK_WIDTH;
-    hCurPosY = 2*Game::BLOCK_WIDTH;
-
-    hDesPosX = hCurPosX;
-    hDesPoxY = hCurPosY;
+    hCurPosX = hDesPosX = pos.first;
+    hCurPosY = hDesPosY = pos.second;
 
     hDestRect = {0, 0, HERO_WIDTH * 2, HERO_HEIGHT * 2};
+
+    playerRectDest = {0, 0, Game::BLOCK_WIDTH * 2, Game::BLOCK_WIDTH * 2};
 
     playerCurrentTex = new Texture();
     playerCurrentTex = &idleDown;
@@ -25,6 +27,11 @@ Hero::~Hero() {
     playerCurrentTex = nullptr;
 }
 
+void Hero::setpos()
+{
+    hCurPosX = hDesPosX = pos.first;
+    hCurPosY = hDesPosY = pos.second;
+}
 void Hero::loadHeroIMG() {
     //Load hero idle texture
     idleDown.loadFromFile(FindRes::getPath("img", "idown.png"));
@@ -46,45 +53,47 @@ void Hero::loadHeroIMG() {
     }
 }
 
-int Hero::heroHandleEvent(SDL_Event& e) {
-    int hNextDirection;
+int Hero::heroHandleEvent(SDL_Event& e, Enemy& mainEnemy) {
     // If a key was pressed
-    if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
-        //Determine hero direction
-        switch (e.key.keysym.sym)
-        {
-            case SDLK_w:
-            case SDLK_UP:
-                hNextDirection = checkCollisionwithMap(MapGame::level0, *this, MOVE_UP);
-                hNextDirection = Box::hitBox(*this, hNextDirection);
-                Move(hNextDirection);
-                return hNextDirection;
-                break;
-            case SDLK_s:
-            case SDLK_DOWN:
-                hNextDirection = checkCollisionwithMap(MapGame::level0, *this, MOVE_DOWN);
-                hNextDirection = Box::hitBox(*this, hNextDirection);
-                Move(hNextDirection);
-                return hNextDirection;
-                break;
-            case SDLK_a:
-            case SDLK_LEFT:
-                hNextDirection = checkCollisionwithMap(MapGame::level0, *this, MOVE_LEFT);
-                hNextDirection = Box::hitBox(*this, hNextDirection);
-                Move(hNextDirection);
-                return hNextDirection;
-                break;
-            case SDLK_d:
-            case SDLK_RIGHT:
-                hNextDirection = checkCollisionwithMap(MapGame::level0, *this, MOVE_RIGHT);
-                hNextDirection = Box::hitBox(*this, hNextDirection);
-                Move(hNextDirection);
-                return hNextDirection;
-                break;
-            default:
-                return NOT_MOVE;
-                break;
-        }
+    int way;
+    // Adjust the velocity
+    switch (e.key.keysym.sym)
+    {
+        case SDLK_w:
+        case SDLK_UP:
+            way = checkCollisionwithMap(Map::level0, *this, MOVE_UP);
+            way = mainEnemy.checkCollisionWithThis(hDesPosX, hDesPosY, way);
+            way = Box::hitBox(*this, way);
+            Move(way);
+            return way;
+            break;
+        case SDLK_s:
+        case SDLK_DOWN:
+            way = checkCollisionwithMap(Map::level0, *this, MOVE_DOWN);
+            way = mainEnemy.checkCollisionWithThis(hDesPosX, hDesPosY, way);
+            way = Box::hitBox(*this, way);
+            Move(way);
+            return way;
+            break;
+        case SDLK_a:
+        case SDLK_LEFT:
+            way = checkCollisionwithMap(Map::level0, *this, MOVE_LEFT);
+            way = mainEnemy.checkCollisionWithThis(hDesPosX, hDesPosY, way);
+            way = Box::hitBox(*this, way);
+            Move(way);
+            return way;
+            break;
+        case SDLK_d:
+        case SDLK_RIGHT:
+            way = checkCollisionwithMap(Map::level0, *this, MOVE_RIGHT);
+            way = mainEnemy.checkCollisionWithThis(hDesPosX, hDesPosY, way);
+            way = Box::hitBox(*this, way);
+            Move(way);
+            return way;
+            break;
+        default:
+            return NOT_MOVE;
+            break;
     }
     return NOT_MOVE;
 }
@@ -96,6 +105,7 @@ void Hero::Move(int direction) {
             playerCurrentTex = &walkRight;
             while (hCurPosX != hDesPosX) {
                 hCurPosX += HERO_VEL;
+                Mix_PlayChannel(-1, Game::gHero, 0);
                 heroRender();
             }
             playerCurrentTex = &idleRight;
@@ -105,24 +115,27 @@ void Hero::Move(int direction) {
             playerCurrentTex = &walkLeft;
             while (hCurPosX != hDesPosX) {
                 hCurPosX -= HERO_VEL;
+                Mix_PlayChannel(-1, Game::gHero, 0);
                 heroRender();
             }
             playerCurrentTex = &idleLeft;
             break;
         case MOVE_UP:
-            hDesPoxY -= Game::BLOCK_WIDTH;
+            hDesPosY -= Game::BLOCK_WIDTH;
             playerCurrentTex = &walkUp;
-            while (hCurPosY != hDesPoxY) {
+            while (hCurPosY != hDesPosY) {
                 hCurPosY -= HERO_VEL;
+                Mix_PlayChannel(-1, Game::gHero, 0);
                 heroRender();
             }
             playerCurrentTex = &idleUp;
             break;
         case MOVE_DOWN:
-            hDesPoxY += Game::BLOCK_WIDTH;
+            hDesPosY += Game::BLOCK_WIDTH;
             playerCurrentTex = &walkDown;
-            while (hCurPosY != hDesPoxY) {
+            while (hCurPosY != hDesPosY) {
                 hCurPosY += HERO_VEL;
+                Mix_PlayChannel(-1, Game::gHero, 0);
                 heroRender();
             }
             playerCurrentTex = &idleDown;
@@ -132,7 +145,9 @@ void Hero::Move(int direction) {
 
 void Hero::heroRender() {
     SDL_Rect* currentClip = &playerCurrentFrame[frame / 8];
-    playerCurrentTex->render(hCurPosX - 16, hCurPosY - 16, currentClip, &hDestRect);            
+    playerCurrentTex->render(hCurPosX - Game::BLOCK_WIDTH/2, hCurPosY - Game::BLOCK_WIDTH/2, currentClip,
+                             &playerRectDest);
+    // SDL_RenderPresent( Game::gRenderer );
     frame++;
     //Reset animation frame
     if (frame / 8 >= PLAYER_FRAMES) frame = 0;

@@ -4,7 +4,7 @@
 #include "Hero.h"
 #include "Texture.h"
 #include "find_res.h"
-#include "mapgame.h"
+#include "Map.h"
 
 class Box {
    public:
