@@ -27,6 +27,7 @@ public:
     void render();
 
     void close();
+    
 
     bool getGameState(){ return isRunning; }
 
