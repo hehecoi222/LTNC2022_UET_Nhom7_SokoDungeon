@@ -34,10 +34,12 @@ void Savegame::toFile(const char* filename) {
     fileSaveOut.close();
 }
 
-void Savegame::setMap(Hero& hero, Map& map) {
+void Savegame::setMap(Hero& hero, Enemy& enemy, Map& map) {
     map.setMap(mapSave);
     map.preLoadMap();
     hero.setpos();
+    enemy.setCurX(Enemy::enemyGlobalPos.first);
+    enemy.setCurY(Enemy::enemyGlobalPos.second);
 }
 
 void Savegame::loadSavefile(const char* filename, Hero& hero, Enemy& enemy,
@@ -46,16 +48,15 @@ void Savegame::loadSavefile(const char* filename, Hero& hero, Enemy& enemy,
     if (fileSaveIn.is_open()) {
         if (!fileSaveIn.eof()) {
             fileSaveIn >> mapSave;
-            setMap(hero, map);
+            setMap(hero, enemy, map);
         } else {
             mapSave = 0;
-            setMap(hero, map);
+            setMap(hero, enemy, map);
         }
         while (!fileSaveIn.eof()) {
             int direction;
             if (fileSaveIn >> direction) {
-                direction =
-                    checkCollisionwithMap(Map::level0, hero, direction);
+                direction = checkCollisionwithMap(Map::level0, hero, direction);
                 direction = enemy.checkCollisionWithThis(
                     hero.getCurX(), hero.getCurY(), direction);
                 direction = Box::hitBox(hero, direction);
@@ -65,6 +66,9 @@ void Savegame::loadSavefile(const char* filename, Hero& hero, Enemy& enemy,
                     enemy.findPathToHero(hero.getCurX(), hero.getCurY())));
             }
         }
+    } else {
+        mapSave = 0;
+        setMap(hero, enemy, map);
     }
 }
 
@@ -214,13 +218,13 @@ int Savegame::enemyUndoDirection(int direction) {
 }
 
 void Savegame::recordEnemyMove(int direction) {
-    if (currentHeroMove == movesStack->direction) pushEnemy(direction);
+    pushEnemy(direction);
 }
 
 void Savegame::recordMove(int direction) {
-    currentHeroMove = direction;
     switch (direction) {
         case NOT_MOVE:
+            push(NOT_MOVE);
             break;
         case MOVE_UP:
             push(MOVE_UP);

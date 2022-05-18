@@ -26,7 +26,7 @@ Menu gMenu;
 
 // init main character
 Hero mainHero;
-Enemy mainEnemy(4*Game::BLOCK_WIDTH, 2*Game::BLOCK_WIDTH);
+Enemy mainEnemy;
 
 // Map
 Map Game0;
@@ -153,6 +153,8 @@ void Game::handleEvents() {
             save.clear();
             Game0.preLoadMap();
             mainHero.setpos();
+            mainEnemy.setCurX(Enemy::enemyGlobalPos.first);
+            mainEnemy.setCurY(Enemy::enemyGlobalPos.second);
             save.setMapInt(Game0.current_map);
             save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
             save.loadHighScore(FindRes::getPath("savefile","fileHighScore.skbhsf"));
@@ -163,6 +165,8 @@ void Game::handleEvents() {
             save.clear();
             Game0.preLoadMap();
             mainHero.setpos();
+            mainEnemy.setCurX(Enemy::enemyGlobalPos.first);
+            mainEnemy.setCurY(Enemy::enemyGlobalPos.second);
             save.setMapInt(Game0.current_map);
             save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
             save.loadHighScore(FindRes::getPath("savefile","fileHighScore.skbhsf"));
@@ -171,6 +175,8 @@ void Game::handleEvents() {
             save.clear();
             Game0.preLoadMap();
             mainHero.setpos();
+            mainEnemy.setCurX(Enemy::enemyGlobalPos.first);
+            mainEnemy.setCurY(Enemy::enemyGlobalPos.second);
         }
         else {
             if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {

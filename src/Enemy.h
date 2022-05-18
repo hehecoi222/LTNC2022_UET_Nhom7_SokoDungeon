@@ -6,6 +6,10 @@
 #include "Texture.h"
 class Enemy {
    public:
+    // Global var to import postion from Map
+    static std::pair<int, int> enemyGlobalPos;
+    // Set the global var
+    static void setEnemyGlobalPos(int x, int y);
     // Initializer
     Enemy();
     Enemy(int x, int y);
