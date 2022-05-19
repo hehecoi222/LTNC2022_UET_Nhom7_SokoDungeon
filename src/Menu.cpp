@@ -68,8 +68,8 @@ void Menu::loadMenu() {
         optButDes[i]. w = optButDes[i].h = optPanelDest.w/10;
     }
     optButClip[PAUSE_GAME].w = optButClip[PAUSE_GAME].h = 16;
-    optButDes[PAUSE_GAME].x = optButDes[PAUSE_GAME].y = optButDes[PAUSE_GAME].w/4;
     optButDes[PAUSE_GAME].w = optButDes[PAUSE_GAME].h = optPanelDest.w/10;
+    optButDes[PAUSE_GAME].x = optButDes[PAUSE_GAME].y = optButDes[PAUSE_GAME].w/8;
     optButDes[CLOSE_OPTION].w = optButDes[CLOSE_OPTION].h = optPanelDest.w*6/80;
     optButDes[CLOSE_OPTION].x = optPanelDest.x + optPanelDest.w - optButDes[CLOSE_OPTION].w*5/4;
     optButDes[CLOSE_OPTION].y = optPanelDest.y + optButDes[CLOSE_OPTION].w*1/4;
@@ -85,6 +85,7 @@ void Menu::loadMenu() {
 }
 
 void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
+    cout << optButDes[PAUSE_GAME].x  << " " << optButDes[PAUSE_GAME].y  << " " << optButDes[PAUSE_GAME].w  << " " << optButDes[PAUSE_GAME].h  << " " << endl;
     if(inMenu && !inOptions) {
         switch (e.type)
         {
@@ -151,7 +152,7 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
     if(!inMenu && !inOptions) {
         if(e.type == SDL_MOUSEBUTTONDOWN){
             SDL_GetMouseState(&curMX, &curMY);
-            if(curMX >= optButDes[PAUSE_GAME].x  && curMY >= optButDes[PAUSE_GAME].y && curMX <= optButDes[PAUSE_GAME].x + optButDes[PAUSE_GAME].w &&  curMY <= optButDes[PAUSE_GAME].y + optButDes[PAUSE_GAME].h) {
+            if(curMX >= optButDes[PAUSE_GAME].x  && curMY >= optButDes[PAUSE_GAME].y && curMX <= optButDes[PAUSE_GAME].y + optButDes[PAUSE_GAME].w &&  curMY <= optButDes[PAUSE_GAME].y + optButDes[PAUSE_GAME].h) {
                 isClicked = PAUSE_GAME;
                 if(itemsFunction(isClicked) == EXIT_GAME) gameIsRunning = false;
             }
@@ -217,9 +218,10 @@ void Menu::menuRender() {
             optTex.render(optButDes[i].x, optButDes[i].y, &optButClip[i], &optButDes[i]);
         }
     }
+    SDL_Rect temp ={0, 0, 48, 48};
     if(!inMenu && !inOptions){
-        optPresTex.render(optButDes[PAUSE_GAME].x, optButDes[PAUSE_GAME].y, &optButClip[PAUSE_GAME], &optButDes[PAUSE_GAME]);
-        cout << "render pause " <<endl;
+        cout << optButClip[PAUSE_GAME].w << endl;
+        optPresTex.render(optButDes[PAUSE_GAME].x, optButDes[PAUSE_GAME].y, &optButClip[PAUSE_GAME], &temp);
     }
     
     

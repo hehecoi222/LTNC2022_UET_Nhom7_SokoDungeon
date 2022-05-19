@@ -41,6 +41,7 @@ private:
     Texture menuItemsTex[TOTAL_MENU_ITEMS];
     string menuItemsLabel[TOTAL_MENU_ITEMS] = {"New game", "Continue", "Options", "Exit"}; 
     SDL_Rect menuItemsDes[TOTAL_MENU_ITEMS];
+    SDL_Rect pauseGame;
 
     bool isHovering[TOTAL_ITEMS] = {0};
     int isClicked;
