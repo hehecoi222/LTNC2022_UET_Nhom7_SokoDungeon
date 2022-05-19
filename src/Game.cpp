@@ -196,6 +196,7 @@ void Game::update() {
         save.clear();
         Game0.preLoadMap();
         mainHero.setpos();
+        mainEnemy.setCurXY(Enemy::enemyGlobalPos.first, Enemy::enemyGlobalPos.second);
         save.setMapInt(Game0.current_map);
         save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
         save.loadHighScore(FindRes::getPath("savefile","fileHighScore.skbhsf"));
