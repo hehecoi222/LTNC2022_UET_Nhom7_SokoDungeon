@@ -31,6 +31,21 @@ void Enemy::loadEnemyIMG() {
     eRectClip = {0, 0, 16, 16};
 }
 
+void Enemy::setCurX(int x) {
+    eCurPosX = x;
+    eRectDest.x = x;
+}
+
+void Enemy::setCurY(int y) {
+    eCurPosY = y;
+    eRectDest.y = y;
+}
+
+void Enemy::setCurXY(int x, int y) {
+    setCurX(x);
+    setCurY(y);
+}
+
 void Enemy::enemyRender() {
     int clipDirection = 0;
     switch (eCurState) {

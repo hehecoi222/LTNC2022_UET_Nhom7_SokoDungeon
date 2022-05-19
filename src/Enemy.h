@@ -20,13 +20,16 @@ class Enemy {
 
     // render enemy
     void enemyRender();
+    // Set current state
+    void setState(int state) { eCurState = state; }
 
     // Return base information
     int getCurX() { return eCurPosX; }
     int getCurY() { return eCurPosY; }
     // Set base information
-    void setCurX(int x) { eCurPosX = x; }
-    void setCurY(int y) { eCurPosY = y; }
+    void setCurX(int x); 
+    void setCurY(int y);
+    void setCurXY(int x, int y);
 
     // Find path to object
     int findPathToHero(int desireX, int desireY);

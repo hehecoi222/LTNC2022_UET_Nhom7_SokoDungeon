@@ -62,7 +62,7 @@ void Map::preLoadMap() {
         }
         char temp;
         file.read(&temp, 1);
-        // if (current_map != 0) file.read(&temp, 1);
+        // file.read(&temp, 1);
     }
     file.close();
     // load image from folder img

@@ -246,9 +246,10 @@ void Savegame::recordMove(int direction) {
 }
 
 void Savegame::undoMove(Hero& hero, Enemy& enemy) {
-    int direction = (movesStack ? movesStack->direction : 0);
+    int direction = (movesStack ? movesStack->direction : -1);
     switch (direction) {
         case NOT_MOVE:
+            shift(hero, enemy, direction);
             break;
         case MOVE_UP:
             direction = MOVE_DOWN;
@@ -282,5 +283,7 @@ void Savegame::shift(Hero& hero, Enemy& enemy, int direction) {
         Box::layerBox[boxY][boxX]->Move(direction);
         popBoxes();
     }
-    enemy.Move(enemyUndoDirection(popEnemy()));
+    int enemyDirection = popEnemy();
+    enemy.Move(enemyUndoDirection(enemyDirection));
+    enemy.setState(enemyDirection);
 }
