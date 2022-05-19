@@ -11,6 +11,7 @@ Texture Box::box;
 Box*** Box::layerBox = nullptr;
 int Box::boxCount = 0, Box::boxWinCount = 0;
 extern Savegame save;
+extern Enemy mainEnemy;
 
 Box::Box() {
     // Initialize the variables
@@ -57,10 +58,10 @@ int Box::collision(int direction) {
     // If the box is colliding with the obj in the left direction
     if (direction == NOT_MOVE) return direction;
     int way = checkCollisionwithMap(Map::level0, *this, direction);
+    way = mainEnemy.checkCollisionWithThis(bCurPosX, bCurPosY, way);
     way = hitBox(*this, way);
     Move(way);
     if (way) {
-        
         saveBoxinsave();
     }
     return way;
