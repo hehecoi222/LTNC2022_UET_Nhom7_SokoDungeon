@@ -141,9 +141,6 @@ void Game::handleEvents() {
         if (e.type == SDL_QUIT) {
             isRunning = false;
         }
-        else if(gMenu.getMenuState()){
-            gMenu.menuHandleEvent(e, isRunning);
-        }
         else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_u && e.key.repeat == 0) {
             save.undoMove(mainHero, mainEnemy);
         } 
@@ -178,6 +175,7 @@ void Game::handleEvents() {
                 save.recordEnemyMove(mainEnemy.Move(
                     mainEnemy.findPathToHero(mainHero.getCurX(), mainHero.getCurY())));
             }
+        gMenu.menuHandleEvent(e, isRunning);
         }
     }
 }

@@ -11,8 +11,6 @@ Hero::Hero() {
     hCurPosX = hDesPosX = pos.first;
     hCurPosY = hDesPosY = pos.second;
 
-    hDestRect = {0, 0, HERO_WIDTH * 2, HERO_HEIGHT * 2};
-
     playerRectDest = {0, 0, Game::BLOCK_WIDTH * 2, Game::BLOCK_WIDTH * 2};
 
     playerCurrentTex = new Texture();

@@ -56,7 +56,7 @@ public:
     static const int GRID_HEIGHT = 15;
     static const int BLOCK_WIDTH = 32;
     static const int WINDOW_WIDTH = 800;
-    static const int WINDOW_HEIGHT = GRID_HEIGHT*BLOCK_WIDTH;
+    static const int WINDOW_HEIGHT = 640;
 };
 
 #endif /* Game_hpp */

@@ -8,8 +8,6 @@
 class Hero
 {
     public:
-		//Maximum axis velocity of the HERO
-		static const int HERO_VEL = 4;
 
 		//Initializes the variables
 		Hero();
@@ -32,12 +30,6 @@ class Hero
 		//Returns hero current position
 		int getCurX(){return hCurPosX;}
 		int getCurY(){return hCurPosY;}
-
-		//idle texture
-		Texture idleUp, idleDown, idleRight, idleLeft;
-
-		//walking texture;
-		Texture walkUp, walkDown, walkRight, walkLeft;
 
 		//current hero texture that will be rendered
 		Texture *playerCurrentTex = &idleUp;
@@ -80,7 +72,7 @@ class Hero
 		Texture walkUp, walkDown, walkRight, walkLeft;
 
 		//Hero rendered destination rect
-		SDL_Rect hDestRect;
+		SDL_Rect playerRectDest;
 
 		//Player sprites frames
 		static const int PLAYER_FRAMES = 4;
