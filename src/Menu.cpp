@@ -197,6 +197,12 @@ int Menu::itemsFunction(int isCLicked){
         inOptions = false;
         cout << "return home" << endl << endl;
         break;
+    case MUSIC:
+        swap(optButClip[MUSIC],optButClip[MUSIC_OFF]);
+        break;
+    case SOUND_EFFECT:
+        swap(optButClip[SOUND_EFFECT],optButClip[SOUND_EFFECT_OFF]);
+        break;
     default:
     break;
     }
