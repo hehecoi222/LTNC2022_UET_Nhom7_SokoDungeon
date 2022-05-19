@@ -55,11 +55,14 @@ void Map::preLoadMap() {
             {
                 Hero::pos.first = j * Game::BLOCK_WIDTH;
                 Hero::pos.second = i * Game::BLOCK_WIDTH;
+            } else if(level0[i][j] == '&') {
+                Enemy::setEnemyGlobalPos(j * Game::BLOCK_WIDTH,
+                                         i * Game::BLOCK_WIDTH);
             }
         }
         char temp;
         file.read(&temp, 1);
-        // if (current_map != 0) file.read(&temp, 1);
+        // file.read(&temp, 1);
     }
     file.close();
     // load image from folder img
@@ -85,6 +88,7 @@ void Map::LoadMap() {
                 case ' ':
                 case '$':
                 case '@':
+                case '&':
                     floor[(i + j) % 3].render(j * Game::BLOCK_WIDTH,
                                                i * Game::BLOCK_WIDTH, nullptr,
                                                &des0);
