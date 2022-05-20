@@ -13,6 +13,7 @@ Menu::Menu() {
 
     inMenu = true;
     inOptions = false;
+    inWinPanel = true;
     cout << "init successful";
 }
 Menu::~Menu(){}
@@ -52,41 +53,53 @@ void Menu::loadMenu() {
     optPanelDest.x = Game::WINDOW_WIDTH/2 - optPanelDest.w/2;
     optPanelDest.y = Game::WINDOW_HEIGHT/2 - optPanelDest.h/2;
 
+    //Load winning panel
+    winPanelDest = optPanelDest;
+    winPanelClip = optPanelClip;
+
     //Load option items
-    optTex.loadFromFile(FindRes::getPath("img","buttons.png"));
-    optPresTex.loadFromFile(FindRes::getPath("img","buttonsPressed.png"));
-    optButClip[RETURN_HOME] = {0, 0};
-    optButClip[CREDIT] = {64, 16};
-    optButClip[SOUND_EFFECT] = {16, 32};
-    optButClip[SOUND_EFFECT_OFF] = {32, 32};
-    optButClip[MUSIC] = {48, 16};
-    optButClip[MUSIC_OFF] = {0, 32};
-    optButClip[CLOSE_OPTION] = {16, 48};
-    optButClip[PAUSE_GAME] = {16, 16};
+    buttonsTex.loadFromFile(FindRes::getPath("img","buttons.png"));
+    buttonsPresTex.loadFromFile(FindRes::getPath("img","buttonsPressed.png"));
+    ButClip[RETURN_HOME] = {0, 0};
+    ButClip[CREDIT] = {64, 16};
+    ButClip[SOUND_EFFECT] = {16, 32};
+    ButClip[SOUND_EFFECT_OFF] = {32, 32};
+    ButClip[MUSIC] = {48, 16};
+    ButClip[MUSIC_OFF] = {0, 32};
+    ButClip[CLOSE_OPTION] = {16, 48};
+    ButClip[PAUSE_GAME] = {16, 16};
     for (int i = RETURN_HOME; i < TOTAL_OPTION_BUTTONS; i++) {
-        optButClip[i].w = optButClip[i].h = 16;
-        optButDes[i]. w = optButDes[i].h = optPanelDest.w/10;
+        ButClip[i].w = ButClip[i].h = 16;
+        ButDes[i]. w = ButDes[i].h = optPanelDest.w/10;
     }
-    optButClip[PAUSE_GAME].w = optButClip[PAUSE_GAME].h = 16;
-    optButDes[PAUSE_GAME].w = optButDes[PAUSE_GAME].h = optPanelDest.w/10;
-    optButDes[PAUSE_GAME].x = optButDes[PAUSE_GAME].y = optButDes[PAUSE_GAME].w/8;
-    optButDes[CLOSE_OPTION].w = optButDes[CLOSE_OPTION].h = optPanelDest.w*6/80;
-    optButDes[CLOSE_OPTION].x = optPanelDest.x + optPanelDest.w - optButDes[CLOSE_OPTION].w*5/4;
-    optButDes[CLOSE_OPTION].y = optPanelDest.y + optButDes[CLOSE_OPTION].w*1/4;
-    optButDes[RETURN_HOME].x = optPanelDest.x + optPanelDest.w*14/80;
-    optButDes[RETURN_HOME].y =  optPanelDest.y + optPanelDest.h*15/48;
-    optButDes[CREDIT].x = optPanelDest.x + optPanelDest.w*26/80;
-    optButDes[CREDIT].y =  optButDes[RETURN_HOME].y;
-    optButDes[SOUND_EFFECT].x = optButDes[SOUND_EFFECT_OFF].x = optButDes[RETURN_HOME].x;
-    optButDes[SOUND_EFFECT].y = optButDes[SOUND_EFFECT_OFF].y = optPanelDest.y + optPanelDest.h*27/48;
-    optButDes[MUSIC].x = optButDes[MUSIC_OFF].x = optButDes[CREDIT].x;
-    optButDes[MUSIC].y = optButDes[MUSIC_OFF].y = optButDes[SOUND_EFFECT].y;
-    cout << "load media";
+    ButClip[PAUSE_GAME].w = ButClip[PAUSE_GAME].h = 16;
+    ButDes[PAUSE_GAME].w = ButDes[PAUSE_GAME].h = optPanelDest.w/10;
+    ButDes[PAUSE_GAME].x = ButDes[PAUSE_GAME].y = ButDes[PAUSE_GAME].w/8;
+    ButDes[CLOSE_OPTION].w = ButDes[CLOSE_OPTION].h = optPanelDest.w*6/80;
+    ButDes[CLOSE_OPTION].x = optPanelDest.x + optPanelDest.w - ButDes[CLOSE_OPTION].w*5/4;
+    ButDes[CLOSE_OPTION].y = optPanelDest.y + ButDes[CLOSE_OPTION].w*1/4;
+    ButDes[RETURN_HOME].x = optPanelDest.x + optPanelDest.w*14/80;
+    ButDes[RETURN_HOME].y =  optPanelDest.y + optPanelDest.h*15/48;
+    ButDes[CREDIT].x = optPanelDest.x + optPanelDest.w*26/80;
+    ButDes[CREDIT].y =  ButDes[RETURN_HOME].y;
+    ButDes[SOUND_EFFECT].x = ButDes[SOUND_EFFECT_OFF].x = ButDes[RETURN_HOME].x;
+    ButDes[SOUND_EFFECT].y = ButDes[SOUND_EFFECT_OFF].y = optPanelDest.y + optPanelDest.h*27/48;
+    ButDes[MUSIC].x = ButDes[MUSIC_OFF].x = ButDes[CREDIT].x;
+    ButDes[MUSIC].y = ButDes[MUSIC_OFF].y = ButDes[SOUND_EFFECT].y;
+
+    //Load winning buttons from img
+    ButClip[RESTART_LEVEL] = {0, 48};
+    ButClip[NEXT_LEVEL] = {32, 0};
+    for (int i = NEXT_LEVEL; i < TOTAL_WINNING_BUTTONS; i++) {
+        ButClip[i].w = ButClip[i].h = 16;
+        ButDes[i]. w = ButDes[i].h = optPanelDest.w/10;
+    }
+    ButDes[RESTART_LEVEL] = ButDes[CREDIT];
+    ButDes[NEXT_LEVEL] = ButDes[SOUND_EFFECT];
 }
 
 void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
-    cout << optButDes[PAUSE_GAME].x  << " " << optButDes[PAUSE_GAME].y  << " " << optButDes[PAUSE_GAME].w  << " " << optButDes[PAUSE_GAME].h  << " " << endl;
-    if(inMenu && !inOptions) {
+    if(inMenu && !inOptions && !inWinPanel) {
         switch (e.type)
         {
         case SDL_MOUSEMOTION:
@@ -120,13 +133,13 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
             break;
         }
     }
-    else if(inOptions) {
+    else if(inOptions && !inWinPanel) {    
         switch (e.type)
         {
         case SDL_MOUSEMOTION:
             SDL_GetMouseState(&curMX, &curMY);
             for (int i = RETURN_HOME; i < TOTAL_OPTION_BUTTONS; i++) {
-                if(curMX >= optButDes[i].x  && curMY >= optButDes[i].y && curMX <= optButDes[i].x + optButDes[i].w &&  curMY <= optButDes[i].y + optButDes[i].h) {
+                if(curMX >= ButDes[i].x  && curMY >= ButDes[i].y && curMX <= ButDes[i].x + ButDes[i].w &&  curMY <= ButDes[i].y + ButDes[i].h) {
                     isHovering[i] = 1;
                 }
                 else {
@@ -137,35 +150,74 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
         case SDL_MOUSEBUTTONDOWN:
             SDL_GetMouseState(&curMX, &curMY);
             for (int i = RETURN_HOME; i < TOTAL_OPTION_BUTTONS; i++) {
-                if(curMX >= optButDes[i].x  && curMY >= optButDes[i].y && curMX <= optButDes[i].x + optButDes[i].w &&  curMY <= optButDes[i].y + optButDes[i].h) {
+                if(curMX >= ButDes[i].x  && curMY >= ButDes[i].y && curMX <= ButDes[i].x + ButDes[i].w &&  curMY <= ButDes[i].y + ButDes[i].h) {
                     isClicked = i;
                     if(itemsFunction(isClicked) == EXIT_GAME) gameIsRunning = false;
-                    cout << "Press buttons " << endl;
+                }
+                else {
+                    isClicked = TOTAL_ITEMS;
                 }
             }
-            isClicked = TOTAL_ITEMS;
             break; 
         default:
             break;
         }
     }
-    if(!inMenu && !inOptions) {
+    if(!inMenu && !inOptions && !inWinPanel) {
         if(e.type == SDL_MOUSEBUTTONDOWN){
             SDL_GetMouseState(&curMX, &curMY);
-            if(curMX >= optButDes[PAUSE_GAME].x  && curMY >= optButDes[PAUSE_GAME].y && curMX <= optButDes[PAUSE_GAME].y + optButDes[PAUSE_GAME].w &&  curMY <= optButDes[PAUSE_GAME].y + optButDes[PAUSE_GAME].h) {
+            if(curMX >= ButDes[PAUSE_GAME].x  && curMY >= ButDes[PAUSE_GAME].y && curMX <= ButDes[PAUSE_GAME].y + ButDes[PAUSE_GAME].w &&  curMY <= ButDes[PAUSE_GAME].y + ButDes[PAUSE_GAME].h) {
                 isClicked = PAUSE_GAME;
                 if(itemsFunction(isClicked) == EXIT_GAME) gameIsRunning = false;
             }
+            else {
+                isClicked = TOTAL_ITEMS;
+            }
+        }
+        if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_w){
+            inWinPanel = true;
         }
     }
-    else if( e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE){
-        inOptions = true;
+    if(inWinPanel) {
+        switch (e.type)
+        {
+        case SDL_MOUSEMOTION:
+            SDL_GetMouseState(&curMX, &curMY);
+            for (int i = RETURN_HOME; i < TOTAL_OPTION_BUTTONS; i++) {
+                if(curMX >= ButDes[i].x  && curMY >= ButDes[i].y && curMX <= ButDes[i].x + ButDes[i].w &&  curMY <= ButDes[i].y + ButDes[i].h) {
+                    isHovering[i] = 1;
+                    cout << 1;
+                }
+                else {
+                    isHovering[i] = 0;
+                }
+            }
+            break;
+        case SDL_MOUSEBUTTONDOWN:
+            SDL_GetMouseState(&curMX, &curMY);
+            for (int i = NEXT_LEVEL; i < TOTAL_WINNING_BUTTONS; i++) {
+                if(curMX >= ButDes[i].x  && curMY >= ButDes[i].y && curMX <= ButDes[i].x + ButDes[i].w &&  curMY <= ButDes[i].y + ButDes[i].h) {
+                    isClicked = i;
+                    if(itemsFunction(isClicked) == EXIT_GAME) gameIsRunning = false;
+                    cout << "winning click" << endl;
+                }
+            }
+            if(curMX >= ButDes[RETURN_HOME].x  && curMY >= ButDes[RETURN_HOME].y && curMX <= ButDes[RETURN_HOME].x + ButDes[RETURN_HOME].w &&  curMY <= ButDes[RETURN_HOME].y + ButDes[RETURN_HOME].h) {
+                isClicked = RETURN_HOME;
+                cout << "click return home win";
+                if(itemsFunction(isClicked) == EXIT_GAME) gameIsRunning = false;
+            }
+            checkClicked(CLOSE_OPTION);
+            break; 
+        default:
+            break;
+        }
     }
+    
 }
 
 
 int Menu::itemsFunction(int isCLicked){
-    cout << "menu function ";
     switch (isClicked)
     {
     case NEW_GAME:
@@ -175,7 +227,6 @@ int Menu::itemsFunction(int isCLicked){
     case CONTINUE_GAME:
         inMenu = false;
         break;
-
     case OPTION_GAME:
         inOptions = true;
         break;
@@ -189,19 +240,25 @@ int Menu::itemsFunction(int isCLicked){
 
     case CLOSE_OPTION:
         inOptions = false;
+        inWinPanel = false;
         cout << "close option" << endl;
         break;
 
     case RETURN_HOME:
         inMenu = true;
         inOptions = false;
+        inWinPanel = false;
         cout << "return home" << endl << endl;
         break;
     case MUSIC:
-        swap(optButClip[MUSIC],optButClip[MUSIC_OFF]);
+        swap(ButClip[MUSIC],ButClip[MUSIC_OFF]);
         break;
     case SOUND_EFFECT:
-        swap(optButClip[SOUND_EFFECT],optButClip[SOUND_EFFECT_OFF]);
+        swap(ButClip[SOUND_EFFECT],ButClip[SOUND_EFFECT_OFF]);
+        break;
+    case RESTART_LEVEL:
+        break;
+    case NEXT_LEVEL:
         break;
     default:
     break;
@@ -215,22 +272,42 @@ void Menu::menuRender() {
         for (int i = 0; i < TOTAL_MENU_ITEMS; i++) {
             menuItemsTex[i].render(menuItemsDes[i].x, menuItemsDes[i].y);
         }      
-        // titleBox.render(titleBoxDest.x, titleBoxDest.y, &titleBoxClip, &titleBoxDest);
         gameTitle.render(gameTitleDest.x, gameTitleDest.y, nullptr, &gameTitleDest);
     }
     if(inOptions) {
         optPanel.render(optPanelDest.x, optPanelDest.y, &optPanelClip, &optPanelDest);
         for (int i = RETURN_HOME; i < PAUSE_GAME; i++) {
-            optTex.render(optButDes[i].x, optButDes[i].y, &optButClip[i], &optButDes[i]);
+            buttonsTex.render(ButDes[i].x, ButDes[i].y, &ButClip[i], &ButDes[i]);
         }
     }
-    SDL_Rect temp ={0, 0, 48, 48};
     if(!inMenu && !inOptions){
-        cout << optButClip[PAUSE_GAME].w << endl;
-        optPresTex.render(optButDes[PAUSE_GAME].x, optButDes[PAUSE_GAME].y, &optButClip[PAUSE_GAME], &temp);
+        buttonsPresTex.render(ButDes[PAUSE_GAME].x, ButDes[PAUSE_GAME].y, &ButClip[PAUSE_GAME], &ButDes[PAUSE_GAME]);
     }
+    if(inWinPanel){
+        optPanel.render(winPanelDest.x, winPanelDest.y, &winPanelClip, &winPanelDest);
+        for (int i = NEXT_LEVEL; i < TOTAL_WINNING_BUTTONS; i++)
+        {
+            buttonsTex.render(ButDes[i].x, ButDes[i].y, &ButClip[i], &ButDes[i]);
+        }
+        buttonsTex.render(ButDes[RETURN_HOME].x,  ButDes[RETURN_HOME].y, &ButClip[RETURN_HOME], &ButDes[RETURN_HOME]);
+        buttonsTex.render(ButDes[CLOSE_OPTION].x,  ButDes[CLOSE_OPTION].y, &ButClip[CLOSE_OPTION], &ButDes[CLOSE_OPTION]);
+    }
+
     
-    
+
+}
+int Menu::checkClicked(int item){
+    SDL_GetMouseState(&curMX, &curMY);
+    if(curMX >= ButDes[item].x  && curMY >= ButDes[item].y && curMX <= ButDes[item].x + ButDes[item].w &&  curMY <= ButDes[item].y + ButDes[item].h) {
+        if(item == EXIT_GAME) return EXIT_GAME;
+        isClicked = item;
+        cout << item << " is clicked";
+        itemsFunction(isClicked);
+    }
+    else {
+        isClicked = TOTAL_ITEMS;
+    }
+    return item;
 }
 
 bool Menu::getMenuState() {return inMenu;}

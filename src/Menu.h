@@ -36,6 +36,9 @@ private:
         CLOSE_OPTION,
         TOTAL_OPTION_BUTTONS,
         PAUSE_GAME,
+        NEXT_LEVEL,
+        RESTART_LEVEL,
+        TOTAL_WINNING_BUTTONS,
         TOTAL_ITEMS
     };
     Texture menuItemsTex[TOTAL_MENU_ITEMS];
@@ -53,8 +56,11 @@ private:
     Texture optPanel;
     SDL_Rect optPanelClip, optPanelDest;
 
-    Texture optTex, optPresTex;
-    SDL_Rect optButClip[TOTAL_OPTION_BUTTONS], optButDes[TOTAL_OPTION_BUTTONS];
+    SDL_Rect winPanelClip, winPanelDest;
+    
+
+    Texture buttonsTex, buttonsPresTex;
+    SDL_Rect ButClip[TOTAL_ITEMS], ButDes[TOTAL_ITEMS];
 
 
     // Mouse position
@@ -63,17 +69,21 @@ private:
     //Menu state
     bool inMenu;
     bool inOptions;
+    bool inWinPanel;
 public:
     Menu();
     ~Menu();
 
     void loadMenu();
     void menuHandleEvent(SDL_Event& e, bool &gameIsRunning);
-    int itemsFunction(int isClicked);
+    int itemsFunction(int item);
     void menuRender();
+
+    int checkClicked(int item);
 
     bool getMenuState();
     bool getOptionState();
+    
 };
 
 #endif
