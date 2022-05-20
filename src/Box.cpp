@@ -1,7 +1,5 @@
-#include "Box.h"
-
 #include <stdio.h>
-
+#include "Box.h"
 #include "find_res.h"
 #include "Map.h"
 #include "Game.h"
@@ -11,6 +9,7 @@ Texture Box::box;
 Box*** Box::layerBox = nullptr;
 int Box::boxCount = 0, Box::boxWinCount = 0;
 extern Savegame save;
+extern Enemy mainEnemy;
 
 Box::Box() {
     // Initialize the variables
@@ -57,10 +56,10 @@ int Box::collision(int direction) {
     // If the box is colliding with the obj in the left direction
     if (direction == NOT_MOVE) return direction;
     int way = checkCollisionwithMap(Map::level0, *this, direction);
+    way = mainEnemy.checkCollisionWithThis(bCurPosX, bCurPosY, way);
     way = hitBox(*this, way);
     Move(way);
     if (way) {
-        
         saveBoxinsave();
     }
     return way;
@@ -80,7 +79,8 @@ void Box::Move(int direction) {
             bDesPosX -= Game::BLOCK_WIDTH;
             while (bCurPosX != bDesPosX) {
                 bCurPosX -= BOX_VEL;
-                Mix_PlayChannel(-1, Game::gBox, 0);
+                if(Game::sEffect)
+                    Mix_PlayChannel(-1, Game::gBox, 0);
                 boxRender();
             }
             addBoxCount();
@@ -93,7 +93,8 @@ void Box::Move(int direction) {
             bDesPosX += Game::BLOCK_WIDTH;
             while (bCurPosX != bDesPosX) {
                 bCurPosX += BOX_VEL;
-                Mix_PlayChannel(-1, Game::gBox, 0);
+                if(Game::sEffect)
+                    Mix_PlayChannel(-1, Game::gBox, 0);
                 boxRender();
             }
             addBoxCount();
@@ -106,7 +107,8 @@ void Box::Move(int direction) {
             bDesPosY -= Game::BLOCK_WIDTH;
             while (bCurPosY != bDesPosY) {
                 bCurPosY -= BOX_VEL;
-                Mix_PlayChannel(-1, Game::gBox, 0);
+                if(Game::sEffect)
+                    Mix_PlayChannel(-1, Game::gBox, 0);
                 boxRender();
             }
             addBoxCount();
@@ -119,7 +121,8 @@ void Box::Move(int direction) {
             bDesPosY += Game::BLOCK_WIDTH;
             while (bCurPosY != bDesPosY) {
                 bCurPosY += BOX_VEL;
-                Mix_PlayChannel(-1, Game::gBox, 0);
+                if(Game::sEffect)
+                    Mix_PlayChannel(-1, Game::gBox, 0);
                 boxRender();
             }
             addBoxCount();

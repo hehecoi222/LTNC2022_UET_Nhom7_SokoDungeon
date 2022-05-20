@@ -38,7 +38,7 @@ class Savegame {
     void compareHighScore(const char* filename);
 
     // Set current map
-    void setMap(Hero& hero, Map& map);
+    void setMap(Hero& hero, Enemy& enemy, Map& map);
     void setMapInt(int currentMap) { mapSave = currentMap; };
 
     // Clear save game
@@ -75,8 +75,6 @@ class Savegame {
     NodeBox* tempBoxes;
     // Stack to save enemy step
     Node* enemyStack;
-    // Current hero move state
-    int currentHeroMove = NOT_MOVE;
     // Push to stack
     void push(int direction);
     // Pop from stack

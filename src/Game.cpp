@@ -14,8 +14,8 @@ TTF_Font* Game::gFont = nullptr;
 //Music and sound effects will be used
 Mix_Music* Game::gVictory = NULL, *Game::gMusic = NULL, *Game::gTheme = NULL;
 Mix_Chunk* Game::gBox = NULL, *Game::gHero = NULL, *Game::gMouse = NULL;
-
-
+bool Game::Musicon = true;
+bool Game::sEffect = true;
 
 //Create different render viewport
 const SDL_Rect fullSizeViewPort = {0, 0, Game::WINDOW_WIDTH, Game::WINDOW_HEIGHT};
@@ -24,9 +24,9 @@ const SDL_Rect subViewport = {Game::WINDOW_WIDTH/2 - Game::BLOCK_WIDTH*Game::GRI
 //Menu
 Menu gMenu;
 
-// init main character
+//Main character
 Hero mainHero;
-Enemy mainEnemy(4*Game::BLOCK_WIDTH, 2*Game::BLOCK_WIDTH);
+Enemy mainEnemy;
 
 // Map
 Map Game0;
@@ -96,7 +96,7 @@ bool Game::init() {
 bool Game::loadMedia() {
     bool success = true;
 
-    Game::gFont = TTF_OpenFont(FindRes::getPath("font", "Pixel2.ttf"), 28);
+    gFont = TTF_OpenFont(FindRes::getPath("font","DungeonFont.ttf"), 36);
     if( gFont == NULL )
     {
         cout << "Failed to load gFont" << TTF_GetError() << endl;
@@ -117,7 +117,6 @@ bool Game::loadMedia() {
     if(gMenu.getMenuState())
         Mix_PlayMusic(gTheme, -1);
     else
-        //Play gMusic
         Mix_PlayMusic(gMusic, -1);
     // load Hero img
     mainHero.loadHeroIMG();
@@ -141,9 +140,6 @@ void Game::handleEvents() {
         if (e.type == SDL_QUIT) {
             isRunning = false;
         }
-        else if(gMenu.getMenuState()){
-            gMenu.menuHandleEvent(e, isRunning);
-        }
         else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_u && e.key.repeat == 0) {
             save.undoMove(mainHero, mainEnemy);
         } 
@@ -153,6 +149,7 @@ void Game::handleEvents() {
             save.clear();
             Game0.preLoadMap();
             mainHero.setpos();
+            mainEnemy.setCurXY(Enemy::enemyGlobalPos.first, Enemy::enemyGlobalPos.second);
             save.setMapInt(Game0.current_map);
             save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
             save.loadHighScore(FindRes::getPath("savefile","fileHighScore.skbhsf"));
@@ -163,6 +160,7 @@ void Game::handleEvents() {
             save.clear();
             Game0.preLoadMap();
             mainHero.setpos();
+            mainEnemy.setCurXY(Enemy::enemyGlobalPos.first, Enemy::enemyGlobalPos.second);
             save.setMapInt(Game0.current_map);
             save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
             save.loadHighScore(FindRes::getPath("savefile","fileHighScore.skbhsf"));
@@ -171,6 +169,7 @@ void Game::handleEvents() {
             save.clear();
             Game0.preLoadMap();
             mainHero.setpos();
+            mainEnemy.setCurXY(Enemy::enemyGlobalPos.first, Enemy::enemyGlobalPos.second);
         }
         else {
             if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
@@ -178,6 +177,7 @@ void Game::handleEvents() {
                 save.recordEnemyMove(mainEnemy.Move(
                     mainEnemy.findPathToHero(mainHero.getCurX(), mainHero.getCurY())));
             }
+        gMenu.menuHandleEvent(e, isRunning);
         }
     }
 }
@@ -187,25 +187,28 @@ void Game::update() {
         Game0.NextMap();
         Game0.PresVic();
         render();
-        Mix_PlayMusic(gVictory, -1);
+        if(sEffect)
+            Mix_PlayMusic(gVictory, -1);
         SDL_Delay(2000);
         Mix_HaltMusic();
         save.clear();
         Game0.preLoadMap();
         mainHero.setpos();
+        mainEnemy.setCurXY(Enemy::enemyGlobalPos.first, Enemy::enemyGlobalPos.second);
         save.setMapInt(Game0.current_map);
         save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
         save.loadHighScore(FindRes::getPath("savefile","fileHighScore.skbhsf"));
     }
+
 }
 
 void Game::render() {
+    // Clear screen
+    SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
+    SDL_RenderClear(gRenderer);
+
     if(!Box::winLevel())
     {
-        // Clear screen
-        SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
-        SDL_RenderClear(gRenderer);
-
         //Change render viewport
         SDL_RenderSetViewport(gRenderer, &subViewport);
         // Load Map0
@@ -259,5 +262,5 @@ void Game::close() {
     save.toFile(FindRes::getPath("savefile", "level0.skbsf"));
     // Quit SDL subsystems
     SDL_Quit();
-    cout << "Game clear";
+    cout << "Game clear" << endl;
 }

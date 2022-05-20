@@ -103,7 +103,6 @@ class Box {
     // Check winning state
     void checkWin(char**);
 
-    // Add up in boxCount
     void addBoxCount();
 
     // Rectangle to represent the box
