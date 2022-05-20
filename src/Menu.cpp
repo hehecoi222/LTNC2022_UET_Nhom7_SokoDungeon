@@ -127,6 +127,8 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
                     isClicked = TOTAL_ITEMS;
                     cout << "not press menu " << endl;
                 }
+                //thay cả cụm trong for bằng dòng dưới sẽ lỗi click không làm gì cả
+                //checkClicked(i); 
             }
             break; 
         default:
@@ -302,6 +304,7 @@ int Menu::checkClicked(int item){
         if(item == EXIT_GAME) return EXIT_GAME;
         isClicked = item;
         cout << item << " is clicked";
+        // itemsFunction(item) lỗi trong thực hiện được hàm itemFuction;
         itemsFunction(isClicked);
     }
     else {
