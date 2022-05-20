@@ -11,13 +11,18 @@ Hero::Hero() {
     hCurPosX = hDesPosX = pos.first;
     hCurPosY = hDesPosY = pos.second;
 
-    hVelX = 0;
-    hVelY = 0;
-
     playerRectDest = {0, 0, Game::BLOCK_WIDTH * 2, Game::BLOCK_WIDTH * 2};
 
     playerCurrentTex = new Texture();
     playerCurrentTex = &idleDown;
+
+    cout << "Init Hero" << endl;
+}
+
+Hero::~Hero() {
+    cout << "Clear Hero" << endl;
+    playerCurrentTex->free();
+    playerCurrentTex = nullptr;
 }
 
 void Hero::setpos()
@@ -26,21 +31,23 @@ void Hero::setpos()
     hCurPosY = hDesPosY = pos.second;
 }
 void Hero::loadHeroIMG() {
-    idleDown.loadFromFile(FindRes::getPath("img", "idown.png"));
-    idleDown.loadFromFile(FindRes::getPath("img", "idown.png"));
+    //Load hero idle texture
     idleDown.loadFromFile(FindRes::getPath("img", "idown.png"));
     idleUp.loadFromFile(FindRes::getPath("img", "iup.png"));
     idleLeft.loadFromFile(FindRes::getPath("img", "ileft.png"));
     idleRight.loadFromFile(FindRes::getPath("img", "iright.png"));
 
+    //Load hero walking texture
     walkDown.loadFromFile(FindRes::getPath("img", "wDown.png"));
     walkUp.loadFromFile(FindRes::getPath("img", "wUp.png"));
     walkLeft.loadFromFile(FindRes::getPath("img", "wLeft.png"));
     walkRight.loadFromFile(FindRes::getPath("img", "wRight.png"));
+
+
     for (int i = 0; i < PLAYER_FRAMES; i++) {
-        playerCurrentFrame[i].x = (i * 64) + 16;
-        playerCurrentFrame[i].y = 16;
-        playerCurrentFrame[i].w = playerCurrentFrame[i].h = 32;
+        playerCurrentFrame[i].x = (i * HERO_CLIP_WIDTH ) + Game::BLOCK_WIDTH/2;
+        playerCurrentFrame[i].y = Game::BLOCK_WIDTH/2;
+        playerCurrentFrame[i].w = playerCurrentFrame[i].h = Game::BLOCK_WIDTH;
     }
 }
 
@@ -135,16 +142,12 @@ void Hero::Move(int direction) {
 }
 
 void Hero::heroRender() {
-    // SDL_RenderClear( Game::gRenderer );
     SDL_Rect* currentClip = &playerCurrentFrame[frame / 8];
     playerCurrentTex->render(hCurPosX - Game::BLOCK_WIDTH/2, hCurPosY - Game::BLOCK_WIDTH/2, currentClip,
                              &playerRectDest);
     // SDL_RenderPresent( Game::gRenderer );
     frame++;
+    //Reset animation frame
     if (frame / 8 >= PLAYER_FRAMES) frame = 0;
 }
 
-Hero::~Hero() {
-    playerCurrentTex->free();
-    playerCurrentTex = nullptr;
-}

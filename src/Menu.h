@@ -13,40 +13,67 @@ private:
     SDL_Rect backgroundClip;
     SDL_Rect backgroundDestRect;
 
-    //list of items (3)
+    //Game title texture
+    Texture gameTitle;
+    SDL_Rect gameTitleDest; 
+    Texture titleBox;
+    SDL_Rect titleBoxDest, titleBoxClip;
+
+
+    //list of title menu items (3)
     enum {
         NEW_GAME,
         CONTINUE_GAME,
+        OPTION_GAME,
         EXIT_GAME,
+        TOTAL_MENU_ITEMS,
+        RETURN_HOME,
+        CREDIT,
+        MUSIC_OFF,
+        SOUND_EFFECT_OFF,
+        MUSIC,
+        SOUND_EFFECT,
+        CLOSE_OPTION,
+        TOTAL_OPTION_BUTTONS,
+        PAUSE_GAME,
         TOTAL_ITEMS
     };
-    Texture menuItemsTex[TOTAL_ITEMS];
-    string itemsLabel[TOTAL_ITEMS] = {"NEW GAME", "CONTINUE", "EXIT"}; 
-    SDL_Rect itemsPos[TOTAL_ITEMS];
+    Texture menuItemsTex[TOTAL_MENU_ITEMS];
+    string menuItemsLabel[TOTAL_MENU_ITEMS] = {"New game", "Continue", "Options", "Exit"}; 
+    SDL_Rect menuItemsDes[TOTAL_MENU_ITEMS];
+    SDL_Rect pauseGame;
 
     bool isHovering[TOTAL_ITEMS] = {0};
-    bool isClicked[TOTAL_ITEMS] = {0};
+    int isClicked;
 
-    //Menu text color
+    //Text color
     SDL_Color defaultTextColor, hoveringTextColor;
+    SDL_Color colorWhite;
+
+    Texture optPanel;
+    SDL_Rect optPanelClip, optPanelDest;
+
+    Texture optTex, optPresTex;
+    SDL_Rect optButClip[TOTAL_OPTION_BUTTONS], optButDes[TOTAL_OPTION_BUTTONS];
+
 
     // Mouse position
     int curMX, curMY;
 
     //Menu state
     bool inMenu;
+    bool inOptions;
 public:
     Menu();
     ~Menu();
 
     void loadMenu();
     void menuHandleEvent(SDL_Event& e, bool &gameIsRunning);
-    int itemsFunction(bool isClicked[]);
+    int itemsFunction(int isClicked);
     void menuRender();
 
     bool getMenuState();
-    
-
+    bool getOptionState();
 };
 
 #endif

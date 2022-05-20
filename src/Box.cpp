@@ -1,7 +1,5 @@
-#include "Box.h"
-
 #include <stdio.h>
-
+#include "Box.h"
 #include "find_res.h"
 #include "Map.h"
 #include "Game.h"

@@ -27,7 +27,7 @@ const SDL_Rect subViewport = {
 // Menu
 Menu gMenu;
 
-// init main character
+//Main character
 Hero mainHero;
 Enemy mainEnemy;
 
@@ -103,8 +103,9 @@ bool Game::init() {
 bool Game::loadMedia() {
     bool success = true;
 
-    Game::gFont = TTF_OpenFont(FindRes::getPath("font", "Pixel2.ttf"), 28);
-    if (gFont == NULL) {
+    gFont = TTF_OpenFont(FindRes::getPath("font","DungeonFont.ttf"), 36);
+    if( gFont == NULL )
+    {
         cout << "Failed to load gFont" << TTF_GetError() << endl;
         success = false;
     }
@@ -147,10 +148,8 @@ void Game::handleEvents() {
         // User requests quit
         if (e.type == SDL_QUIT) {
             isRunning = false;
-        } else if (gMenu.getMenuState()) {
-            gMenu.menuHandleEvent(e, isRunning);
-        } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_u &&
-                   e.key.repeat == 0) {
+        }
+        else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_u && e.key.repeat == 0) {
             save.undoMove(mainHero, mainEnemy);
         } else if (e.type == SDL_KEYDOWN &&
                    e.key.keysym.sym == SDLK_LEFTBRACKET) {
@@ -199,6 +198,7 @@ void Game::handleEvents() {
                                 mainHero.getCurX(), mainHero.getCurY())));
                 }
             }
+        gMenu.menuHandleEvent(e, isRunning);
         }
     }
 }
@@ -225,12 +225,13 @@ void Game::update() {
 }
 
 void Game::render() {
-    if (!Box::winLevel()) {
-        // Clear screen
-        SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
-        SDL_RenderClear(gRenderer);
+    // Clear screen
+    SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
+    SDL_RenderClear(gRenderer);
 
-        // Change render viewport
+    if(!Box::winLevel())
+    {
+        //Change render viewport
         SDL_RenderSetViewport(gRenderer, &subViewport);
         // Load Map0
         Game0.LoadMap();
@@ -283,5 +284,5 @@ void Game::close() {
     save.toFile(FindRes::getPath("savefile", "level0.skbsf"));
     // Quit SDL subsystems
     SDL_Quit();
-    cout << "Game clear";
+    cout << "Game clear" << endl;
 }
