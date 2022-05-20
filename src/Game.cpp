@@ -120,12 +120,6 @@ bool Game::loadMedia() {
     gHero = Mix_LoadWAV(FindRes::getPath("audio", "Footsteps.wav"));
     gBox = Mix_LoadWAV(FindRes::getPath("audio", "box.wav"));
     gMouse = Mix_LoadWAV(FindRes::getPath("audio", "MouseClick.wav"));
-    // Play intro sound while being in Menu state
-    if (gMenu.getMenuState())
-        Mix_PlayMusic(gTheme, -1);
-    else
-        // Play gMusic
-        Mix_PlayMusic(gMusic, -1);
     // load Hero img
     mainHero.loadHeroIMG();
     mainEnemy.loadEnemyIMG();
@@ -203,16 +197,7 @@ void Game::update() {
     if (Box::winLevel()) {
         save.compareHighScore(
             FindRes::getPath("savefile", "fileHighScore.skbhsf"));
-        Game0.NextMap();
-        Game0.PresVic();
-        render();
-        Mix_PlayMusic(gVictory, -1);
-        SDL_Delay(2000);
-        Mix_HaltMusic();
-        restartGame();
-        save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
-        save.loadHighScore(
-            FindRes::getPath("savefile", "fileHighScore.skbhsf"));
+        gMenu.setInWinOptions(true);
     }
 }
 
@@ -220,30 +205,42 @@ void Game::render() {
     // Clear screen
     SDL_SetRenderDrawColor(gRenderer, 31, 138, 148, 255);
     SDL_RenderClear(gRenderer);
+    //Change render viewport
+    SDL_RenderSetViewport(gRenderer, &subViewport);
+    // Load Map0
+    Game0.LoadMap();
+    // Render player
+    mainHero.heroRender();
 
-    if(!Box::winLevel())
-    {
-        //Change render viewport
-        SDL_RenderSetViewport(gRenderer, &subViewport);
-        // Load Map0
-        Game0.LoadMap();
-        // Render player
-        mainHero.heroRender();
+    // Render enemy
+    mainEnemy.enemyRender();
 
-        // Render enemy
-        mainEnemy.enemyRender();
+    // Render box
+    Box::layerBoxRender();
 
-        // Render box
-        Box::layerBoxRender();
+    // set renderer to menu viewport
+    SDL_RenderSetViewport(gRenderer, &fullSizeViewPort);
 
-        // set renderer to menu viewport
-        SDL_RenderSetViewport(gRenderer, &fullSizeViewPort);
-
-        // render menu
-        gMenu.menuRender();
-    }
+    // render menu
+    gMenu.menuRender();
     // Update Screen
     SDL_RenderPresent(gRenderer);
+
+    if (gMenu.getWinOptionState() && gMenu.getWinMusicPlayed() == false) {
+        Mix_PlayMusic(gVictory, -1);
+        Mix_HaltMusic();
+        gMenu.setInWinMusicPlayed(true);
+        Mix_PlayMusic(gMusic, -1);
+    }
+    // Play intro sound while being in Menu state
+    if (gMenu.getMenuState() && isBackgroundMusicPlaying == false) {
+        Mix_PlayMusic(gTheme, -1);
+        isBackgroundMusicPlaying = true;
+    } else if (gMenu.getMenuState() == false && isBackgroundMusicPlaying == true) {
+        // Play gMusic
+        Mix_PlayMusic(gMusic, -1);
+        isBackgroundMusicPlaying = false;
+    }
 }
 
 void Game::close() {

@@ -13,6 +13,7 @@ Menu::Menu() {
 
     inMenu = true;
     inOptions = false;
+    inWinOptions = false;
     cout << "init successful";
 }
 Menu::~Menu(){}
@@ -82,6 +83,14 @@ void Menu::loadMenu() {
     optButDes[MUSIC].x = optButDes[MUSIC_OFF].x = optButDes[CREDIT].x;
     optButDes[MUSIC].y = optButDes[MUSIC_OFF].y = optButDes[SOUND_EFFECT].y;
     cout << "load media";
+}
+
+void Menu::setInWinOptions(bool _inWinOptions) {
+    inWinOptions = _inWinOptions;
+}
+
+void Menu::setInWinMusicPlayed(bool _inWinMusicPlayed) {
+    inWinMusicPlayed = _inWinMusicPlayed;
 }
 
 void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
@@ -198,6 +207,7 @@ int Menu::itemsFunction(int isCLicked){
     case RETURN_HOME:
         inMenu = true;
         inOptions = false;
+        inWinOptions = false;
         cout << "return home" << endl << endl;
         break;
     case MUSIC:
@@ -227,8 +237,14 @@ void Menu::menuRender() {
             optTex.render(optButDes[i].x, optButDes[i].y, &optButClip[i], &optButDes[i]);
         }
     }
-    SDL_Rect temp ={0, 0, 48, 48};
-    if(!inMenu && !inOptions){
+    if (inWinOptions) {
+        optPanel.render(optPanelDest.x, optPanelDest.y, &optPanelClip, &optPanelDest);
+        for (int i = RETURN_HOME; i < PAUSE_GAME; i++) {
+            optTex.render(optButDes[i].x, optButDes[i].y, &optButClip[i], &optButDes[i]);
+        }
+    }
+    SDL_Rect temp = {0, 0, int(Game::BLOCK_WIDTH * 1.5), int(Game::BLOCK_WIDTH * 1.5)};
+    if(!inMenu && !inOptions && !inWinOptions) {
         optPresTex.render(optButDes[PAUSE_GAME].x, optButDes[PAUSE_GAME].y, &optButClip[PAUSE_GAME], &temp);
     }
     
@@ -237,3 +253,5 @@ void Menu::menuRender() {
 
 bool Menu::getMenuState() {return inMenu;}
 bool Menu::getOptionState() {return inOptions;}
+bool Menu::getWinOptionState() {return inWinOptions;}
+bool Menu::getWinMusicPlayed() {return inWinMusicPlayed;}

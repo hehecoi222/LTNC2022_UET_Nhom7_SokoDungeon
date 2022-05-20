@@ -15,7 +15,7 @@ class Game {
     int cnt = 0;
     bool isRunning = true;
     SDL_Window* gWindow = NULL;
-
+    bool isBackgroundMusicPlaying = false;
         
 public:
     Game();

@@ -63,17 +63,24 @@ private:
     //Menu state
     bool inMenu;
     bool inOptions;
-public:
+    bool inWinOptions;
+    bool inWinMusicPlayed = false;
+
+   public:
     Menu();
     ~Menu();
 
     void loadMenu();
     void menuHandleEvent(SDL_Event& e, bool &gameIsRunning);
+    void setInWinOptions(bool inWinOptions);
+    void setInWinMusicPlayed(bool inWinMusicPlayed);
     int itemsFunction(int isClicked);
     void menuRender();
 
     bool getMenuState();
     bool getOptionState();
+    bool getWinOptionState();
+    bool getWinMusicPlayed();
 };
 
 #endif
