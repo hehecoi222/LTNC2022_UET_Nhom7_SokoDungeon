@@ -45,9 +45,9 @@ void Hero::loadHeroIMG() {
 
 
     for (int i = 0; i < PLAYER_FRAMES; i++) {
-        playerCurrentFrame[i].x = (i * HERO_CLIP_WIDTH ) + Game::BLOCK_WIDTH/2;
-        playerCurrentFrame[i].y = Game::BLOCK_WIDTH/2;
-        playerCurrentFrame[i].w = playerCurrentFrame[i].h = Game::BLOCK_WIDTH;
+        playerCurrentFrame[i].x = (i * HERO_CLIP_WIDTH ) + 16;
+        playerCurrentFrame[i].y = 16;
+        playerCurrentFrame[i].w = playerCurrentFrame[i].h = 32;
     }
 }
 

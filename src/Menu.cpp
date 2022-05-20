@@ -5,9 +5,9 @@ Menu::Menu() {
     curMX = 0;
     curMY = 0;
 
-    defaultTextColor = {0, 0, 0}; //Black
-    hoveringTextColor = {255, 0, 0}; //Red
-    colorWhite = {255, 255, 255};
+    defaultTextColor = {0, 0, 0, 255}; //Black
+    hoveringTextColor = {255, 0, 0, 255}; //Red
+    colorWhite = {255, 255, 255, 255};
 
     isClicked = TOTAL_ITEMS;
 
@@ -30,15 +30,15 @@ void Menu::loadMenu() {
     gameTitleDest.w = gameTitle.getWidth()*2;
     gameTitleDest.h = gameTitle.getHeight()*2;
     gameTitleDest.x = Game::WINDOW_WIDTH/2 - gameTitleDest.w/2;
-    gameTitleDest.y = 200;
+    gameTitleDest.y = Game::WINDOW_HEIGHT * 2 / 7  ;
     
     //Load Menu label
-    int labelVertSpace = 72; 
+    int labelVertSpace = Game::BLOCK_WIDTH; 
     for (int i = 0; i < TOTAL_MENU_ITEMS; i++)
     {
         menuItemsTex[i].loadFromRenderText(menuItemsLabel[i], defaultTextColor);
         menuItemsDes[i].x = Game::WINDOW_WIDTH/2 - menuItemsTex[i].getWidth()/2;
-        menuItemsDes[i].y = 300 + labelVertSpace;
+        menuItemsDes[i].y = Game::WINDOW_HEIGHT/2 + labelVertSpace;
         menuItemsDes[i].w = menuItemsTex[i].getWidth();
         menuItemsDes[i].h = menuItemsTex[i].getHeight();
         labelVertSpace += 48;
@@ -85,7 +85,6 @@ void Menu::loadMenu() {
 }
 
 void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
-    cout << optButDes[PAUSE_GAME].x  << " " << optButDes[PAUSE_GAME].y  << " " << optButDes[PAUSE_GAME].w  << " " << optButDes[PAUSE_GAME].h  << " " << endl;
     if(inMenu && !inOptions) {
         switch (e.type)
         {
@@ -109,6 +108,9 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
                     isClicked = i;
                     cout << "Press menu" << endl;
                     if(itemsFunction(isClicked) == EXIT_GAME ) gameIsRunning = false;
+                    else if (itemsFunction(isClicked) == NEW_GAME) {
+                        Game::restartGame();
+                    }
                 }
                 else {
                     isClicked = TOTAL_ITEMS;
@@ -170,6 +172,7 @@ int Menu::itemsFunction(int isCLicked){
     {
     case NEW_GAME:
         inMenu = false;
+        return NEW_GAME;
         break;
 
     case CONTINUE_GAME:
@@ -226,7 +229,6 @@ void Menu::menuRender() {
     }
     SDL_Rect temp ={0, 0, 48, 48};
     if(!inMenu && !inOptions){
-        cout << optButClip[PAUSE_GAME].w << endl;
         optPresTex.render(optButDes[PAUSE_GAME].x, optButDes[PAUSE_GAME].y, &optButClip[PAUSE_GAME], &temp);
     }
     
