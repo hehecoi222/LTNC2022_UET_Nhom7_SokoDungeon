@@ -207,7 +207,6 @@ void Game::restartGame() {
 void Game::update() {
     if (Box::winLevel()) {
         save.compareHighScore(FindRes::getPath("savefile", "fileHighScore.skbhsf"));
-        gMenu.setInWinOptions(true);
         Game0.NextMap();
         Game0.PresVic();
         render();
@@ -215,10 +214,7 @@ void Game::update() {
             Mix_PlayMusic(gVictory, -1);
         SDL_Delay(2000);
         Mix_HaltMusic();
-        save.clear();
-        Game0.preLoadMap();
-        mainHero.setpos();
-        mainEnemy.setCurXY(Enemy::enemyGlobalPos.first, Enemy::enemyGlobalPos.second);
+        restartGame();
         save.setMapInt(Game0.current_map);
         save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
         save.loadHighScore(FindRes::getPath("savefile","fileHighScore.skbhsf"));
@@ -255,21 +251,15 @@ void Game::render() {
     // Update Screen
     SDL_RenderPresent(gRenderer);
 
-    if (gMenu.getWinOptionState() && gMenu.getWinMusicPlayed() == false) {
-        Mix_PlayMusic(gVictory, -1);
-        Mix_HaltMusic();
-        gMenu.setInWinMusicPlayed(true);
-        Mix_PlayMusic(gMusic, -1);
-    }
-    // Play intro sound while being in Menu state
-    if (gMenu.getMenuState() && isBackgroundMusicPlaying == false) {
-        Mix_PlayMusic(gTheme, -1);
-        isBackgroundMusicPlaying = true;
-    } else if (gMenu.getMenuState() == false && isBackgroundMusicPlaying == true) {
-        // Play gMusic
-        Mix_PlayMusic(gMusic, -1);
-        isBackgroundMusicPlaying = false;
-    }
+    // // Play intro sound while being in Menu state
+    // if (gMenu.getMenuState() && isBackgroundMusicPlaying == false) {
+    //     Mix_PlayMusic(gTheme, -1);
+    //     isBackgroundMusicPlaying = true;
+    // } else if (gMenu.getMenuState() == false && isBackgroundMusicPlaying == true) {
+    //     // Play gMusic
+    //     Mix_PlayMusic(gMusic, -1);
+    //     isBackgroundMusicPlaying = false;
+    // }
 }
 
 void Game::close() {

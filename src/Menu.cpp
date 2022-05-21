@@ -12,7 +12,6 @@ Menu::Menu() {
     inMenu = true;
     inOptPanel = false;
     inWinPanel = false;
-    inWinOptions = false;
 }
 Menu::~Menu(){}
 
@@ -116,13 +115,6 @@ void Menu::loadMenu() {
     ButTutorialDes[RESTART_TEXT] = {alignmentOfLeftBar - Game::BLOCK_WIDTH / 4 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*3 + Game::BLOCK_WIDTH + Game::BLOCK_WIDTH/8, menuTutorialItemsLabelTex[1].getWidth()/2, menuTutorialItemsLabelTex[1].getHeight()/2 + Game::BLOCK_WIDTH/8};
 }
 
-void Menu::setInWinOptions(bool _inWinOptions) {
-    inWinOptions = _inWinOptions;
-}
-
-void Menu::setInWinMusicPlayed(bool _inWinMusicPlayed) {
-    inWinMusicPlayed = _inWinMusicPlayed;
-}
 
 void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
     if(inMenu && !inOptPanel) {
@@ -207,7 +199,6 @@ void Menu::itemClickFunct(int item){
     case RETURN_HOME:
         inMenu = true;
         inOptPanel = false;
-        inWinOptions = false;
         inWinPanel = false;
         break;
     case MUSIC:
@@ -279,7 +270,5 @@ int Menu::checkClicked(SDL_Rect checkItemDes[], int checkItem){
 }
 
 bool Menu::getMenuState() {return inMenu;}
-bool Menu::getWinOptionState() {return inWinOptions;}
-bool Menu::getWinMusicPlayed() {return inWinMusicPlayed;}
 bool Menu::getOptPanelState() {return inOptPanel;}
 bool Menu::getWinPanelState() {return inWinPanel;}

@@ -79,8 +79,6 @@ private:
 
     //Menu state
     bool inMenu;
-    bool inWinOptions;
-    bool inWinMusicPlayed = false;
     bool inOptPanel;
     bool inWinPanel;
 public:
@@ -89,16 +87,12 @@ public:
 
     void loadMenu();
     void menuHandleEvent(SDL_Event& e, bool &gameIsRunning);
-    void setInWinOptions(bool inWinOptions);
-    void setInWinMusicPlayed(bool inWinMusicPlayed);
     void itemClickFunct(int item);
     void menuRender();
 
     int checkClicked(SDL_Rect itemDes[], int item);
 
     bool getMenuState();
-    bool getWinOptionState();
-    bool getWinMusicPlayed();
     bool getOptPanelState();
     bool getWinPanelState();
     
