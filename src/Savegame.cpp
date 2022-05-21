@@ -89,7 +89,7 @@ void Savegame::loadHighScore(const char* filename) {
 }
 
 void Savegame::compareHighScore(const char* filename) {
-    if (currentHighScore > movesCount) {
+    if (currentHighScore > movesCount || currentHighScore == 0) {
         currentHighScore = movesCount;
     }
     std::ifstream fileHighScoreIn(filename);
@@ -97,7 +97,7 @@ void Savegame::compareHighScore(const char* filename) {
         FindRes::getPath("savefile", "fileHighScoreNew.skbhsf"));
     std::string map = "level" + std::to_string(mapSave) + ".smap";
     bool isWritten = false;
-    if (fileHighScoreIn.is_open() && currentHighScore != 0) {
+    if (fileHighScoreIn.is_open()) {
         while (!fileHighScoreIn.eof()) {
             std::string mapName;
             int highScore;
