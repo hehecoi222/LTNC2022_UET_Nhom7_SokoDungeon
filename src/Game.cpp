@@ -14,7 +14,8 @@ TTF_Font* Game::gFont = nullptr;
 //Music and sound effects will be used
 Mix_Music* Game::gVictory = NULL, *Game::gMusic = NULL, *Game::gTheme = NULL;
 Mix_Chunk* Game::gBox = NULL, *Game::gHero = NULL, *Game::gMouse = NULL;
-
+bool Game::musicOn = true;
+bool Game::isEffect = true;
 
 
 //Create different render viewport
@@ -114,9 +115,9 @@ bool Game::loadMedia() {
     gBox = Mix_LoadWAV(FindRes::getPath("audio", "box.wav"));
     gMouse = Mix_LoadWAV(FindRes::getPath("audio", "MouseClick.wav"));    
     //Play intro sound while being in Menu state
-    if(gMenu.getMenuState())
+    if(gMenu.getMenuState() && musicOn)
         Mix_PlayMusic(gTheme, -1);
-    else
+    else if(musicOn)
         //Play gMusic
         Mix_PlayMusic(gMusic, -1);
     // load Hero img
@@ -188,7 +189,8 @@ void Game::update() {
         Game0.NextMap();
         Game0.PresVic();
         render();
-        Mix_PlayMusic(gVictory, -1);
+        if(isEffect)
+            Mix_PlayMusic(gVictory, -1);
         SDL_Delay(2000);
         Mix_HaltMusic();
         save.clear();

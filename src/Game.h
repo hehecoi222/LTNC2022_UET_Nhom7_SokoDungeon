@@ -57,6 +57,9 @@ public:
     static const int BLOCK_WIDTH = 32;
     static const int WINDOW_WIDTH = 800;
     static const int WINDOW_HEIGHT = 640;
+
+    static bool musicOn;
+    static bool isEffect;
 };
 
 #endif /* Game_hpp */

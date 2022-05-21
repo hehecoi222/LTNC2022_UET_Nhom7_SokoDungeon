@@ -19,6 +19,8 @@ Menu::Menu() {
 Menu::~Menu(){}
 
 void Menu::loadMenu() {
+    if(Game::Musicon)
+        Mix_PlayMusic(Game::gTheme, -1);
     //Load menu background IMG
     menuBackground.loadFromFile(FindRes::getPath("img","MenuBackground.jpg"));
     backgroundClip.w = 1100;
@@ -120,6 +122,8 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
             for (int i = 0; i < TOTAL_MENU_ITEMS; i++) {
                 if(curMX >= menuItemsDes[i].x  && curMY >= menuItemsDes[i].y && curMX <= menuItemsDes[i].x + menuItemsDes[i].w &&  curMY <= menuItemsDes[i].y + menuItemsDes[i].h) {
                     isClicked = i;
+                    if(Game::sEffect)
+                        Mix_PlayChannel(-1, Game::gMouse, 0);
                     cout << "Press menu" << endl;
                     if(itemsFunction(isClicked) == EXIT_GAME ) gameIsRunning = false;
                 }
@@ -154,6 +158,8 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
             for (int i = RETURN_HOME; i < TOTAL_OPTION_BUTTONS; i++) {
                 if(curMX >= ButDes[i].x  && curMY >= ButDes[i].y && curMX <= ButDes[i].x + ButDes[i].w &&  curMY <= ButDes[i].y + ButDes[i].h) {
                     isClicked = i;
+                    if(Game::sEffect)
+                        Mix_PlayChannel(-1, Game::gMouse, 0);
                     if(itemsFunction(isClicked) == EXIT_GAME) gameIsRunning = false;
                 }
                 else {
@@ -170,6 +176,8 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
             SDL_GetMouseState(&curMX, &curMY);
             if(curMX >= ButDes[PAUSE_GAME].x  && curMY >= ButDes[PAUSE_GAME].y && curMX <= ButDes[PAUSE_GAME].y + ButDes[PAUSE_GAME].w &&  curMY <= ButDes[PAUSE_GAME].y + ButDes[PAUSE_GAME].h) {
                 isClicked = PAUSE_GAME;
+                if(Game::sEffect)
+                    Mix_PlayChannel(-1, Game::gMouse, 0);
                 if(itemsFunction(isClicked) == EXIT_GAME) gameIsRunning = false;
             }
             else {
@@ -200,6 +208,8 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
             for (int i = NEXT_LEVEL; i < TOTAL_WINNING_BUTTONS; i++) {
                 if(curMX >= ButDes[i].x  && curMY >= ButDes[i].y && curMX <= ButDes[i].x + ButDes[i].w &&  curMY <= ButDes[i].y + ButDes[i].h) {
                     isClicked = i;
+                    if(Game::sEffect)
+                        Mix_PlayChannel(-1, Game::gMouse, 0);
                     if(itemsFunction(isClicked) == EXIT_GAME) gameIsRunning = false;
                     cout << "winning click" << endl;
                 }
@@ -224,10 +234,14 @@ int Menu::itemsFunction(int isCLicked){
     {
     case NEW_GAME:
         inMenu = false;
+        if(Game::Musicon)
+            Mix_PlayMusic(Game::gMusic, -1);
         break;
 
     case CONTINUE_GAME:
         inMenu = false;
+        if(Game::Musicon)
+            Mix_PlayMusic(Game::gMusic, -1);
         break;
     case OPTION_GAME:
         inOptions = true;
@@ -254,9 +268,15 @@ int Menu::itemsFunction(int isCLicked){
         break;
     case MUSIC:
         swap(ButClip[MUSIC],ButClip[MUSIC_OFF]);
+        Game::Musicon = !Game::Musicon;
+        if(!Game::Musicon)
+            Mix_PauseMusic();
+        else    
+            Mix_ResumeMusic();
         break;
     case SOUND_EFFECT:
         swap(ButClip[SOUND_EFFECT],ButClip[SOUND_EFFECT_OFF]);
+        Game::sEffect = !Game::sEffect;
         break;
     case RESTART_LEVEL:
         break;
