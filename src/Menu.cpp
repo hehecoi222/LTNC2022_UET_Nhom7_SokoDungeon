@@ -97,6 +97,25 @@ void Menu::loadMenu() {
     }
     ButDes[RESTART_LEVEL] = ButDes[CREDIT];
     ButDes[NEXT_LEVEL] = ButDes[SOUND_EFFECT];
+
+    // Load tutorial item
+    menuTutorialItemsLabelTex[0].loadFromRenderText(menuTutorialItemsLabel[0], colorWhite);
+    menuTutorialItemsLabelTex[1].loadFromRenderText(menuTutorialItemsLabel[1], colorWhite);
+    ButTutorialClip[MOVE_UP] = {48, 0, 16, 16};
+    ButTutorialClip[MOVE_DOWN] = {48, 0, 16, 16};
+    ButTutorialClip[MOVE_RIGHT] = {32, 0, 16, 16};
+    ButTutorialClip[MOVE_LEFT] = {0, 16, 16, 16};
+    ButTutorialClip[UNDO] = {32, 64, 16, 16};
+    ButTutorialClip[RESTART] = {0, 48, 16, 16};
+    int alignmentOfLeftBar = ((Game::WINDOW_WIDTH/2) - (Game::BLOCK_WIDTH * Game::GRID_WIDTH / 2))/2;
+    ButTutorialDes[MOVE_UP] = {alignmentOfLeftBar - Game::BLOCK_WIDTH / 4, Game::BLOCK_WIDTH*2, Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2};
+    ButTutorialDes[MOVE_DOWN] = {alignmentOfLeftBar - Game::BLOCK_WIDTH / 4, Game::BLOCK_WIDTH*2 + (Game::BLOCK_WIDTH/2), Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2};
+    ButTutorialDes[MOVE_LEFT] = {(alignmentOfLeftBar - Game::BLOCK_WIDTH / 4) - Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH*2 + Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2};
+    ButTutorialDes[MOVE_RIGHT] = {(alignmentOfLeftBar - Game::BLOCK_WIDTH / 4) + Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH*2 + Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2};
+    ButTutorialDes[UNDO] = {(alignmentOfLeftBar - Game::BLOCK_WIDTH / 4) - Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH*3 + Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2};
+    ButTutorialDes[RESTART] = {(alignmentOfLeftBar - Game::BLOCK_WIDTH / 4) - Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH*3 + Game::BLOCK_WIDTH, Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2};
+    ButTutorialDes[UNDO_TEXT] = {alignmentOfLeftBar - Game::BLOCK_WIDTH / 4 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*3 + Game::BLOCK_WIDTH/2 + Game::BLOCK_WIDTH/8, menuTutorialItemsLabelTex[0].getWidth()/2, menuTutorialItemsLabelTex[0].getHeight()/2 + Game::BLOCK_WIDTH/8};
+    ButTutorialDes[RESTART_TEXT] = {alignmentOfLeftBar - Game::BLOCK_WIDTH / 4 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*3 + Game::BLOCK_WIDTH + Game::BLOCK_WIDTH/8, menuTutorialItemsLabelTex[1].getWidth()/2, menuTutorialItemsLabelTex[1].getHeight()/2 + Game::BLOCK_WIDTH/8};
 }
 
 void Menu::setInWinOptions(bool _inWinOptions) {
@@ -298,6 +317,17 @@ void Menu::menuRender() {
     }
     if(!inMenu && !inOptions){
         buttonsPresTex.render(ButDes[PAUSE_GAME].x, ButDes[PAUSE_GAME].y, &ButClip[PAUSE_GAME], &ButDes[PAUSE_GAME]);
+        for (int i = 0; i < TOTAL_TUTORIAL_ITEMS; i++) {
+            if (i == MOVE_DOWN) {
+                buttonsPresTex.render(ButTutorialDes[i].x , ButTutorialDes[i].y, &ButTutorialClip[i], &ButTutorialDes[i], 180, NULL);
+            } else if (i == UNDO_TEXT) {
+                menuTutorialItemsLabelTex[0].render(ButTutorialDes[i].x, ButTutorialDes[i].y, nullptr, &ButTutorialDes[i]);
+            } else if (i == RESTART_TEXT) {
+                menuTutorialItemsLabelTex[1].render(ButTutorialDes[i].x, ButTutorialDes[i].y, nullptr, &ButTutorialDes[i]);
+            } else {
+                buttonsPresTex.render(ButTutorialDes[i].x , ButTutorialDes[i].y, &ButTutorialClip[i], &ButTutorialDes[i]);
+            }
+        } 
     }
     if(inWinPanel){
         optPanel.render(winPanelDest.x, winPanelDest.y, &winPanelClip, &winPanelDest);
