@@ -39,7 +39,6 @@ void Map::preLoadMap() {
             map[5] = '5';
             break;
     }
-    
     // using file operation to load
     ifstream file(FindRes::getPath("map", map));
     level0 = new char*[Game::GRID_HEIGHT];
@@ -77,7 +76,7 @@ void Map::preLoadMap() {
 }
 
 void Map::LoadMap() {
-    
+   
    for (int i = 0; i < Game::GRID_HEIGHT; i++) {
         for (int j = 0; j < Game::GRID_WIDTH; j++) {
             switch (level0[i][j]) {

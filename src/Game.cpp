@@ -14,8 +14,9 @@ TTF_Font* Game::gFont = nullptr;
 //Music and sound effects will be used
 Mix_Music* Game::gVictory = NULL, *Game::gMusic = NULL, *Game::gTheme = NULL;
 Mix_Chunk* Game::gBox = NULL, *Game::gHero = NULL, *Game::gMouse = NULL;
-bool Game::Musicon = true;
-bool Game::sEffect = true;
+bool Game::musicOn = true;
+bool Game::isEffect = true;
+
 
 //Create different render viewport
 const SDL_Rect fullSizeViewPort = {0, 0, Game::WINDOW_WIDTH, Game::WINDOW_HEIGHT};
@@ -114,9 +115,10 @@ bool Game::loadMedia() {
     gBox = Mix_LoadWAV(FindRes::getPath("audio", "box.wav"));
     gMouse = Mix_LoadWAV(FindRes::getPath("audio", "MouseClick.wav"));    
     //Play intro sound while being in Menu state
-    if(gMenu.getMenuState() && Musicon)
+    if(gMenu.getMenuState() && musicOn)
         Mix_PlayMusic(gTheme, -1);
-    else if (Musicon)
+    else if(musicOn)
+        //Play gMusic
         Mix_PlayMusic(gMusic, -1);
     // load Hero img
     mainHero.loadHeroIMG();
@@ -187,7 +189,7 @@ void Game::update() {
         Game0.NextMap();
         Game0.PresVic();
         render();
-        if(sEffect)
+        if(isEffect)
             Mix_PlayMusic(gVictory, -1);
         SDL_Delay(2000);
         Mix_HaltMusic();
@@ -199,7 +201,6 @@ void Game::update() {
         save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
         save.loadHighScore(FindRes::getPath("savefile","fileHighScore.skbhsf"));
     }
-
 }
 
 void Game::render() {
