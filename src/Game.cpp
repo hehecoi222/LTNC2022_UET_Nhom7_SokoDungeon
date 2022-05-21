@@ -114,9 +114,9 @@ bool Game::loadMedia() {
     gBox = Mix_LoadWAV(FindRes::getPath("audio", "box.wav"));
     gMouse = Mix_LoadWAV(FindRes::getPath("audio", "MouseClick.wav"));    
     //Play intro sound while being in Menu state
-    if(gMenu.getMenuState())
+    if(gMenu.getMenuState() && Musicon)
         Mix_PlayMusic(gTheme, -1);
-    else
+    else if (Musicon)
         Mix_PlayMusic(gMusic, -1);
     // load Hero img
     mainHero.loadHeroIMG();
