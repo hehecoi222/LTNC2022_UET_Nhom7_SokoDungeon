@@ -79,7 +79,8 @@ void Box::Move(int direction) {
             bDesPosX -= Game::BLOCK_WIDTH;
             while (bCurPosX != bDesPosX) {
                 bCurPosX -= BOX_VEL;
-                Mix_PlayChannel(-1, Game::gBox, 0);
+                if(Game::isEffect)
+                    Mix_PlayChannel(-1, Game::gBox, 0);
                 boxRender();
             }
             addBoxCount();
@@ -92,7 +93,8 @@ void Box::Move(int direction) {
             bDesPosX += Game::BLOCK_WIDTH;
             while (bCurPosX != bDesPosX) {
                 bCurPosX += BOX_VEL;
-                Mix_PlayChannel(-1, Game::gBox, 0);
+                if(Game::isEffect)
+                    Mix_PlayChannel(-1, Game::gBox, 0);
                 boxRender();
             }
             addBoxCount();
@@ -105,7 +107,8 @@ void Box::Move(int direction) {
             bDesPosY -= Game::BLOCK_WIDTH;
             while (bCurPosY != bDesPosY) {
                 bCurPosY -= BOX_VEL;
-                Mix_PlayChannel(-1, Game::gBox, 0);
+                if(Game::isEffect)
+                    Mix_PlayChannel(-1, Game::gBox, 0);
                 boxRender();
             }
             addBoxCount();
@@ -118,7 +121,8 @@ void Box::Move(int direction) {
             bDesPosY += Game::BLOCK_WIDTH;
             while (bCurPosY != bDesPosY) {
                 bCurPosY += BOX_VEL;
-                Mix_PlayChannel(-1, Game::gBox, 0);
+                if(Game::isEffect)
+                    Mix_PlayChannel(-1, Game::gBox, 0);
                 boxRender();
             }
             addBoxCount();

@@ -16,9 +16,6 @@ private:
     //Game title texture
     Texture gameTitle;
     SDL_Rect gameTitleDest; 
-    Texture titleBox;
-    SDL_Rect titleBoxDest, titleBoxClip;
-
 
     //list of title menu items (3)
     enum {
@@ -34,8 +31,8 @@ private:
         MUSIC,
         SOUND_EFFECT,
         CLOSE_OPTION,
-        TOTAL_OPTION_BUTTONS,
         PAUSE_GAME,
+        TOTAL_OPTION_BUTTONS,
         NEXT_LEVEL,
         RESTART_LEVEL,
         TOTAL_WINNING_BUTTONS,
@@ -63,14 +60,11 @@ private:
     SDL_Rect menuItemsDes[TOTAL_MENU_ITEMS];
     SDL_Rect pauseGame;
 
-    bool isHovering[TOTAL_ITEMS] = {0};
-    int isClicked;
-
     //Text color
     SDL_Color defaultTextColor, hoveringTextColor;
     SDL_Color colorWhite;
 
-    Texture optPanel;
+    Texture panelTex;
     SDL_Rect optPanelClip, optPanelDest;
 
     SDL_Rect winPanelClip, winPanelDest;
@@ -85,9 +79,9 @@ private:
 
     //Menu state
     bool inMenu;
-    bool inOptions;
     bool inWinOptions;
     bool inWinMusicPlayed = false;
+    bool inOptPanel;
     bool inWinPanel;
 public:
     Menu();
@@ -97,15 +91,17 @@ public:
     void menuHandleEvent(SDL_Event& e, bool &gameIsRunning);
     void setInWinOptions(bool inWinOptions);
     void setInWinMusicPlayed(bool inWinMusicPlayed);
-    int itemsFunction(int isClicked);
+    void itemClickFunct(int item);
     void menuRender();
 
-    int checkClicked(int item);
+    int checkClicked(SDL_Rect itemDes[], int item);
 
     bool getMenuState();
-    bool getOptionState();
     bool getWinOptionState();
     bool getWinMusicPlayed();
+    bool getOptPanelState();
+    bool getWinPanelState();
+    
 };
 
 #endif

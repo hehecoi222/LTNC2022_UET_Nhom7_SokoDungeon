@@ -23,6 +23,8 @@ const SDL_Rect subViewport = {
     Game::WINDOW_WIDTH / 2 - Game::BLOCK_WIDTH * Game::GRID_WIDTH / 2,
     0, Game::BLOCK_WIDTH * Game::GRID_WIDTH,
     Game::BLOCK_WIDTH * Game::GRID_HEIGHT};
+bool Game::musicOn = true;
+bool Game::isEffect = true;    
 
 const SDL_Rect leftBorder = {subViewport.x, subViewport.y, - Game::BLOCK_WIDTH/8, subViewport.h};
 const SDL_Rect rightBorder = {subViewport.x + subViewport.w, subViewport.y, Game::BLOCK_WIDTH/8, subViewport.h};
@@ -122,7 +124,13 @@ bool Game::loadMedia() {
     gTheme = Mix_LoadMUS(FindRes::getPath("audio", "Theme Song.wav"));
     gHero = Mix_LoadWAV(FindRes::getPath("audio", "Footsteps.wav"));
     gBox = Mix_LoadWAV(FindRes::getPath("audio", "box.wav"));
-    gMouse = Mix_LoadWAV(FindRes::getPath("audio", "MouseClick.wav"));
+    gMouse = Mix_LoadWAV(FindRes::getPath("audio", "MouseClick.wav"));    
+    //Play intro sound while being in Menu state
+    if(gMenu.getMenuState() && musicOn)
+        Mix_PlayMusic(gTheme, -1);
+    else if(musicOn)
+        //Play gMusic
+        Mix_PlayMusic(gMusic, -1);
     // load Hero img
     mainHero.loadHeroIMG();
     mainEnemy.loadEnemyIMG();
@@ -198,9 +206,22 @@ void Game::restartGame() {
 
 void Game::update() {
     if (Box::winLevel()) {
-        save.compareHighScore(
-            FindRes::getPath("savefile", "fileHighScore.skbhsf"));
+        save.compareHighScore(FindRes::getPath("savefile", "fileHighScore.skbhsf"));
         gMenu.setInWinOptions(true);
+        Game0.NextMap();
+        Game0.PresVic();
+        render();
+        if(isEffect)
+            Mix_PlayMusic(gVictory, -1);
+        SDL_Delay(2000);
+        Mix_HaltMusic();
+        save.clear();
+        Game0.preLoadMap();
+        mainHero.setpos();
+        mainEnemy.setCurXY(Enemy::enemyGlobalPos.first, Enemy::enemyGlobalPos.second);
+        save.setMapInt(Game0.current_map);
+        save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
+        save.loadHighScore(FindRes::getPath("savefile","fileHighScore.skbhsf"));
     }
 }
 
