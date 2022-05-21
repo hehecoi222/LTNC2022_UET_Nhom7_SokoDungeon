@@ -39,7 +39,7 @@ public:
     static TTF_Font* gFont;
 
     //Sound of Victory
-    static Mix_Music* gVictory;
+    static Mix_Chunk* gVictory;
     //Soundtrack 
     static Mix_Music* gMusic;
     //Sound effect of Hero

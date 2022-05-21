@@ -97,7 +97,7 @@ void Savegame::compareHighScore(const char* filename) {
         FindRes::getPath("savefile", "fileHighScoreNew.skbhsf"));
     std::string map = "level" + std::to_string(mapSave) + ".smap";
     bool isWritten = false;
-    if (fileHighScoreIn.is_open()) {
+    if (fileHighScoreIn.is_open() && currentHighScore != 0) {
         while (!fileHighScoreIn.eof()) {
             std::string mapName;
             int highScore;
@@ -286,4 +286,9 @@ void Savegame::shift(Hero& hero, Enemy& enemy, int direction) {
     int enemyDirection = popEnemy();
     enemy.Move(enemyUndoDirection(enemyDirection));
     enemy.setState(enemyDirection);
+}
+
+int Savegame::getCurrentMove() {
+    if (movesStack) return movesStack->direction;
+    return -1;
 }

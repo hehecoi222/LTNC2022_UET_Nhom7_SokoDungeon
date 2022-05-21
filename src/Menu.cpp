@@ -12,6 +12,7 @@ Menu::Menu() {
     inMenu = true;
     inOptPanel = false;
     inWinPanel = false;
+    inWinMusicPlayed = false;
 }
 Menu::~Menu(){}
 
@@ -55,6 +56,8 @@ void Menu::loadMenu() {
     winPanelDest = optPanelDest;
     winPanelClip = optPanelClip;
 
+    int alignmentOfLeftBar = ((Game::WINDOW_WIDTH/2) - (Game::BLOCK_WIDTH * Game::GRID_WIDTH / 2))/2;
+
     //Load option items
     buttonsTex.loadFromFile(FindRes::getPath("img","buttons.png"));
     buttonsPresTex.loadFromFile(FindRes::getPath("img","buttonsPressed.png"));
@@ -71,8 +74,7 @@ void Menu::loadMenu() {
         ButDes[i]. w = ButDes[i].h = optPanelDest.w/10;
     }
     ButClip[PAUSE_GAME].w = ButClip[PAUSE_GAME].h = 16;
-    ButDes[PAUSE_GAME].w = ButDes[PAUSE_GAME].h = optPanelDest.w/10;
-    ButDes[PAUSE_GAME].x = ButDes[PAUSE_GAME].y = ButDes[PAUSE_GAME].w/8;
+    ButDes[PAUSE_GAME] = {alignmentOfLeftBar - Game::BLOCK_WIDTH/2, alignmentOfLeftBar - Game::BLOCK_WIDTH, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
     ButDes[CLOSE_OPTION].w = ButDes[CLOSE_OPTION].h = optPanelDest.w*6/80;
     ButDes[CLOSE_OPTION].x = optPanelDest.x + optPanelDest.w - ButDes[CLOSE_OPTION].w*5/4;
     ButDes[CLOSE_OPTION].y = optPanelDest.y + ButDes[CLOSE_OPTION].w*1/4;
@@ -104,7 +106,6 @@ void Menu::loadMenu() {
     ButTutorialClip[MOVE_LEFT] = {0, 16, 16, 16};
     ButTutorialClip[UNDO] = {32, 64, 16, 16};
     ButTutorialClip[RESTART] = {0, 48, 16, 16};
-    int alignmentOfLeftBar = ((Game::WINDOW_WIDTH/2) - (Game::BLOCK_WIDTH * Game::GRID_WIDTH / 2))/2;
     ButTutorialDes[MOVE_UP] = {alignmentOfLeftBar - Game::BLOCK_WIDTH / 4, Game::BLOCK_WIDTH*2, Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2};
     ButTutorialDes[MOVE_DOWN] = {alignmentOfLeftBar - Game::BLOCK_WIDTH / 4, Game::BLOCK_WIDTH*2 + (Game::BLOCK_WIDTH/2), Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2};
     ButTutorialDes[MOVE_LEFT] = {(alignmentOfLeftBar - Game::BLOCK_WIDTH / 4) - Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH*2 + Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2};
@@ -272,3 +273,7 @@ int Menu::checkClicked(SDL_Rect checkItemDes[], int checkItem){
 bool Menu::getMenuState() {return inMenu;}
 bool Menu::getOptPanelState() {return inOptPanel;}
 bool Menu::getWinPanelState() {return inWinPanel;}
+bool Menu::getWinMusicPlayed() {return inWinMusicPlayed;}
+
+void Menu::setWinPanelState(bool state) {inWinPanel = state;}
+void Menu::setWinMusicPlayed(bool state) {inWinMusicPlayed = state;}

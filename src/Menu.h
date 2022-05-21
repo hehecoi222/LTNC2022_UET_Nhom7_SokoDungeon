@@ -81,7 +81,9 @@ private:
     bool inMenu;
     bool inOptPanel;
     bool inWinPanel;
-public:
+    bool inWinMusicPlayed;
+
+   public:
     Menu();
     ~Menu();
 
@@ -95,7 +97,9 @@ public:
     bool getMenuState();
     bool getOptPanelState();
     bool getWinPanelState();
-    
+    bool getWinMusicPlayed();
+    void setWinPanelState(bool state);
+    void setWinMusicPlayed(bool state);
 };
 
 #endif

@@ -13,8 +13,8 @@ SDL_Renderer* Game::gRenderer = nullptr;
 TTF_Font* Game::gFont = nullptr;
 
 // Music and sound effects will be used
-Mix_Music *Game::gVictory = NULL, *Game::gMusic = NULL, *Game::gTheme = NULL;
-Mix_Chunk *Game::gBox = NULL, *Game::gHero = NULL, *Game::gMouse = NULL;
+Mix_Music *Game::gMusic = NULL, *Game::gTheme = NULL;
+Mix_Chunk *Game::gBox = NULL, *Game::gHero = NULL, *Game::gVictory = NULL, *Game::gMouse = NULL;
 
 // Create different render viewport
 const SDL_Rect fullSizeViewPort = {0, 0, Game::WINDOW_WIDTH,
@@ -87,7 +87,7 @@ bool Game::init() {
                 }
 
                 // Initialize SDL_Mixer
-                if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+                if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0 && Mix_AllocateChannels(3) < 0) {
                     printf(
                         "SDL_Mixer could not initialize! SDL_mixer Error: %s\n",
                         Mix_GetError());
@@ -119,18 +119,18 @@ bool Game::loadMedia() {
     gMenu.loadMenu();
 
     // Load music and sound effect
-    gVictory = Mix_LoadMUS(FindRes::getPath("audio", "Victory.wav"));
+    gVictory = Mix_LoadWAV(FindRes::getPath("audio", "Victory.wav"));
     gMusic = Mix_LoadMUS(FindRes::getPath("audio", "Soundtrack.wav"));
     gTheme = Mix_LoadMUS(FindRes::getPath("audio", "Theme Song.wav"));
     gHero = Mix_LoadWAV(FindRes::getPath("audio", "Footsteps.wav"));
     gBox = Mix_LoadWAV(FindRes::getPath("audio", "box.wav"));
     gMouse = Mix_LoadWAV(FindRes::getPath("audio", "MouseClick.wav"));    
     //Play intro sound while being in Menu state
-    if(gMenu.getMenuState() && musicOn)
-        Mix_PlayMusic(gTheme, -1);
-    else if(musicOn)
-        //Play gMusic
-        Mix_PlayMusic(gMusic, -1);
+    // if(gMenu.getMenuState() && musicOn)
+    //     Mix_PlayMusic(gTheme, -1);
+    // else if(musicOn)
+    //     //Play gMusic
+    //     Mix_PlayMusic(gMusic, -1);
     // load Hero img
     mainHero.loadHeroIMG();
     mainEnemy.loadEnemyIMG();
@@ -202,22 +202,13 @@ void Game::restartGame() {
     mainHero.setpos();
     mainEnemy.setCurXY(Enemy::enemyGlobalPos.first,
                         Enemy::enemyGlobalPos.second);
+    gMenu.setWinPanelState(false);
 }
 
 void Game::update() {
     if (Box::winLevel()) {
         save.compareHighScore(FindRes::getPath("savefile", "fileHighScore.skbhsf"));
-        Game0.NextMap();
-        Game0.PresVic();
-        render();
-        if(isEffect)
-            Mix_PlayMusic(gVictory, -1);
-        SDL_Delay(2000);
-        Mix_HaltMusic();
-        restartGame();
-        save.setMapInt(Game0.current_map);
-        save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
-        save.loadHighScore(FindRes::getPath("savefile","fileHighScore.skbhsf"));
+        gMenu.setWinPanelState(true);
     }
 }
 
@@ -225,6 +216,7 @@ void Game::render() {
     // Clear screen
     SDL_SetRenderDrawColor(gRenderer, 31, 138, 148, 255);
     SDL_RenderClear(gRenderer);
+
     //Change render viewport
     SDL_RenderSetViewport(gRenderer, &subViewport);
     // Load Map0
@@ -245,21 +237,51 @@ void Game::render() {
     SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
     SDL_RenderFillRect(gRenderer, &leftBorder);
     SDL_RenderFillRect(gRenderer, &rightBorder);
+    if (!Box::winLevel()) {
 
-    // render menu
-    gMenu.menuRender();
+        // render menu
+        gMenu.menuRender();
+
+        Mix_VolumeMusic(MIX_MAX_VOLUME);
+
+        // Play intro sound while being in Menu state
+        if (gMenu.getMenuState() && isBackgroundMusicPlaying == false) {
+            Mix_PlayMusic(gTheme, -1);
+            isBackgroundMusicPlaying = true;
+        } else if (gMenu.getMenuState() == false && isBackgroundMusicPlaying == true) {
+            // Play gMusic
+            Mix_PlayMusic(gMusic, -1);
+            isBackgroundMusicPlaying = false;
+        }
+    } else if (gMenu.getMenuState()) {
+            gMenu.setWinPanelState(false);
+            gMenu.menuRender();
+            Mix_VolumeMusic(MIX_MAX_VOLUME);
+
+            // Play intro sound while being in Menu state
+            if (gMenu.getMenuState() && isBackgroundMusicPlaying == false) {
+                Mix_PlayMusic(gTheme, -1);
+                isBackgroundMusicPlaying = true;
+            } else if (gMenu.getMenuState() == false && isBackgroundMusicPlaying == true) {
+                // Play gMusic
+                Mix_PlayMusic(gMusic, -1);
+                isBackgroundMusicPlaying = false;
+            }
+    } else {
+        if (gMenu.getMenuState() == false && isBackgroundMusicPlaying == true) {
+                // Play gMusic
+                Mix_PlayMusic(gMusic, -1);
+                isBackgroundMusicPlaying = false;
+        }
+        gMenu.menuRender();
+        if(isEffect && gMenu.getWinMusicPlayed() == false) {
+            Mix_PlayChannel(2, gVictory, 0);
+            gMenu.setWinMusicPlayed(true);
+        }
+        Mix_VolumeMusic(64);
+    }
     // Update Screen
     SDL_RenderPresent(gRenderer);
-
-    // // Play intro sound while being in Menu state
-    // if (gMenu.getMenuState() && isBackgroundMusicPlaying == false) {
-    //     Mix_PlayMusic(gTheme, -1);
-    //     isBackgroundMusicPlaying = true;
-    // } else if (gMenu.getMenuState() == false && isBackgroundMusicPlaying == true) {
-    //     // Play gMusic
-    //     Mix_PlayMusic(gMusic, -1);
-    //     isBackgroundMusicPlaying = false;
-    // }
 }
 
 void Game::close() {
@@ -268,14 +290,14 @@ void Game::close() {
     SDL_DestroyWindow(gWindow);
 
     // Free the sound effects and sound
-    Mix_FreeMusic(gVictory);
+    Mix_FreeChunk(gVictory);
     Mix_FreeChunk(gHero);
     Mix_FreeChunk(gBox);
     Mix_FreeMusic(gTheme);
     Mix_FreeMusic(gMusic);
     Mix_FreeChunk(gMouse);
-    gVictory = gTheme = gMusic = NULL;
-    gHero = gBox = gMouse = NULL;
+    gTheme = gMusic = NULL;
+    gHero = gBox = gMouse = gVictory = NULL;
 
     gWindow = NULL;
     gRenderer = NULL;
