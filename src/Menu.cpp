@@ -9,12 +9,9 @@ Menu::Menu() {
     hoveringTextColor = {255, 0, 0}; //Red
     colorWhite = {255, 255, 255};
 
-    isClicked = TOTAL_ITEMS;
-
     inMenu = true;
-    inOptions = false;
-    inWinPanel = true;
-    cout << "init successful";
+    inOptPanel = false;
+    inWinPanel = false;
 }
 Menu::~Menu(){}
 
@@ -29,6 +26,7 @@ void Menu::loadMenu() {
     backgroundClip.y = menuBackground.getHeight()/2 - backgroundClip.h/2 - 100;
     backgroundDestRect = {0, 0, Game::WINDOW_WIDTH, Game::WINDOW_HEIGHT};
 
+    //load game title
     gameTitle.loadFromRenderText("SoKo Dungeon", colorWhite);
     gameTitleDest.w = gameTitle.getWidth()*2;
     gameTitleDest.h = gameTitle.getHeight()*2;
@@ -36,7 +34,7 @@ void Menu::loadMenu() {
     gameTitleDest.y = 200;
     
     //Load Menu label
-    int labelVertSpace = 72; 
+    int labelVertSpace = 88; 
     for (int i = 0; i < TOTAL_MENU_ITEMS; i++)
     {
         menuItemsTex[i].loadFromRenderText(menuItemsLabel[i], defaultTextColor);
@@ -44,11 +42,11 @@ void Menu::loadMenu() {
         menuItemsDes[i].y = 300 + labelVertSpace;
         menuItemsDes[i].w = menuItemsTex[i].getWidth();
         menuItemsDes[i].h = menuItemsTex[i].getHeight();
-        labelVertSpace += 48;
+        labelVertSpace += 44;
     }
 
     //Load option panel
-    optPanel.loadFromFile(FindRes::getPath("img", "GUI.png"));
+    panelTex.loadFromFile(FindRes::getPath("img", "GUI.png"));
     optPanelClip = {112, 256, 80 , 48};
     optPanelDest.w = Game::WINDOW_WIDTH*0.6;
     optPanelDest.h = optPanelDest.w*0.6;
@@ -70,7 +68,7 @@ void Menu::loadMenu() {
     ButClip[MUSIC_OFF] = {0, 32};
     ButClip[CLOSE_OPTION] = {16, 48};
     ButClip[PAUSE_GAME] = {16, 16};
-    for (int i = RETURN_HOME; i < TOTAL_OPTION_BUTTONS; i++) {
+    for (int i = RETURN_HOME; i < PAUSE_GAME; i++) {
         ButClip[i].w = ButClip[i].h = 16;
         ButDes[i]. w = ButDes[i].h = optPanelDest.w/10;
     }
@@ -101,24 +99,21 @@ void Menu::loadMenu() {
 }
 
 void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
-    if(inMenu && !inOptions && !inWinPanel) {
+    if(inMenu && !inOptPanel) {
         switch (e.type)
         {
         case SDL_MOUSEMOTION:
             SDL_GetMouseState(&curMX, &curMY);
             for (int i = 0; i < TOTAL_MENU_ITEMS; i++) {
                 if(curMX >= menuItemsDes[i].x  && curMY >= menuItemsDes[i].y && curMX <= menuItemsDes[i].x + menuItemsDes[i].w &&  curMY <= menuItemsDes[i].y + menuItemsDes[i].h) {
-                    isHovering[i] = 1;
                     menuItemsTex[i].loadFromRenderText(menuItemsLabel[i], hoveringTextColor);
                 }
                 else {
-                    isHovering[i] = 0;
                     menuItemsTex[i].loadFromRenderText(menuItemsLabel[i], defaultTextColor);
                 }
             }
             break;
         case SDL_MOUSEBUTTONDOWN:
-            SDL_GetMouseState(&curMX, &curMY);
             for (int i = 0; i < TOTAL_MENU_ITEMS; i++) {
                 if(curMX >= menuItemsDes[i].x  && curMY >= menuItemsDes[i].y && curMX <= menuItemsDes[i].x + menuItemsDes[i].w &&  curMY <= menuItemsDes[i].y + menuItemsDes[i].h) {
                     isClicked = i;
@@ -133,24 +128,17 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
                 }
                 //thay cả cụm trong for bằng dòng dưới sẽ lỗi click không làm gì cả
                 //checkClicked(i); 
+                if(checkClicked(menuItemsDes, i) == EXIT_GAME) gameIsRunning = false;
             }
             break; 
         default:
             break;
         }
     }
-    else if(inOptions && !inWinPanel) {    
-        switch (e.type)
-        {
-        case SDL_MOUSEMOTION:
-            SDL_GetMouseState(&curMX, &curMY);
-            for (int i = RETURN_HOME; i < TOTAL_OPTION_BUTTONS; i++) {
-                if(curMX >= ButDes[i].x  && curMY >= ButDes[i].y && curMX <= ButDes[i].x + ButDes[i].w &&  curMY <= ButDes[i].y + ButDes[i].h) {
-                    isHovering[i] = 1;
-                }
-                else {
-                    isHovering[i] = 0;
-                }
+    else if(inOptPanel) {    
+        if(e.type == SDL_MOUSEBUTTONDOWN) {
+            for (int i = RETURN_HOME; i < PAUSE_GAME; i++) {
+                checkClicked(ButDes, i);
             }
             break;
         case SDL_MOUSEBUTTONDOWN:
@@ -184,27 +172,17 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
                 isClicked = TOTAL_ITEMS;
             }
         }
-        if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_w){
+    }
+    if(!inMenu && !inOptPanel && !inWinPanel) {
+        if(e.type == SDL_MOUSEBUTTONDOWN) {
+        checkClicked(ButDes, PAUSE_GAME);
+        }
+        if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_w) {
             inWinPanel = true;
         }
     }
     if(inWinPanel) {
-        switch (e.type)
-        {
-        case SDL_MOUSEMOTION:
-            SDL_GetMouseState(&curMX, &curMY);
-            for (int i = RETURN_HOME; i < TOTAL_OPTION_BUTTONS; i++) {
-                if(curMX >= ButDes[i].x  && curMY >= ButDes[i].y && curMX <= ButDes[i].x + ButDes[i].w &&  curMY <= ButDes[i].y + ButDes[i].h) {
-                    isHovering[i] = 1;
-                    cout << 1;
-                }
-                else {
-                    isHovering[i] = 0;
-                }
-            }
-            break;
-        case SDL_MOUSEBUTTONDOWN:
-            SDL_GetMouseState(&curMX, &curMY);
+        if(e.type == SDL_MOUSEBUTTONDOWN) {
             for (int i = NEXT_LEVEL; i < TOTAL_WINNING_BUTTONS; i++) {
                 if(curMX >= ButDes[i].x  && curMY >= ButDes[i].y && curMX <= ButDes[i].x + ButDes[i].w &&  curMY <= ButDes[i].y + ButDes[i].h) {
                     isClicked = i;
@@ -213,24 +191,17 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
                     if(itemsFunction(isClicked) == EXIT_GAME) gameIsRunning = false;
                     cout << "winning click" << endl;
                 }
+                checkClicked(ButDes, i);
             }
-            if(curMX >= ButDes[RETURN_HOME].x  && curMY >= ButDes[RETURN_HOME].y && curMX <= ButDes[RETURN_HOME].x + ButDes[RETURN_HOME].w &&  curMY <= ButDes[RETURN_HOME].y + ButDes[RETURN_HOME].h) {
-                isClicked = RETURN_HOME;
-                cout << "click return home win";
-                if(itemsFunction(isClicked) == EXIT_GAME) gameIsRunning = false;
-            }
-            checkClicked(CLOSE_OPTION);
-            break; 
-        default:
-            break;
+            checkClicked(ButDes, RETURN_HOME);
+            checkClicked(ButDes, CLOSE_OPTION);
         }
     }
-    
 }
 
 
-int Menu::itemsFunction(int isCLicked){
-    switch (isClicked)
+void Menu::itemClickFunct(int item){
+    switch (item)
     {
     case NEW_GAME:
         inMenu = false;
@@ -243,28 +214,29 @@ int Menu::itemsFunction(int isCLicked){
         if(Game::Musicon)
             Mix_PlayMusic(Game::gMusic, -1);
         break;
+
     case OPTION_GAME:
-        inOptions = true;
+        inOptPanel = true;
+        inWinPanel = false;
         break;
+
     case EXIT_GAME:
-        return EXIT_GAME;
+        return;
         break;
 
     case PAUSE_GAME:
-        inOptions = true;
+        inOptPanel = true;
         break;
 
     case CLOSE_OPTION:
-        inOptions = false;
+        inOptPanel = false;
         inWinPanel = false;
-        cout << "close option" << endl;
         break;
 
     case RETURN_HOME:
         inMenu = true;
-        inOptions = false;
+        inOptPanel = false;
         inWinPanel = false;
-        cout << "return home" << endl << endl;
         break;
     case MUSIC:
         swap(ButClip[MUSIC],ButClip[MUSIC_OFF]);
@@ -285,7 +257,6 @@ int Menu::itemsFunction(int isCLicked){
     default:
     break;
     }
-    return TOTAL_ITEMS;
 }
 
 void Menu::menuRender() {
@@ -296,17 +267,17 @@ void Menu::menuRender() {
         }      
         gameTitle.render(gameTitleDest.x, gameTitleDest.y, nullptr, &gameTitleDest);
     }
-    if(inOptions) {
-        optPanel.render(optPanelDest.x, optPanelDest.y, &optPanelClip, &optPanelDest);
+    if(inOptPanel) {
+        panelTex.render(optPanelDest.x, optPanelDest.y, &optPanelClip, &optPanelDest);
         for (int i = RETURN_HOME; i < PAUSE_GAME; i++) {
             buttonsTex.render(ButDes[i].x, ButDes[i].y, &ButClip[i], &ButDes[i]);
         }
     }
-    if(!inMenu && !inOptions){
+    if(!inMenu && !inOptPanel){
         buttonsPresTex.render(ButDes[PAUSE_GAME].x, ButDes[PAUSE_GAME].y, &ButClip[PAUSE_GAME], &ButDes[PAUSE_GAME]);
     }
     if(inWinPanel){
-        optPanel.render(winPanelDest.x, winPanelDest.y, &winPanelClip, &winPanelDest);
+        panelTex.render(winPanelDest.x, winPanelDest.y, &winPanelClip, &winPanelDest);
         for (int i = NEXT_LEVEL; i < TOTAL_WINNING_BUTTONS; i++)
         {
             buttonsTex.render(ButDes[i].x, ButDes[i].y, &ButClip[i], &ButDes[i]);
@@ -318,20 +289,18 @@ void Menu::menuRender() {
     
 
 }
-int Menu::checkClicked(int item){
+int Menu::checkClicked(SDL_Rect checkItemDes[], int checkItem){
     SDL_GetMouseState(&curMX, &curMY);
-    if(curMX >= ButDes[item].x  && curMY >= ButDes[item].y && curMX <= ButDes[item].x + ButDes[item].w &&  curMY <= ButDes[item].y + ButDes[item].h) {
-        if(item == EXIT_GAME) return EXIT_GAME;
-        isClicked = item;
-        cout << item << " is clicked";
-        // itemsFunction(item) lỗi trong thực hiện được hàm itemFuction;
-        itemsFunction(isClicked);
+    if(curMX >= checkItemDes[checkItem].x  && curMY >= checkItemDes[checkItem].y && curMX <= checkItemDes[checkItem].x + checkItemDes[checkItem].w &&  curMY <= checkItemDes[checkItem].y + checkItemDes[checkItem].h) {
+        if(checkItem == EXIT_GAME) {
+            cout << "Exit Game\n";
+            return EXIT_GAME;
+        }
+        itemClickFunct(checkItem);
     }
-    else {
-        isClicked = TOTAL_ITEMS;
-    }
-    return item;
+    return TOTAL_ITEMS;
 }
 
 bool Menu::getMenuState() {return inMenu;}
-bool Menu::getOptionState() {return inOptions;}
+bool Menu::getOptPanelState() {return inOptPanel;}
+bool Menu::getWinPanelState() {return inWinPanel;}
