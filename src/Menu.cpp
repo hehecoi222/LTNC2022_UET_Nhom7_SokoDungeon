@@ -178,12 +178,14 @@ int Menu::itemsFunction(int isCLicked){
     {
     case NEW_GAME:
         inMenu = false;
-        Mix_PlayMusic(Game::gMusic, -1);
+        if(Game::Musicon)
+            Mix_PlayMusic(Game::gMusic, -1);
         break;
 
     case CONTINUE_GAME:
         inMenu = false;
-        Mix_PlayMusic(Game::gMusic, -1);
+        if(Game::Musicon)
+            Mix_PlayMusic(Game::gMusic, -1);
         break;
 
     case OPTION_GAME:
@@ -205,7 +207,8 @@ int Menu::itemsFunction(int isCLicked){
     case RETURN_HOME:
         inMenu = true;
         inOptions = false;
-        Mix_PlayMusic(Game::gTheme, -1);
+        if(Game::Musicon)
+            Mix_PlayMusic(Game::gTheme, -1);
         cout << "return home" << endl << endl;
         break;
     case MUSIC:
