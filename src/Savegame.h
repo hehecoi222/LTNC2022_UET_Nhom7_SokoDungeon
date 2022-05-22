@@ -69,7 +69,7 @@ class Savegame {
     int getHighScore() { return currentHighScore; }
 
     // Get current move
-    int getCurrentMove();
+    int getCurrentMove() { return currentHeroMove;  }
 
     // Direction
     enum { NOT_MOVE, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT };
@@ -105,6 +105,9 @@ class Savegame {
     int movesCount = 0;
     void addMovesCount() { movesCount++; }
     void subMovesCount() { movesCount--; }
+
+    // Current hero move
+    int currentHeroMove = NOT_MOVE;
 
     // Current high score
     int currentHighScore = 0;

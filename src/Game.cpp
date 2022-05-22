@@ -177,18 +177,20 @@ void Game::handleEvents() {
         } else {
             if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
                 save.recordMove(mainHero.heroHandleEvent(e, mainEnemy));
-                switch (e.key.keysym.sym) {
-                    case SDLK_UP:
-                    case SDLK_w:
-                    case SDLK_DOWN:
-                    case SDLK_s:
-                    case SDLK_LEFT:
-                    case SDLK_a:
-                    case SDLK_RIGHT:
-                    case SDLK_d:
-                        save.recordEnemyMove(
-                            mainEnemy.Move(mainEnemy.findPathToHero(
-                                mainHero.getCurX(), mainHero.getCurY())));
+                if (save.getCurrentMove()) {
+                    switch (e.key.keysym.sym) {
+                        case SDLK_UP:
+                        case SDLK_w:
+                        case SDLK_DOWN:
+                        case SDLK_s:
+                        case SDLK_LEFT:
+                        case SDLK_a:
+                        case SDLK_RIGHT:
+                        case SDLK_d:
+                            save.recordEnemyMove(
+                                mainEnemy.Move(mainEnemy.findPathToHero(
+                                    mainHero.getCurX(), mainHero.getCurY())));
+                    }
                 }
             }
         gMenu.menuHandleEvent(e, isRunning);
@@ -245,13 +247,13 @@ void Game::render() {
         Mix_VolumeMusic(MIX_MAX_VOLUME);
 
         // Play intro sound while being in Menu state
-        if (gMenu.getMenuState() && isBackgroundMusicPlaying == false) {
+        if (gMenu.getMenuState() && isThemeMusicPlaying == false) {
             Mix_PlayMusic(gTheme, -1);
-            isBackgroundMusicPlaying = true;
-        } else if (gMenu.getMenuState() == false && isBackgroundMusicPlaying == true) {
+            isThemeMusicPlaying = true;
+        } else if (gMenu.getMenuState() == false && isThemeMusicPlaying == true) {
             // Play gMusic
             Mix_PlayMusic(gMusic, -1);
-            isBackgroundMusicPlaying = false;
+            isThemeMusicPlaying = false;
         }
     } else if (gMenu.getMenuState()) {
             gMenu.setWinPanelState(false);
@@ -259,19 +261,19 @@ void Game::render() {
             Mix_VolumeMusic(MIX_MAX_VOLUME);
 
             // Play intro sound while being in Menu state
-            if (gMenu.getMenuState() && isBackgroundMusicPlaying == false) {
+            if (gMenu.getMenuState() && isThemeMusicPlaying == false && musicOn) {
                 Mix_PlayMusic(gTheme, -1);
-                isBackgroundMusicPlaying = true;
-            } else if (gMenu.getMenuState() == false && isBackgroundMusicPlaying == true) {
+                isThemeMusicPlaying = true;
+            } else if (gMenu.getMenuState() == false && isThemeMusicPlaying == true && musicOn) {
                 // Play gMusic
                 Mix_PlayMusic(gMusic, -1);
-                isBackgroundMusicPlaying = false;
+                isThemeMusicPlaying = false;
             }
     } else {
-        if (gMenu.getMenuState() == false && isBackgroundMusicPlaying == true) {
+        if (gMenu.getMenuState() == false && isThemeMusicPlaying == true && musicOn) {
                 // Play gMusic
                 Mix_PlayMusic(gMusic, -1);
-                isBackgroundMusicPlaying = false;
+                isThemeMusicPlaying = false;
         }
         gMenu.menuRender();
         if(isEffect && gMenu.getWinMusicPlayed() == false) {
