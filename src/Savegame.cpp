@@ -159,7 +159,6 @@ void Savegame::boxPush(int x, int y) {
 }
 
 void Savegame::push(int direction) {
-    addMovesCount();
     Node* newNode = new Node;
     newNode->direction = direction;
     newNode->boxes = tempBoxes;
@@ -178,7 +177,6 @@ int Savegame::pop() {
 }
 
 void Savegame::popBoxes() {
-    subMovesCount();
     if (movesStack->boxes == nullptr) return;
     NodeBox* temp = movesStack->boxes;
     movesStack->boxes = movesStack->boxes->next;
@@ -228,18 +226,22 @@ void Savegame::recordMove(int direction) {
             push(NOT_MOVE);
             break;
         case MOVE_UP:
+            addMovesCount();
             push(MOVE_UP);
             heroY--;
             break;
         case MOVE_DOWN:
+            addMovesCount();
             push(MOVE_DOWN);
             heroY++;
             break;
         case MOVE_LEFT:
+            addMovesCount();
             push(MOVE_LEFT);
             heroX--;
             break;
         case MOVE_RIGHT:
+            addMovesCount();
             push(MOVE_RIGHT);
             heroX++;
             break;
@@ -247,7 +249,6 @@ void Savegame::recordMove(int direction) {
 }
 
 void Savegame::undoMove(Hero& hero, Enemy& enemy) {
-    subMovesCount();
     int direction = (movesStack ? movesStack->direction : -1);
     switch (direction) {
         case NOT_MOVE:
@@ -255,21 +256,25 @@ void Savegame::undoMove(Hero& hero, Enemy& enemy) {
             break;
         case MOVE_UP:
             direction = MOVE_DOWN;
+            subMovesCount();
             shift(hero, enemy, direction);
             heroY++;
             break;
         case MOVE_DOWN:
             direction = MOVE_UP;
+            subMovesCount();
             shift(hero, enemy, direction);
             heroY--;
             break;
         case MOVE_LEFT:
             direction = MOVE_RIGHT;
+            subMovesCount();
             shift(hero, enemy, direction);
             heroX++;
             break;
         case MOVE_RIGHT:
             direction = MOVE_LEFT;
+            subMovesCount();
             shift(hero, enemy, direction);
             heroX--;
             break;
