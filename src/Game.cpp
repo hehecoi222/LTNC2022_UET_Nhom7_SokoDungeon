@@ -22,6 +22,11 @@ bool Game::NewGame = false;
 const SDL_Rect fullSizeViewPort = {0, 0, Game::WINDOW_WIDTH, Game::WINDOW_HEIGHT};
 const SDL_Rect subViewport = {Game::WINDOW_WIDTH/2 - Game::BLOCK_WIDTH*Game::GRID_WIDTH/2, Game::WINDOW_HEIGHT/2 - Game::BLOCK_WIDTH*Game::GRID_HEIGHT/2, 480, 480};
 
+const SDL_Rect leftBorder = {subViewport.x, subViewport.y, - Game::BLOCK_WIDTH/4, subViewport.h};
+const SDL_Rect rightBorder = {subViewport.x + subViewport.w, subViewport.y, Game::BLOCK_WIDTH/4, subViewport.h};
+const SDL_Rect topBorder = {subViewport.x - Game::BLOCK_WIDTH/4, subViewport.y, subViewport.w + Game::BLOCK_WIDTH/2, - Game::BLOCK_WIDTH/4};
+const SDL_Rect bottomBorder = {subViewport.x - Game::BLOCK_WIDTH/4, subViewport.y + subViewport.h, subViewport.w + Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/4};
+
 //Menu
 Menu gMenu;
 
@@ -214,7 +219,7 @@ void Game::update() {
 
 void Game::render() {
     // Clear screen
-    SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
+    SDL_SetRenderDrawColor(gRenderer, 35, 87, 137, 255);
     SDL_RenderClear(gRenderer);
 
     if(!Box::winLevel())
@@ -234,6 +239,13 @@ void Game::render() {
 
         //set renderer to menu viewport
         SDL_RenderSetViewport(gRenderer, &fullSizeViewPort);
+
+        // Border to game viewport
+        SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
+        SDL_RenderFillRect(gRenderer, &leftBorder);
+        SDL_RenderFillRect(gRenderer, &rightBorder);
+        SDL_RenderFillRect(gRenderer, &topBorder);
+        SDL_RenderFillRect(gRenderer, &bottomBorder);
 
         //render menu
         gMenu.menuRender();

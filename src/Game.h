@@ -39,7 +39,7 @@ public:
     static TTF_Font* gFont;
 
     //Sound of Victory
-    static Mix_Chunk* gVictory;
+    static Mix_Music* gVictory;
     //Soundtrack 
     static Mix_Music* gMusic;
     //Sound effect of Hero
@@ -56,9 +56,9 @@ public:
 
     static const int GRID_WIDTH = 15;
     static const int GRID_HEIGHT = 15;
-    static const int BLOCK_WIDTH = 64;
-    static const int WINDOW_HEIGHT = GRID_HEIGHT * BLOCK_WIDTH;
-    static const int WINDOW_WIDTH = WINDOW_HEIGHT * 4 / 3;
+    static const int BLOCK_WIDTH = 32;
+    static const int WINDOW_HEIGHT = 640;
+    static const int WINDOW_WIDTH = 800;
     static bool musicOn;
     static bool effectOn;
     static bool NewGame;
