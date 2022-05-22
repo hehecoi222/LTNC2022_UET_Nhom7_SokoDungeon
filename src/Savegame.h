@@ -63,10 +63,18 @@ class Savegame {
     void undoMove(Hero& hero, Enemy& enemy);
 
     // Get Move count:
-    int getMovesCount() { return movesCount; }
+    static int getMovesCount() { return movesCount; }
 
     // Get high score
-    int getHighScore() { return currentHighScore; }
+    static int getHighScore() { return currentHighScore; }
+
+    // Current high score
+    static int currentHighScore;
+
+    // Count how many moves
+    static int movesCount;
+    static void addMovesCount() { movesCount++; }
+    static void subMovesCount() { movesCount--; }
 
     // Get current move
     int getCurrentMove() { return currentHeroMove;  }
@@ -101,16 +109,9 @@ class Savegame {
     // Shift position
     void shift(Hero& hero, Enemy& enemy, int direction);
 
-    // Count how many moves
-    int movesCount = 0;
-    void addMovesCount() { movesCount++; }
-    void subMovesCount() { movesCount--; }
 
     // Current hero move
     int currentHeroMove = NOT_MOVE;
-
-    // Current high score
-    int currentHighScore = 0;
 };
 
 #endif

@@ -8,6 +8,11 @@
 #include "Hero.h"
 #include "Map.h"
 
+int Savegame::currentHighScore = 0;
+
+    // Count how many moves
+int Savegame::movesCount = 0;
+
 Savegame::Savegame() {
     movesStack = nullptr;
     enemyStack = nullptr;
