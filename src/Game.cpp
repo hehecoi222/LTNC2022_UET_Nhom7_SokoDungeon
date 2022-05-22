@@ -175,8 +175,21 @@ void Game::handleEvents() {
         else {
             if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
                 save.recordMove(mainHero.heroHandleEvent(e, mainEnemy));
-                save.recordEnemyMove(mainEnemy.Move(
-                    mainEnemy.findPathToHero(mainHero.getCurX(), mainHero.getCurY())));
+                if (save.getCurrentMove()) {
+                    switch (e.key.keysym.sym) {
+                        case SDLK_UP:
+                        case SDLK_w:
+                        case SDLK_DOWN:
+                        case SDLK_s:
+                        case SDLK_LEFT:
+                        case SDLK_a:
+                        case SDLK_RIGHT:
+                        case SDLK_d:
+                            save.recordEnemyMove(
+                                mainEnemy.Move(mainEnemy.findPathToHero(
+                                    mainHero.getCurX(), mainHero.getCurY())));
+                    }
+                }
             }
         gMenu.menuHandleEvent(e, isRunning);
         if(NewGame)
@@ -218,40 +231,37 @@ void Game::update() {
 }
 
 void Game::render() {
+    if (!Box::winLevel()) {
     // Clear screen
-    SDL_SetRenderDrawColor(gRenderer, 35, 87, 137, 255);
+    SDL_SetRenderDrawColor(gRenderer, 26, 61, 60, 255);
     SDL_RenderClear(gRenderer);
 
-    if(!Box::winLevel())
-    {
-        //Change render viewport
-        SDL_RenderSetViewport(gRenderer, &subViewport);
-        // Load Map0
-        Game0.LoadMap();
-        // Render player
-        mainHero.heroRender();
+    //Change render viewport
+    SDL_RenderSetViewport(gRenderer, &subViewport);
+    // Load Map0
+    Game0.LoadMap();
+    // Render player
+    mainHero.heroRender();
 
-        // Render enemy
-        mainEnemy.enemyRender();
+    // Render enemy
+    mainEnemy.enemyRender();
 
-        // Render box
-        Box::layerBoxRender();
+    // Render box
+    Box::layerBoxRender();
 
-        //set renderer to menu viewport
-        SDL_RenderSetViewport(gRenderer, &fullSizeViewPort);
+    // set renderer to menu viewport
+    SDL_RenderSetViewport(gRenderer, &fullSizeViewPort);
 
-        // Border to game viewport
-        SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
-        SDL_RenderFillRect(gRenderer, &leftBorder);
-        SDL_RenderFillRect(gRenderer, &rightBorder);
-        SDL_RenderFillRect(gRenderer, &topBorder);
-        SDL_RenderFillRect(gRenderer, &bottomBorder);
+    // Border to game viewport
+    SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
+    SDL_RenderFillRect(gRenderer, &leftBorder);
+    SDL_RenderFillRect(gRenderer, &rightBorder);
+    SDL_RenderFillRect(gRenderer, &topBorder);
+    SDL_RenderFillRect(gRenderer, &bottomBorder);
 
-        //render menu
-        gMenu.menuRender();
-    }
-    
-
+    // render menu
+    gMenu.menuRender();
+    } 
     // Update Screen
     SDL_RenderPresent(gRenderer);
 }

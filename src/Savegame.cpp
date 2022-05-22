@@ -221,9 +221,9 @@ void Savegame::recordEnemyMove(int direction) {
 }
 
 void Savegame::recordMove(int direction) {
+    currentHeroMove = direction;
     switch (direction) {
         case NOT_MOVE:
-            push(NOT_MOVE);
             break;
         case MOVE_UP:
             addMovesCount();
@@ -284,6 +284,7 @@ void Savegame::undoMove(Hero& hero, Enemy& enemy) {
 
 void Savegame::shift(Hero& hero, Enemy& enemy, int direction) {
     hero.Move(direction);
+    subMovesCount();
     while (movesStack->boxes) {
         int boxX = movesStack->boxes->x;
         int boxY = movesStack->boxes->y;
@@ -293,9 +294,4 @@ void Savegame::shift(Hero& hero, Enemy& enemy, int direction) {
     int enemyDirection = popEnemy();
     enemy.Move(enemyUndoDirection(enemyDirection));
     enemy.setState(enemyDirection);
-}
-
-int Savegame::getCurrentMove() {
-    if (movesStack) return movesStack->direction;
-    return -1;
 }

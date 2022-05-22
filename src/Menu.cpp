@@ -74,7 +74,7 @@ void Menu::loadMenu() {
         ButDes[i]. w = ButDes[i].h = optPanelDest.w/10;
     }
     ButClip[PAUSE_GAME].w = ButClip[PAUSE_GAME].h = 16;
-    ButDes[PAUSE_GAME] = {alignmentOfLeftBar - Game::BLOCK_WIDTH/2, alignmentOfLeftBar - Game::BLOCK_WIDTH, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
+    ButDes[PAUSE_GAME] = {Game::BLOCK_WIDTH, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
     ButDes[CLOSE_OPTION].w = ButDes[CLOSE_OPTION].h = optPanelDest.w*6/80;
     ButDes[CLOSE_OPTION].x = optPanelDest.x + optPanelDest.w - ButDes[CLOSE_OPTION].w*5/4;
     ButDes[CLOSE_OPTION].y = optPanelDest.y + ButDes[CLOSE_OPTION].w*1/4;
@@ -106,14 +106,14 @@ void Menu::loadMenu() {
     ButTutorialClip[MOVE_LEFT] = {0, 16, 16, 16};
     ButTutorialClip[UNDO] = {32, 64, 16, 16};
     ButTutorialClip[RESTART] = {0, 48, 16, 16};
-    ButTutorialDes[MOVE_UP] = {alignmentOfLeftBar - Game::BLOCK_WIDTH / 4, Game::BLOCK_WIDTH*2, Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2};
-    ButTutorialDes[MOVE_DOWN] = {alignmentOfLeftBar - Game::BLOCK_WIDTH / 4, Game::BLOCK_WIDTH*2 + (Game::BLOCK_WIDTH/2), Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2};
-    ButTutorialDes[MOVE_LEFT] = {(alignmentOfLeftBar - Game::BLOCK_WIDTH / 4) - Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH*2 + Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2};
-    ButTutorialDes[MOVE_RIGHT] = {(alignmentOfLeftBar - Game::BLOCK_WIDTH / 4) + Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH*2 + Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2};
-    ButTutorialDes[UNDO] = {(alignmentOfLeftBar - Game::BLOCK_WIDTH / 4) - Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH*3 + Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2};
-    ButTutorialDes[RESTART] = {(alignmentOfLeftBar - Game::BLOCK_WIDTH / 4) - Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH*3 + Game::BLOCK_WIDTH, Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2};
-    ButTutorialDes[UNDO_TEXT] = {alignmentOfLeftBar - Game::BLOCK_WIDTH / 4 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*3 + Game::BLOCK_WIDTH/2 + Game::BLOCK_WIDTH/8, menuTutorialItemsLabelTex[0].getWidth()/2, menuTutorialItemsLabelTex[0].getHeight()/2 + Game::BLOCK_WIDTH/8};
-    ButTutorialDes[RESTART_TEXT] = {alignmentOfLeftBar - Game::BLOCK_WIDTH / 4 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*3 + Game::BLOCK_WIDTH + Game::BLOCK_WIDTH/8, menuTutorialItemsLabelTex[1].getWidth()/2, menuTutorialItemsLabelTex[1].getHeight()/2 + Game::BLOCK_WIDTH/8};
+    ButTutorialDes[MOVE_UP] = {Game::BLOCK_WIDTH*2, Game::BLOCK_WIDTH*3, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
+    ButTutorialDes[MOVE_DOWN] = {Game::BLOCK_WIDTH*2, Game::BLOCK_WIDTH*4, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
+    ButTutorialDes[MOVE_LEFT] = {Game::BLOCK_WIDTH, Game::BLOCK_WIDTH*4, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
+    ButTutorialDes[MOVE_RIGHT] = {Game::BLOCK_WIDTH*3, Game::BLOCK_WIDTH*4, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
+    ButTutorialDes[UNDO] = {Game::BLOCK_WIDTH, Game::BLOCK_WIDTH*6, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
+    ButTutorialDes[RESTART] = {Game::BLOCK_WIDTH, Game::BLOCK_WIDTH*7, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
+    ButTutorialDes[UNDO_TEXT] = {Game::BLOCK_WIDTH*2 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*6 +Game::BLOCK_WIDTH/4 , menuTutorialItemsLabelTex[0].getWidth()/2, menuTutorialItemsLabelTex[0].getHeight()/2 + Game::BLOCK_WIDTH/8};
+    ButTutorialDes[RESTART_TEXT] = {Game::BLOCK_WIDTH*2 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*7 + Game::BLOCK_WIDTH/4, menuTutorialItemsLabelTex[1].getWidth()/2, menuTutorialItemsLabelTex[1].getHeight()/2 + Game::BLOCK_WIDTH/8};
 }
 
 

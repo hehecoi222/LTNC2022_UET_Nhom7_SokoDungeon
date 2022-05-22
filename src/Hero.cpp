@@ -101,37 +101,25 @@ void Hero::Move(int direction) {
         case MOVE_RIGHT:
             hDesPosX += Game::BLOCK_WIDTH;
             playerCurrentTex = &walkRight;
-            while (hCurPosX != hDesPosX) {
-                hCurPosX += HERO_VEL;
-                heroRender();
-            }
+            hCurPosX = hDesPosX;
             playerCurrentTex = &idleRight;
             break;
         case MOVE_LEFT:
             hDesPosX -= Game::BLOCK_WIDTH;
             playerCurrentTex = &walkLeft;
-            while (hCurPosX != hDesPosX) {
-                hCurPosX -= HERO_VEL;
-                heroRender();
-            }
+            hCurPosX = hDesPosX;
             playerCurrentTex = &idleLeft;
             break;
         case MOVE_UP:
             hDesPosY -= Game::BLOCK_WIDTH;
             playerCurrentTex = &walkUp;
-            while (hCurPosY != hDesPosY) {
-                hCurPosY -= HERO_VEL;
-                heroRender();
-            }
+            hCurPosY = hDesPosY;
             playerCurrentTex = &idleUp;
             break;
         case MOVE_DOWN:
             hDesPosY += Game::BLOCK_WIDTH;
             playerCurrentTex = &walkDown;
-            while (hCurPosY != hDesPosY) {
-                hCurPosY += HERO_VEL;
-                heroRender();
-            }
+            hCurPosY = hDesPosY;
             playerCurrentTex = &idleDown;
             break;
     }

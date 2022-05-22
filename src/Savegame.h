@@ -69,7 +69,8 @@ class Savegame {
     int getHighScore() { return currentHighScore; }
 
     // Get current move
-    int getCurrentMove();
+    int getCurrentMove() { return currentHeroMove;  }
+
     // Count how many moves
     static int movesCount;
 
@@ -107,6 +108,9 @@ class Savegame {
 
     void addMovesCount() { movesCount++; }
     void subMovesCount() { movesCount--; }
+
+    // Current hero move
+    int currentHeroMove = NOT_MOVE;
 
     // Current high score
     int currentHighScore = 0;

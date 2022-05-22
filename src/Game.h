@@ -15,7 +15,7 @@ class Game {
     int cnt = 0;
     bool isRunning = true;
     SDL_Window* gWindow = NULL;
-    bool isBackgroundMusicPlaying = false;
+    bool isThemeMusicPlaying = false;
         
 public:
     Game();
@@ -57,8 +57,8 @@ public:
     static const int GRID_WIDTH = 15;
     static const int GRID_HEIGHT = 15;
     static const int BLOCK_WIDTH = 32;
-    static const int WINDOW_HEIGHT = 640;
-    static const int WINDOW_WIDTH = 800;
+    static const int WINDOW_HEIGHT = 720;
+    static const int WINDOW_WIDTH = 720*5/4;
     static bool musicOn;
     static bool effectOn;
     static bool NewGame;
