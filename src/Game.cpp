@@ -207,12 +207,15 @@ void Game::restartGame() {
     mainEnemy.setCurXY(Enemy::enemyGlobalPos.first,
                         Enemy::enemyGlobalPos.second);
     gMenu.setWinPanelState(false);
+    gMenu.setWinMusicPlayed(false);
 }
 
 void Game::update() {
     if (Box::winLevel()) {
         save.compareHighScore(FindRes::getPath("savefile", "fileHighScore.skbhsf"));
-        gMenu.setWinPanelState(true);
+        if (!gMenu.getWinPanelState()) {
+            gMenu.setWinPanelState(true);
+        }
     }
 }
 

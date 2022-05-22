@@ -96,6 +96,7 @@ void Menu::loadMenu() {
     }
     ButDes[RESTART_LEVEL] = ButDes[CREDIT];
     ButDes[NEXT_LEVEL] = ButDes[SOUND_EFFECT];
+    ButDes[NEXT_LEVEL].x =  optPanelDest.x + optPanelDest.w * 20 / 80;
 
     // Load tutorial item
     menuTutorialItemsLabelTex[0].loadFromRenderText(menuTutorialItemsLabel[0], colorWhite);
@@ -118,7 +119,7 @@ void Menu::loadMenu() {
 
 
 void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
-    if(inMenu && !inOptPanel) {
+    if(inMenu && !inOptPanel && !inWinPanel) {
         switch (e.type)
         {
         case SDL_MOUSEMOTION:
@@ -147,6 +148,13 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
                 checkClicked(ButDes, i);
             }
         }
+    } else if(inWinPanel) {
+        if(e.type == SDL_MOUSEBUTTONDOWN) {
+            for (int i = NEXT_LEVEL; i < TOTAL_WINNING_BUTTONS; i++) {
+                checkClicked(ButDes, i);
+            }
+            checkClicked(ButDes, RETURN_HOME);
+        }
     }
     if(!inMenu && !inOptPanel && !inWinPanel) {
         if(e.type == SDL_MOUSEBUTTONDOWN) {
@@ -154,15 +162,6 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
         }
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_w) {
             inWinPanel = true;
-        }
-    }
-    if(inWinPanel) {
-        if(e.type == SDL_MOUSEBUTTONDOWN) {
-            for (int i = NEXT_LEVEL; i < TOTAL_WINNING_BUTTONS; i++) {
-                checkClicked(ButDes, i);
-            }
-            checkClicked(ButDes, RETURN_HOME);
-            checkClicked(ButDes, CLOSE_OPTION);
         }
     }
 }
@@ -209,6 +208,8 @@ void Menu::itemClickFunct(int item){
         swap(ButClip[SOUND_EFFECT],ButClip[SOUND_EFFECT_OFF]);
         break;
     case RESTART_LEVEL:
+        inWinPanel = false;
+        Game::restartGame();
         break;
     case NEXT_LEVEL:
         break;
@@ -231,7 +232,15 @@ void Menu::menuRender() {
             buttonsTex.render(ButDes[i].x, ButDes[i].y, &ButClip[i], &ButDes[i]);
         }
     }
-    if(!inMenu && !inOptPanel){
+    if(inWinPanel){
+        panelTex.render(winPanelDest.x, winPanelDest.y, &winPanelClip, &winPanelDest);
+        for (int i = NEXT_LEVEL; i < TOTAL_WINNING_BUTTONS; i++)
+        {
+            buttonsTex.render(ButDes[i].x, ButDes[i].y, &ButClip[i], &ButDes[i]);
+        }
+        buttonsTex.render(ButDes[RETURN_HOME].x,  ButDes[RETURN_HOME].y, &ButClip[RETURN_HOME], &ButDes[RETURN_HOME]);
+    }
+    if(!inMenu && !inOptPanel && !inWinPanel){
         buttonsPresTex.render(ButDes[PAUSE_GAME].x, ButDes[PAUSE_GAME].y, &ButClip[PAUSE_GAME], &ButDes[PAUSE_GAME]);
         for (int i = 0; i < TOTAL_TUTORIAL_ITEMS; i++) {
             if (i == MOVE_DOWN) {
@@ -244,15 +253,6 @@ void Menu::menuRender() {
                 buttonsPresTex.render(ButTutorialDes[i].x , ButTutorialDes[i].y, &ButTutorialClip[i], &ButTutorialDes[i]);
             }
         } 
-    }
-    if(inWinPanel){
-        panelTex.render(winPanelDest.x, winPanelDest.y, &winPanelClip, &winPanelDest);
-        for (int i = NEXT_LEVEL; i < TOTAL_WINNING_BUTTONS; i++)
-        {
-            buttonsTex.render(ButDes[i].x, ButDes[i].y, &ButClip[i], &ButDes[i]);
-        }
-        buttonsTex.render(ButDes[RETURN_HOME].x,  ButDes[RETURN_HOME].y, &ButClip[RETURN_HOME], &ButDes[RETURN_HOME]);
-        buttonsTex.render(ButDes[CLOSE_OPTION].x,  ButDes[CLOSE_OPTION].y, &ButClip[CLOSE_OPTION], &ButDes[CLOSE_OPTION]);
     }
 
     
