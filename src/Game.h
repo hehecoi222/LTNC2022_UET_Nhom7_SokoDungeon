@@ -58,7 +58,7 @@ public:
     static const int GRID_HEIGHT = 15;
     static const int BLOCK_WIDTH = 48;
     static const int WINDOW_HEIGHT = GRID_HEIGHT * BLOCK_WIDTH + BLOCK_WIDTH*2;
-    static const int WINDOW_WIDTH = WINDOW_HEIGHT * 5 / 3;
+    static const int WINDOW_WIDTH = WINDOW_HEIGHT * 16 / 9;
     static bool musicOn;
     static bool isEffect;
 };
