@@ -1,6 +1,6 @@
 
 #include "Menu.h"
-
+#include "Map.h"
 Menu::Menu() {
     curMX = 0;
     curMY = 0;
@@ -165,6 +165,7 @@ void Menu::itemClickFunct(int item){
     {
     case NEW_GAME:
         inMenu = false;
+        Game::NewGame = true;
         break;
 
     case CONTINUE_GAME:

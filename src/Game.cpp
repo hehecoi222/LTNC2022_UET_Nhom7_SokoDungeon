@@ -16,7 +16,7 @@ Mix_Music* Game::gVictory = NULL, *Game::gMusic = NULL, *Game::gTheme = NULL;
 Mix_Chunk* Game::gBox = NULL, *Game::gHero = NULL, *Game::gMouse = NULL;
 bool Game::musicOn = true;
 bool Game::effectOn = true;
-
+bool Game::NewGame = false;
 
 //Create different render viewport
 const SDL_Rect fullSizeViewPort = {0, 0, Game::WINDOW_WIDTH, Game::WINDOW_HEIGHT};
@@ -174,6 +174,19 @@ void Game::handleEvents() {
                     mainEnemy.findPathToHero(mainHero.getCurX(), mainHero.getCurY())));
             }
         gMenu.menuHandleEvent(e, isRunning);
+        if(NewGame)
+        {
+            Game0.setMap(0);
+            save.clear();
+            Game0.preLoadMap();
+            mainHero.setpos();
+            mainEnemy.setCurXY(Enemy::enemyGlobalPos.first, Enemy::enemyGlobalPos.second);
+            save.setMapInt(Game0.current_map);
+            save.saveHeroPosition(mainHero.getCurX(), mainHero.getCurY());
+            save.loadHighScore(FindRes::getPath("savefile","fileHighScore.skbhsf"));
+            NewGame = false;
+
+        }
         }
     }
 }
@@ -191,7 +204,6 @@ void Game::update() {
         }
         save.clear();
         Game0.preLoadMap();
-
         mainHero.setpos();
         mainEnemy.setCurXY(Enemy::enemyGlobalPos.first, Enemy::enemyGlobalPos.second);
         save.setMapInt(Game0.current_map);

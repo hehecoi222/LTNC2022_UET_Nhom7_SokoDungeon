@@ -8,14 +8,14 @@
 #include "Savegame.h"
 
 char** Map::level0 = nullptr;
+
 Map::Map()
 {
-    //Initialize variable of the level0
-    current_map = 0;
     map = "level0.smap";
     // destination x, y position of the image to render
     des0.x = des0.y = 0;
     des0.w = des0.h = Game::BLOCK_WIDTH;
+    current_map = 0;
 }
 void Map::preLoadMap() {
     clear();
@@ -151,4 +151,10 @@ void Map::clear() {
     delete[] level0;
     level0 = nullptr;
     Box::flushBoxLayer();
+}
+
+void Map::setMap(int desiredMap)
+{
+    current_map = desiredMap;
+    clear();
 }
