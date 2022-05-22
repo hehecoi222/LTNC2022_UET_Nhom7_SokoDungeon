@@ -8,6 +8,7 @@
 #include "Hero.h"
 #include "Map.h"
 
+int Savegame::movesCount = 0;
 Savegame::Savegame() {
     movesStack = nullptr;
     enemyStack = nullptr;
@@ -246,6 +247,7 @@ void Savegame::recordMove(int direction) {
 }
 
 void Savegame::undoMove(Hero& hero, Enemy& enemy) {
+    subMovesCount();
     int direction = (movesStack ? movesStack->direction : -1);
     switch (direction) {
         case NOT_MOVE:

@@ -40,6 +40,8 @@ private:
     Texture wall[3];
     //Draw goal position of the box to win 
     Texture Goal;
+
+    Texture moveCount;
     // Render goal position
     void goalClicked(int gridX, int gridY);
     //Draw Victory image

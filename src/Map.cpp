@@ -5,6 +5,7 @@
 #include "Game.h"
 #include "Hero.h"
 #include "find_res.h"
+#include "Savegame.h"
 
 char** Map::level0 = nullptr;
 Map::Map()
@@ -102,6 +103,9 @@ void Map::LoadMap() {
             }
         }
     }
+    SDL_Color tex = {255, 255, 255};
+    moveCount.loadFromRenderText("Moves: " + to_string(Savegame::movesCount), tex);
+    moveCount.render(0, Game::BLOCK_WIDTH *225/16);
 }
 
 void Map::goalClicked(int gridX, int gridY) {

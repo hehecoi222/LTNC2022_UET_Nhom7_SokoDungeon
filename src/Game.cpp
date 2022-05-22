@@ -15,7 +15,7 @@ TTF_Font* Game::gFont = nullptr;
 Mix_Music* Game::gVictory = NULL, *Game::gMusic = NULL, *Game::gTheme = NULL;
 Mix_Chunk* Game::gBox = NULL, *Game::gHero = NULL, *Game::gMouse = NULL;
 bool Game::musicOn = true;
-bool Game::isEffect = true;
+bool Game::effectOn = true;
 
 
 //Create different render viewport
@@ -114,12 +114,6 @@ bool Game::loadMedia() {
     gHero = Mix_LoadWAV(FindRes::getPath("audio", "Footsteps.wav"));
     gBox = Mix_LoadWAV(FindRes::getPath("audio", "box.wav"));
     gMouse = Mix_LoadWAV(FindRes::getPath("audio", "MouseClick.wav"));    
-    //Play intro sound while being in Menu state
-    if(gMenu.getMenuState() && musicOn)
-        Mix_PlayMusic(gTheme, -1);
-    else if(musicOn)
-        //Play gMusic
-        Mix_PlayMusic(gMusic, -1);
     // load Hero img
     mainHero.loadHeroIMG();
     mainEnemy.loadEnemyIMG();
@@ -189,12 +183,15 @@ void Game::update() {
         Game0.NextMap();
         Game0.PresVic();
         render();
-        if(isEffect)
+        if(musicOn)
+        {
             Mix_PlayMusic(gVictory, -1);
-        SDL_Delay(2000);
-        Mix_HaltMusic();
+            SDL_Delay(2000);
+            Mix_PlayMusic(gMusic, -1);
+        }
         save.clear();
         Game0.preLoadMap();
+
         mainHero.setpos();
         mainEnemy.setCurXY(Enemy::enemyGlobalPos.first, Enemy::enemyGlobalPos.second);
         save.setMapInt(Game0.current_map);
@@ -229,6 +226,8 @@ void Game::render() {
         //render menu
         gMenu.menuRender();
     }
+    
+
     // Update Screen
     SDL_RenderPresent(gRenderer);
 }
@@ -245,8 +244,8 @@ void Game::close() {
     Mix_FreeMusic(gTheme);
     Mix_FreeMusic(gMusic);
     Mix_FreeChunk(gMouse);
-    gVictory = gTheme = gMusic = NULL;
-    gHero = gBox = gMouse = NULL;
+    gTheme = gMusic = gVictory = NULL;
+    gHero = gBox = gMouse  = NULL;
 
     gWindow = NULL;
     gRenderer = NULL;
