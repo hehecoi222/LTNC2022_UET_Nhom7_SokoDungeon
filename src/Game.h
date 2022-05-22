@@ -15,6 +15,7 @@ class Game {
     int cnt = 0;
     bool isRunning = true;
     SDL_Window* gWindow = NULL;
+    bool isBackgroundMusicPlaying = false;
         
 public:
     Game();
@@ -29,6 +30,7 @@ public:
 
     void close();
     
+    static void restartGame();
 
     bool getGameState(){ return isRunning; }
 
@@ -37,7 +39,7 @@ public:
     static TTF_Font* gFont;
 
     //Sound of Victory
-    static Mix_Music* gVictory;
+    static Mix_Chunk* gVictory;
     //Soundtrack 
     static Mix_Music* gMusic;
     //Sound effect of Hero
@@ -54,10 +56,9 @@ public:
 
     static const int GRID_WIDTH = 15;
     static const int GRID_HEIGHT = 15;
-    static const int BLOCK_WIDTH = 32;
-    static const int WINDOW_WIDTH = 800;
-    static const int WINDOW_HEIGHT = 640;
-
+    static const int BLOCK_WIDTH = 64;
+    static const int WINDOW_HEIGHT = GRID_HEIGHT * BLOCK_WIDTH;
+    static const int WINDOW_WIDTH = WINDOW_HEIGHT * 4 / 3;
     static bool musicOn;
     static bool isEffect;
 };

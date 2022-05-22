@@ -38,7 +38,24 @@ private:
         TOTAL_WINNING_BUTTONS,
         TOTAL_ITEMS
     };
+
+    // List of Tutorial menu items (3)
+    enum {
+        MOVE_UP,
+        MOVE_DOWN,
+        MOVE_LEFT,
+        MOVE_RIGHT,
+        UNDO,
+        UNDO_TEXT,
+        RESTART,
+        RESTART_TEXT,
+        TOTAL_TUTORIAL_ITEMS
+    };
+    static const int TOTAL_TUTORIAL_TEXT_ITEMS = 2;
+
     Texture menuItemsTex[TOTAL_MENU_ITEMS];
+    Texture menuTutorialItemsLabelTex[TOTAL_TUTORIAL_TEXT_ITEMS];
+    string menuTutorialItemsLabel[TOTAL_TUTORIAL_TEXT_ITEMS] = {"Undo", "Restart"};
     string menuItemsLabel[TOTAL_MENU_ITEMS] = {"New game", "Continue", "Options", "Exit"}; 
     SDL_Rect menuItemsDes[TOTAL_MENU_ITEMS];
     SDL_Rect pauseGame;
@@ -54,7 +71,7 @@ private:
     
 
     Texture buttonsTex, buttonsPresTex;
-    SDL_Rect ButClip[TOTAL_ITEMS], ButDes[TOTAL_ITEMS];
+    SDL_Rect ButClip[TOTAL_ITEMS], ButDes[TOTAL_ITEMS], ButTutorialClip[TOTAL_TUTORIAL_ITEMS], ButTutorialDes[TOTAL_TUTORIAL_ITEMS];
 
 
     // Mouse position
@@ -64,7 +81,9 @@ private:
     bool inMenu;
     bool inOptPanel;
     bool inWinPanel;
-public:
+    bool inWinMusicPlayed;
+
+   public:
     Menu();
     ~Menu();
 
@@ -78,7 +97,9 @@ public:
     bool getMenuState();
     bool getOptPanelState();
     bool getWinPanelState();
-    
+    bool getWinMusicPlayed();
+    void setWinPanelState(bool state);
+    void setWinMusicPlayed(bool state);
 };
 
 #endif

@@ -5,13 +5,14 @@ Menu::Menu() {
     curMX = 0;
     curMY = 0;
 
-    defaultTextColor = {0, 0, 0}; //Black
-    hoveringTextColor = {255, 0, 0}; //Red
-    colorWhite = {255, 255, 255};
+    defaultTextColor = {0, 0, 0, 255}; //Black
+    hoveringTextColor = {255, 0, 0, 255}; //Red
+    colorWhite = {255, 255, 255, 255};
 
     inMenu = true;
     inOptPanel = false;
     inWinPanel = false;
+    inWinMusicPlayed = false;
 }
 Menu::~Menu(){}
 
@@ -31,15 +32,15 @@ void Menu::loadMenu() {
     gameTitleDest.w = gameTitle.getWidth()*2;
     gameTitleDest.h = gameTitle.getHeight()*2;
     gameTitleDest.x = Game::WINDOW_WIDTH/2 - gameTitleDest.w/2;
-    gameTitleDest.y = 200;
+    gameTitleDest.y = Game::WINDOW_HEIGHT * 2 / 7  ;
     
     //Load Menu label
-    int labelVertSpace = 88; 
+    int labelVertSpace = Game::BLOCK_WIDTH; 
     for (int i = 0; i < TOTAL_MENU_ITEMS; i++)
     {
         menuItemsTex[i].loadFromRenderText(menuItemsLabel[i], defaultTextColor);
         menuItemsDes[i].x = Game::WINDOW_WIDTH/2 - menuItemsTex[i].getWidth()/2;
-        menuItemsDes[i].y = 300 + labelVertSpace;
+        menuItemsDes[i].y = Game::WINDOW_HEIGHT/2 + labelVertSpace;
         menuItemsDes[i].w = menuItemsTex[i].getWidth();
         menuItemsDes[i].h = menuItemsTex[i].getHeight();
         labelVertSpace += 44;
@@ -57,6 +58,8 @@ void Menu::loadMenu() {
     winPanelDest = optPanelDest;
     winPanelClip = optPanelClip;
 
+    int alignmentOfLeftBar = ((Game::WINDOW_WIDTH/2) - (Game::BLOCK_WIDTH * Game::GRID_WIDTH / 2))/2;
+
     //Load option items
     buttonsTex.loadFromFile(FindRes::getPath("img","buttons.png"));
     buttonsPresTex.loadFromFile(FindRes::getPath("img","buttonsPressed.png"));
@@ -73,8 +76,7 @@ void Menu::loadMenu() {
         ButDes[i]. w = ButDes[i].h = optPanelDest.w/10;
     }
     ButClip[PAUSE_GAME].w = ButClip[PAUSE_GAME].h = 16;
-    ButDes[PAUSE_GAME].w = ButDes[PAUSE_GAME].h = optPanelDest.w/10;
-    ButDes[PAUSE_GAME].x = ButDes[PAUSE_GAME].y = ButDes[PAUSE_GAME].w/8;
+    ButDes[PAUSE_GAME] = {alignmentOfLeftBar - Game::BLOCK_WIDTH/2, alignmentOfLeftBar - Game::BLOCK_WIDTH, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
     ButDes[CLOSE_OPTION].w = ButDes[CLOSE_OPTION].h = optPanelDest.w*6/80;
     ButDes[CLOSE_OPTION].x = optPanelDest.x + optPanelDest.w - ButDes[CLOSE_OPTION].w*5/4;
     ButDes[CLOSE_OPTION].y = optPanelDest.y + ButDes[CLOSE_OPTION].w*1/4;
@@ -96,7 +98,26 @@ void Menu::loadMenu() {
     }
     ButDes[RESTART_LEVEL] = ButDes[CREDIT];
     ButDes[NEXT_LEVEL] = ButDes[SOUND_EFFECT];
+
+    // Load tutorial item
+    menuTutorialItemsLabelTex[0].loadFromRenderText(menuTutorialItemsLabel[0], colorWhite);
+    menuTutorialItemsLabelTex[1].loadFromRenderText(menuTutorialItemsLabel[1], colorWhite);
+    ButTutorialClip[MOVE_UP] = {48, 0, 16, 16};
+    ButTutorialClip[MOVE_DOWN] = {48, 0, 16, 16};
+    ButTutorialClip[MOVE_RIGHT] = {32, 0, 16, 16};
+    ButTutorialClip[MOVE_LEFT] = {0, 16, 16, 16};
+    ButTutorialClip[UNDO] = {32, 64, 16, 16};
+    ButTutorialClip[RESTART] = {0, 48, 16, 16};
+    ButTutorialDes[MOVE_UP] = {alignmentOfLeftBar - Game::BLOCK_WIDTH / 4, Game::BLOCK_WIDTH*2, Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2};
+    ButTutorialDes[MOVE_DOWN] = {alignmentOfLeftBar - Game::BLOCK_WIDTH / 4, Game::BLOCK_WIDTH*2 + (Game::BLOCK_WIDTH/2), Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2};
+    ButTutorialDes[MOVE_LEFT] = {(alignmentOfLeftBar - Game::BLOCK_WIDTH / 4) - Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH*2 + Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2};
+    ButTutorialDes[MOVE_RIGHT] = {(alignmentOfLeftBar - Game::BLOCK_WIDTH / 4) + Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH*2 + Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2};
+    ButTutorialDes[UNDO] = {(alignmentOfLeftBar - Game::BLOCK_WIDTH / 4) - Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH*3 + Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2};
+    ButTutorialDes[RESTART] = {(alignmentOfLeftBar - Game::BLOCK_WIDTH / 4) - Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH*3 + Game::BLOCK_WIDTH, Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH/2};
+    ButTutorialDes[UNDO_TEXT] = {alignmentOfLeftBar - Game::BLOCK_WIDTH / 4 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*3 + Game::BLOCK_WIDTH/2 + Game::BLOCK_WIDTH/8, menuTutorialItemsLabelTex[0].getWidth()/2, menuTutorialItemsLabelTex[0].getHeight()/2 + Game::BLOCK_WIDTH/8};
+    ButTutorialDes[RESTART_TEXT] = {alignmentOfLeftBar - Game::BLOCK_WIDTH / 4 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*3 + Game::BLOCK_WIDTH + Game::BLOCK_WIDTH/8, menuTutorialItemsLabelTex[1].getWidth()/2, menuTutorialItemsLabelTex[1].getHeight()/2 + Game::BLOCK_WIDTH/8};
 }
+
 
 void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
     if(inMenu && !inOptPanel) {
@@ -234,6 +255,17 @@ void Menu::menuRender() {
     }
     if(!inMenu && !inOptPanel){
         buttonsPresTex.render(ButDes[PAUSE_GAME].x, ButDes[PAUSE_GAME].y, &ButClip[PAUSE_GAME], &ButDes[PAUSE_GAME]);
+        for (int i = 0; i < TOTAL_TUTORIAL_ITEMS; i++) {
+            if (i == MOVE_DOWN) {
+                buttonsPresTex.render(ButTutorialDes[i].x , ButTutorialDes[i].y, &ButTutorialClip[i], &ButTutorialDes[i], 180, NULL);
+            } else if (i == UNDO_TEXT) {
+                menuTutorialItemsLabelTex[0].render(ButTutorialDes[i].x, ButTutorialDes[i].y, nullptr, &ButTutorialDes[i]);
+            } else if (i == RESTART_TEXT) {
+                menuTutorialItemsLabelTex[1].render(ButTutorialDes[i].x, ButTutorialDes[i].y, nullptr, &ButTutorialDes[i]);
+            } else {
+                buttonsPresTex.render(ButTutorialDes[i].x , ButTutorialDes[i].y, &ButTutorialClip[i], &ButTutorialDes[i]);
+            }
+        } 
     }
     if(inWinPanel){
         panelTex.render(winPanelDest.x, winPanelDest.y, &winPanelClip, &winPanelDest);
@@ -263,3 +295,6 @@ int Menu::checkClicked(SDL_Rect checkItemDes[], int checkItem){
 bool Menu::getMenuState() {return inMenu;}
 bool Menu::getOptPanelState() {return inOptPanel;}
 bool Menu::getWinPanelState() {return inWinPanel;}
+bool Menu::getWinMusicPlayed() {return inWinMusicPlayed;}
+void Menu::setWinPanelState(bool state) {inWinPanel = state;}
+void Menu::setWinMusicPlayed(bool state) {inWinMusicPlayed = state;}

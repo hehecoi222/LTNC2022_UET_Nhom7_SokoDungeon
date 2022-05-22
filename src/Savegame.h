@@ -65,6 +65,12 @@ class Savegame {
     // Get Move count:
     int getMovesCount() { return movesCount; }
 
+    // Get high score
+    int getHighScore() { return currentHighScore; }
+
+    // Get current move
+    int getCurrentMove();
+
     // Direction
     enum { NOT_MOVE, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT };
 

@@ -89,7 +89,7 @@ void Savegame::loadHighScore(const char* filename) {
 }
 
 void Savegame::compareHighScore(const char* filename) {
-    if (currentHighScore > movesCount) {
+    if (currentHighScore > movesCount || currentHighScore == 0) {
         currentHighScore = movesCount;
     }
     std::ifstream fileHighScoreIn(filename);
@@ -286,4 +286,9 @@ void Savegame::shift(Hero& hero, Enemy& enemy, int direction) {
     int enemyDirection = popEnemy();
     enemy.Move(enemyUndoDirection(enemyDirection));
     enemy.setState(enemyDirection);
+}
+
+int Savegame::getCurrentMove() {
+    if (movesStack) return movesStack->direction;
+    return -1;
 }
