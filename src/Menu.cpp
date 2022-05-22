@@ -17,8 +17,6 @@ Menu::~Menu(){}
 
 void Menu::loadMenu() {
     //Load menu background IMG
-    if(Game::musicOn)
-        Mix_PlayMusic(Game::gTheme, -1);
     menuBackground.loadFromFile(FindRes::getPath("img","MenuBackground.jpg"));
     backgroundClip.w = 1100;
     backgroundClip.h = backgroundClip.w * 0.8;
@@ -100,6 +98,9 @@ void Menu::loadMenu() {
 
 void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
     if(inMenu && !inOptPanel) {
+        if(Game::musicOn && !Mix_PlayingMusic())
+        //Play intro sound while being in Menu state
+            Mix_PlayMusic(Game::gTheme, -1);
         switch (e.type)
         {
         case SDL_MOUSEMOTION:
@@ -114,7 +115,7 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
             }
             break;
         case SDL_MOUSEBUTTONDOWN:
-            if(Game::isEffect)
+            if(Game::effectOn)
                     Mix_PlayChannel(-1, Game::gMouse, 0);
             for (int i = 0; i < TOTAL_MENU_ITEMS; i++) {
                 if(checkClicked(menuItemsDes, i) == EXIT_GAME) gameIsRunning = false;
@@ -126,7 +127,7 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
     }
     else if(inOptPanel) {    
         if(e.type == SDL_MOUSEBUTTONDOWN) {
-            if(Game::isEffect)
+            if(Game::effectOn)
                     Mix_PlayChannel(-1, Game::gMouse, 0);
             for (int i = RETURN_HOME; i < PAUSE_GAME; i++) {
                 checkClicked(ButDes, i);
@@ -134,8 +135,10 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
         }
     }
     if(!inMenu && !inOptPanel && !inWinPanel) {
+        if(Game::musicOn && !Mix_PlayingMusic())
+            Mix_PlayMusic(Game::gMusic, -1);
         if(e.type == SDL_MOUSEBUTTONDOWN) {
-            if(Game::isEffect)
+            if(Game::effectOn)
                     Mix_PlayChannel(-1, Game::gMouse, 0);
         checkClicked(ButDes, PAUSE_GAME);
         }
@@ -145,7 +148,7 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
     }
     if(inWinPanel) {
         if(e.type == SDL_MOUSEBUTTONDOWN) {
-            if(Game::isEffect)
+            if(Game::effectOn)
                     Mix_PlayChannel(-1, Game::gMouse, 0);
             for (int i = NEXT_LEVEL; i < TOTAL_WINNING_BUTTONS; i++) {
                 checkClicked(ButDes, i);
@@ -162,14 +165,10 @@ void Menu::itemClickFunct(int item){
     {
     case NEW_GAME:
         inMenu = false;
-        if(Game::musicOn)
-            Mix_PlayMusic(Game::gMusic, -1);
         break;
 
     case CONTINUE_GAME:
         inMenu = false;
-        if(Game::musicOn)
-            Mix_PlayMusic(Game::gMusic, -1);
         break;
 
     case OPTION_GAME:
@@ -194,20 +193,19 @@ void Menu::itemClickFunct(int item){
         inMenu = true;
         inOptPanel = false;
         inWinPanel = false;
-        if(Game::musicOn)
-            Mix_PlayMusic(Game::gTheme, -1);
         break;
     case MUSIC:
         swap(ButClip[MUSIC],ButClip[MUSIC_OFF]);
         Game::musicOn = !Game::musicOn;
-        if(!Game::musicOn)
+        if(!Game::musicOn){
             Mix_PauseMusic();
-        else    
+        }
+        else
             Mix_ResumeMusic();
         break;
     case SOUND_EFFECT:
         swap(ButClip[SOUND_EFFECT],ButClip[SOUND_EFFECT_OFF]);
-        Game::isEffect = !Game::isEffect;
+        Game::effectOn = !Game::effectOn;
         break;
     case RESTART_LEVEL:
         break;
@@ -263,3 +261,4 @@ int Menu::checkClicked(SDL_Rect checkItemDes[], int checkItem){
 bool Menu::getMenuState() {return inMenu;}
 bool Menu::getOptPanelState() {return inOptPanel;}
 bool Menu::getWinPanelState() {return inWinPanel;}
+
