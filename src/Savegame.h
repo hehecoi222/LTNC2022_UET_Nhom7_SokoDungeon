@@ -70,9 +70,13 @@ class Savegame {
 
     // Get current move
     int getCurrentMove();
+    // Count how many moves
+    static int movesCount;
 
     // Direction
     enum { NOT_MOVE, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT };
+
+    
 
    private:
     // Stack to save step
@@ -101,8 +105,6 @@ class Savegame {
     // Shift position
     void shift(Hero& hero, Enemy& enemy, int direction);
 
-    // Count how many moves
-    int movesCount = 0;
     void addMovesCount() { movesCount++; }
     void subMovesCount() { movesCount--; }
 

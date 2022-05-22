@@ -60,7 +60,8 @@ public:
     static const int WINDOW_HEIGHT = GRID_HEIGHT * BLOCK_WIDTH;
     static const int WINDOW_WIDTH = WINDOW_HEIGHT * 4 / 3;
     static bool musicOn;
-    static bool isEffect;
+    static bool effectOn;
+    static bool NewGame;
 };
 
 #endif /* Game_hpp */
