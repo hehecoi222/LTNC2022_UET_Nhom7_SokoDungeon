@@ -103,7 +103,7 @@ void Hero::Move(int direction) {
             playerCurrentTex = &walkRight;
             while (hCurPosX != hDesPosX) {
                 hCurPosX += HERO_VEL;
-                if(Game::isEffect)
+                if(Game::effectOn)
                     Mix_PlayChannel(-1, Game::gHero, 0);
                 heroRender();
             }
@@ -114,7 +114,7 @@ void Hero::Move(int direction) {
             playerCurrentTex = &walkLeft;
             while (hCurPosX != hDesPosX) {
                 hCurPosX -= HERO_VEL;
-                if(Game::isEffect)
+                if(Game::effectOn)
                     Mix_PlayChannel(-1, Game::gHero, 0);
                 heroRender();
             }
@@ -125,7 +125,7 @@ void Hero::Move(int direction) {
             playerCurrentTex = &walkUp;
             while (hCurPosY != hDesPosY) {
                 hCurPosY -= HERO_VEL;
-                if(Game::isEffect)
+                if(Game::effectOn)
                     Mix_PlayChannel(-1, Game::gHero, 0);
                 heroRender();
             }
@@ -136,7 +136,7 @@ void Hero::Move(int direction) {
             playerCurrentTex = &walkDown;
             while (hCurPosY != hDesPosY) {
                 hCurPosY += HERO_VEL;
-                if(Game::isEffect)
+                if(Game::effectOn)
                     Mix_PlayChannel(-1, Game::gHero, 0);
                 heroRender();
             }
