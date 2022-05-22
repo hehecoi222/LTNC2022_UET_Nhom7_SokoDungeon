@@ -1,6 +1,6 @@
 
 #include "Menu.h"
-
+#include "Map.h"
 Menu::Menu() {
     curMX = 0;
     curMY = 0;
@@ -55,8 +55,6 @@ void Menu::loadMenu() {
     //Load winning panel
     winPanelDest = optPanelDest;
     winPanelClip = optPanelClip;
-
-    int alignmentOfLeftBar = ((Game::WINDOW_WIDTH/2) - (Game::BLOCK_WIDTH * Game::GRID_WIDTH / 2))/2;
 
     //Load option items
     buttonsTex.loadFromFile(FindRes::getPath("img","buttons.png"));
@@ -120,6 +118,9 @@ void Menu::loadMenu() {
 
 void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
     if(inMenu && !inOptPanel && !inWinPanel) {
+        if(Game::musicOn && !Mix_PlayingMusic())
+        //Play intro sound while being in Menu state
+            Mix_PlayMusic(Game::gTheme, -1);
         switch (e.type)
         {
         case SDL_MOUSEMOTION:
@@ -134,6 +135,8 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
             }
             break;
         case SDL_MOUSEBUTTONDOWN:
+            if(Game::effectOn)
+                    Mix_PlayChannel(-1, Game::gMouse, 0);
             for (int i = 0; i < TOTAL_MENU_ITEMS; i++) {
                 if(checkClicked(menuItemsDes, i) == EXIT_GAME) gameIsRunning = false;
             }
@@ -144,24 +147,34 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
     }
     else if(inOptPanel) {    
         if(e.type == SDL_MOUSEBUTTONDOWN) {
+            if(Game::effectOn)
+                    Mix_PlayChannel(-1, Game::gMouse, 0);
             for (int i = RETURN_HOME; i < PAUSE_GAME; i++) {
                 checkClicked(ButDes, i);
             }
         }
-    } else if(inWinPanel) {
-        if(e.type == SDL_MOUSEBUTTONDOWN) {
-            for (int i = NEXT_LEVEL; i < TOTAL_WINNING_BUTTONS; i++) {
-                checkClicked(ButDes, i);
-            }
-            checkClicked(ButDes, RETURN_HOME);
-        }
     }
     if(!inMenu && !inOptPanel && !inWinPanel) {
+        if(Game::musicOn && !Mix_PlayingMusic())
+            Mix_PlayMusic(Game::gMusic, -1);
         if(e.type == SDL_MOUSEBUTTONDOWN) {
+            if(Game::effectOn)
+                    Mix_PlayChannel(-1, Game::gMouse, 0);
         checkClicked(ButDes, PAUSE_GAME);
         }
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_w) {
             inWinPanel = true;
+        }
+    }
+    if(inWinPanel) {
+        if(e.type == SDL_MOUSEBUTTONDOWN) {
+            if(Game::effectOn)
+                    Mix_PlayChannel(-1, Game::gMouse, 0);
+            for (int i = NEXT_LEVEL; i < TOTAL_WINNING_BUTTONS; i++) {
+                checkClicked(ButDes, i);
+            }
+            checkClicked(ButDes, RETURN_HOME);
+            checkClicked(ButDes, CLOSE_OPTION);
         }
     }
 }
@@ -172,6 +185,7 @@ void Menu::itemClickFunct(int item){
     {
     case NEW_GAME:
         inMenu = false;
+        Game::newGame();
         break;
 
     case CONTINUE_GAME:
@@ -203,9 +217,16 @@ void Menu::itemClickFunct(int item){
         break;
     case MUSIC:
         swap(ButClip[MUSIC],ButClip[MUSIC_OFF]);
+        Game::musicOn = !Game::musicOn;
+        if(!Game::musicOn){
+            Mix_PauseMusic();
+        }
+        else
+            Mix_ResumeMusic();
         break;
     case SOUND_EFFECT:
         swap(ButClip[SOUND_EFFECT],ButClip[SOUND_EFFECT_OFF]);
+        Game::effectOn = !Game::effectOn;
         break;
     case RESTART_LEVEL:
         inWinPanel = false;

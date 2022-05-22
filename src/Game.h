@@ -31,6 +31,7 @@ public:
     void close();
     
     static void restartGame();
+    static void newGame();
 
     bool getGameState(){ return isRunning; }
 
@@ -60,7 +61,7 @@ public:
     static const int WINDOW_HEIGHT = GRID_HEIGHT * BLOCK_WIDTH + BLOCK_WIDTH*2;
     static const int WINDOW_WIDTH = WINDOW_HEIGHT * 16 / 9;
     static bool musicOn;
-    static bool isEffect;
+    static bool effectOn;
 };
 
 #endif /* Game_hpp */

@@ -24,7 +24,7 @@ const SDL_Rect subViewport = {
     Game::WINDOW_HEIGHT / 2 - Game::BLOCK_WIDTH*Game::GRID_WIDTH/2, Game::BLOCK_WIDTH * Game::GRID_WIDTH,
     Game::BLOCK_WIDTH * Game::GRID_HEIGHT};
 bool Game::musicOn = true;
-bool Game::isEffect = true;    
+bool Game::effectOn = true;    
 
 const SDL_Rect leftBorder = {subViewport.x, subViewport.y, - Game::BLOCK_WIDTH/4, subViewport.h};
 const SDL_Rect rightBorder = {subViewport.x + subViewport.w, subViewport.y, Game::BLOCK_WIDTH/4, subViewport.h};
@@ -210,6 +210,11 @@ void Game::restartGame() {
     gMenu.setWinMusicPlayed(false);
 }
 
+void Game::newGame() {
+    Game0.setMap(0);
+    restartGame();
+}
+
 void Game::update() {
     if (Box::winLevel()) {
         save.compareHighScore(FindRes::getPath("savefile", "fileHighScore.skbhsf"));
@@ -289,6 +294,8 @@ void Game::render() {
         }
         Mix_VolumeMusic(64);
     }
+    
+
     // Update Screen
     SDL_RenderPresent(gRenderer);
 }
