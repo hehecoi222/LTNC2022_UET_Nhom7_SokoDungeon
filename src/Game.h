@@ -59,7 +59,8 @@ public:
     static const int WINDOW_HEIGHT = 640;
 
     static bool musicOn;
-    static bool isEffect;
+    static bool effectOn;
+    static bool NewGame;
 };
 
 #endif /* Game_hpp */
