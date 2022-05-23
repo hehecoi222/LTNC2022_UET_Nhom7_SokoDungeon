@@ -77,6 +77,7 @@ void Savegame::loadSavefile(const char* filename, Hero& hero, Enemy& enemy,
 }
 
 void Savegame::loadHighScore(const char* filename) {
+    bool changed = false;
     std::ifstream fileHighScoreIn(filename);
     if (fileHighScoreIn.is_open()) {
         std::string map = "level" + std::to_string(mapSave) + ".smap";
@@ -85,11 +86,13 @@ void Savegame::loadHighScore(const char* filename) {
             fileHighScoreIn >> temp;
             if (temp == map) {
                 fileHighScoreIn >> currentHighScore;
+                changed = true;
                 break;
             }
         }
     }
     fileHighScoreIn.close();
+    if (!changed) currentHighScore = 0;
 }
 
 void Savegame::compareHighScore(const char* filename) {

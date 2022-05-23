@@ -161,16 +161,12 @@ void Game::handleEvents() {
         } else if (e.type == SDL_KEYDOWN &&
                    e.key.keysym.sym == SDLK_PERIOD && !gMenu.getMenuState() && !gMenu.getOptPanelState() && !gMenu.getWinPanelState()) {
             Game0.NextMap();
-            restartGame();
             save.setMapInt(Game0.current_map);
-            save.loadHighScore(
-                FindRes::getPath("savefile", "fileHighScore.skbhsf"));
+            restartGame();
         } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_COMMA && !gMenu.getMenuState() && !gMenu.getOptPanelState() && !gMenu.getWinPanelState()) {
             Game0.PrevMap();
-            restartGame();
             save.setMapInt(Game0.current_map);
-            save.loadHighScore(
-                FindRes::getPath("savefile", "fileHighScore.skbhsf"));
+            restartGame();
         } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_r && !gMenu.getMenuState() && !gMenu.getOptPanelState() && !gMenu.getWinPanelState()) {
             restartGame();
         } else {
