@@ -121,8 +121,8 @@ void Hero::Move(int direction) {
         case NOT_MOVE:
             return;
     }
-    if(Game::effectOn)
-                    Mix_PlayChannel(-1, Game::gHero, 0);
+    if(Game::effectOn) Mix_PlayChannel(-1, Game::gHero, 0);
+
 }
 
 void Hero::heroRender() {
