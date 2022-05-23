@@ -49,14 +49,22 @@ public:
 private:
     // The path
     std::string path;
+    // Platform-dependent trailing slash
+    #ifdef _WIN32
+        // Windows
+        std::string trailingSlash = "\\";
+    #else
+        // Linux, Unix
+        std::string trailingSlash = "/";
+    #endif
     // Get the base path
     std::string retPath(const std::string& path) {
         // Get the path to the resource directory if being run after build
-        size_t pos = path.find("bin");
+        size_t pos = path.find("bin" + trailingSlash);
 
         // If not found, probably being debugged
         if (pos == std::string::npos) {
-            pos = path.find("build");
+            pos = path.find("build" + trailingSlash);
 
             // If not found, probably being run at top level directory
             if (pos == std::string::npos) {
@@ -78,14 +86,7 @@ private:
         // Convert the base path to a string for concat and find
         path = basePath;
 
-        // Platform-dependent
-        #ifdef _WIN32
-            // Windows
-            path = retPath(path)  + "res" + "\\" + subPath + "\\";
-        #else
-            // Linux, Unix
-            path = retPath(path)  + "res" + "/" + subPath + "/";
-        #endif
+        path = retPath(path)  + "res" + trailingSlash + subPath + trailingSlash;
         SDL_free(basePath);
         return path;
     }

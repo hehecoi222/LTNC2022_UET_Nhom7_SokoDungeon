@@ -12,12 +12,14 @@ int main( int argc, char* args[] ){
 	if(!game->init())
 	{
 		cout << "Failed to init window" << endl;
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", SDL_GetError(), NULL);
 	}
 	else
 	{
 		if(!game->loadMedia())
 		{
 			cout << "Failed to load Media" << endl;
+			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", SDL_GetError(), NULL);
 		}
 		else
 		{
