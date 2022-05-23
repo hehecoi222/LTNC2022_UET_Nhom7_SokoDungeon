@@ -15,7 +15,12 @@ Menu::Menu() {
     inWinPanel = false;
     inWinMusicPlayed = false;
 }
-Menu::~Menu(){}
+Menu::~Menu() {
+    menuBackground.free();
+    gameTitle.free();
+    winPanelHighScoreTextTex[SCORE_TEXT].free();
+    winPanelHighScoreTextTex[HIGH_SCORE_TEXT].free();
+}
 
 void Menu::loadMenu() {
     //Load menu background IMG
@@ -86,7 +91,7 @@ void Menu::loadMenu() {
     ButDes[MUSIC].x = ButDes[MUSIC_OFF].x = ButDes[CREDIT].x;
     ButDes[MUSIC].y = ButDes[MUSIC_OFF].y = ButDes[SOUND_EFFECT].y;
 
-    //Load winning buttons from img
+    //Load winning buttons
     ButClip[RESTART_LEVEL] = {0, 48};
     ButClip[NEXT_LEVEL] = {32, 0};
     for (int i = NEXT_LEVEL; i < TOTAL_WINNING_BUTTONS; i++) {
@@ -99,23 +104,31 @@ void Menu::loadMenu() {
 
     // Load tutorial item
     keyboardTex.loadFromFile(FindRes::getPath("img","keyboardIcons.png"));
-    menuTutorialItemsLabelTex[0].loadFromRenderText(menuTutorialItemsLabel[0], colorWhite);
-    menuTutorialItemsLabelTex[1].loadFromRenderText(menuTutorialItemsLabel[1], colorWhite);
+    for (int i = 0; i < TOTAL_TUTORIAL_TEXT_ITEMS; i++) {
+        menuTutorialItemsLabelTex[i].loadFromRenderText(menuTutorialItemsLabel[i], colorWhite);
+    }
+
     for (int i = MOVE_UP; i <= MOVE_LEFT; i++)
     {
         ButTutorialClip[i] = {160 + i*32, 128, 32, 32};
     }
-    
     ButTutorialClip[UNDO] = {64, 32, 32, 32};
     ButTutorialClip[RESTART] = {480, 0, 32, 32};
+    ButTutorialClip[PREV_LVL_TUT] = {320, 64, 32, 32};
+    ButTutorialClip[NEXT_LVL_TUT] = {352, 64, 32, 32};
+
     ButTutorialDes[MOVE_UP] = {Game::BLOCK_WIDTH*2, Game::BLOCK_WIDTH*3, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
     ButTutorialDes[MOVE_DOWN] = {Game::BLOCK_WIDTH*2, Game::BLOCK_WIDTH*4, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
     ButTutorialDes[MOVE_LEFT] = {Game::BLOCK_WIDTH, Game::BLOCK_WIDTH*4, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
     ButTutorialDes[MOVE_RIGHT] = {Game::BLOCK_WIDTH*3, Game::BLOCK_WIDTH*4, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
     ButTutorialDes[UNDO] = {Game::BLOCK_WIDTH, Game::BLOCK_WIDTH*6, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
     ButTutorialDes[RESTART] = {Game::BLOCK_WIDTH, Game::BLOCK_WIDTH*7, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
+    ButTutorialDes[PREV_LVL_TUT] = {Game::BLOCK_WIDTH, Game::BLOCK_WIDTH*8, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
+    ButTutorialDes[NEXT_LVL_TUT] = {Game::BLOCK_WIDTH*2, Game::BLOCK_WIDTH*8, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
     ButTutorialDes[UNDO_TEXT] = {Game::BLOCK_WIDTH*2 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*6 +Game::BLOCK_WIDTH/4 , menuTutorialItemsLabelTex[0].getWidth()/2, menuTutorialItemsLabelTex[0].getHeight()/2 + Game::BLOCK_WIDTH/8};
     ButTutorialDes[RESTART_TEXT] = {Game::BLOCK_WIDTH*2 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*7 + Game::BLOCK_WIDTH/4, menuTutorialItemsLabelTex[1].getWidth()/2, menuTutorialItemsLabelTex[1].getHeight()/2 + Game::BLOCK_WIDTH/8};
+    ButTutorialDes[CHANGE_LVL_TEXT] = {Game::BLOCK_WIDTH*3 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*8 + Game::BLOCK_WIDTH/4, menuTutorialItemsLabelTex[1].getWidth()/2, menuTutorialItemsLabelTex[1].getHeight()/2 + Game::BLOCK_WIDTH/8};
+    
 }
 
 
@@ -246,30 +259,29 @@ void Menu::itemClickFunct(int item){
 
 void Menu::renderHighScoreText() {
     winPanelHighScoreTextTex[SCORE_TEXT].loadFromRenderText(
-        winPanelHighScoreTextLabel[SCORE_TEXT] + to_string(Savegame::movesCount), defaultTextColor);
+        winPanelHighScoreText[SCORE_TEXT] + to_string(Savegame::movesCount), defaultTextColor);
     winPanelHighScoreTextTex[HIGH_SCORE_TEXT].loadFromRenderText(
-        winPanelHighScoreTextLabel[HIGH_SCORE_TEXT] + to_string(Savegame::currentHighScore), defaultTextColor);
-    winPanelHighScoreItemsDes[SCORE_TEXT] = {
-    optPanelDest.x + (optPanelDest.w * 9 / 16),
-    optPanelDest.y + optPanelDest.h * 15 / 48,
-    int(winPanelHighScoreTextTex[SCORE_TEXT].getWidth() * 1.5),
-    int(winPanelHighScoreTextTex[SCORE_TEXT].getHeight() * 1.5)};
+        winPanelHighScoreText[HIGH_SCORE_TEXT] + to_string(Savegame::currentHighScore), defaultTextColor);
+    HighScoreDes[SCORE_TEXT] = {
+        optPanelDest.x + (optPanelDest.w * 9 / 16),
+        optPanelDest.y + optPanelDest.h * 15 / 48,
+        int(winPanelHighScoreTextTex[SCORE_TEXT].getWidth()),
+        int(winPanelHighScoreTextTex[SCORE_TEXT].getHeight())};
 
-winPanelHighScoreItemsDes[HIGH_SCORE_TEXT] = {
-    optPanelDest.x + (optPanelDest.w * 9 / 16),
-    optPanelDest.y + optPanelDest.h * 26 / 48,
-    int(winPanelHighScoreTextTex[SCORE_TEXT].getWidth() * 1.5),
-    int(winPanelHighScoreTextTex[SCORE_TEXT].getHeight() * 1.5)};
+    HighScoreDes[HIGH_SCORE_TEXT] = {
+        optPanelDest.x + (optPanelDest.w * 9 / 16),
+        optPanelDest.y + optPanelDest.h * 26 / 48,
+        int(winPanelHighScoreTextTex[SCORE_TEXT].getWidth()),
+        int(winPanelHighScoreTextTex[SCORE_TEXT].getHeight())};
     winPanelHighScoreTextTex[SCORE_TEXT].render(
-        winPanelHighScoreItemsDes[SCORE_TEXT].x,
-        winPanelHighScoreItemsDes[SCORE_TEXT].y, nullptr,
-        &winPanelHighScoreItemsDes[SCORE_TEXT]);
+        HighScoreDes[SCORE_TEXT].x,
+        HighScoreDes[SCORE_TEXT].y, nullptr,
+        &HighScoreDes[SCORE_TEXT]);
     winPanelHighScoreTextTex[HIGH_SCORE_TEXT].render(
-        winPanelHighScoreItemsDes[HIGH_SCORE_TEXT].x,
-        winPanelHighScoreItemsDes[HIGH_SCORE_TEXT].y, nullptr,
-        &winPanelHighScoreItemsDes[HIGH_SCORE_TEXT]);
-    winPanelHighScoreTextTex[SCORE_TEXT].free();
-    winPanelHighScoreTextTex[HIGH_SCORE_TEXT].free();
+        HighScoreDes[HIGH_SCORE_TEXT].x,
+        HighScoreDes[HIGH_SCORE_TEXT].y, nullptr,
+        &HighScoreDes[HIGH_SCORE_TEXT]);
+    
 }
 
 void Menu::menuRender() {
@@ -302,10 +314,12 @@ void Menu::menuRender() {
                 menuTutorialItemsLabelTex[0].render(ButTutorialDes[i].x, ButTutorialDes[i].y, nullptr, &ButTutorialDes[i]);
             } else if (i == RESTART_TEXT) {
                 menuTutorialItemsLabelTex[1].render(ButTutorialDes[i].x, ButTutorialDes[i].y, nullptr, &ButTutorialDes[i]);
+            } else if (i == CHANGE_LVL_TEXT) {
+                menuTutorialItemsLabelTex[2].render(ButTutorialDes[i].x, ButTutorialDes[i].y, nullptr, &ButTutorialDes[i]);
             } else {
                 keyboardTex.render(ButTutorialDes[i].x , ButTutorialDes[i].y, &ButTutorialClip[i], &ButTutorialDes[i]);
             }
-        } 
+        }
     }
 
     
