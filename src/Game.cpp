@@ -267,10 +267,6 @@ void Game::render() {
 }
 
 void Game::close() {
-    // Destroy window
-    SDL_DestroyRenderer(gRenderer);
-    SDL_DestroyWindow(gWindow);
-
     // Free the sound effects and sound
     Mix_FreeMusic(gVictory);
     Mix_FreeChunk(gHero);
@@ -281,8 +277,6 @@ void Game::close() {
     gTheme = gMusic = gVictory = NULL;
     gHero = gBox = gMouse  = NULL;
 
-    gWindow = NULL;
-    gRenderer = NULL;
     Box::box.free();
     for (int i = 0; i < GRID_HEIGHT; i++) {
         for (int j = 0; j < GRID_WIDTH; j++) {
@@ -294,7 +288,17 @@ void Game::close() {
     delete[] Box::layerBox;
     delete[] Map::level0;
     save.toFile(FindRes::getPath("savefile", "level0.skbsf"));
+
+    // Destroy window
+    SDL_DestroyRenderer(gRenderer);
+    SDL_DestroyWindow(gWindow);
+    gWindow = NULL;
+    gRenderer = NULL;
+    gFont = NULL;
+
     // Quit SDL subsystems
+    TTF_Quit();
+    IMG_Quit();
     SDL_Quit();
     cout << "Game clear" << endl;
 }

@@ -56,8 +56,6 @@ void Menu::loadMenu() {
     winPanelDest = optPanelDest;
     winPanelClip = optPanelClip;
 
-    int alignmentOfLeftBar = ((Game::WINDOW_WIDTH/2) - (Game::BLOCK_WIDTH * Game::GRID_WIDTH / 2))/2;
-
     //Load option items
     buttonsTex.loadFromFile(FindRes::getPath("img","buttons.png"));
     buttonsPresTex.loadFromFile(FindRes::getPath("img","buttonsPressed.png"));
@@ -98,14 +96,16 @@ void Menu::loadMenu() {
     ButDes[NEXT_LEVEL] = ButDes[SOUND_EFFECT];
 
     // Load tutorial item
+    keyboardTex.loadFromFile(FindRes::getPath("img","keyboardIcons.png"));
     menuTutorialItemsLabelTex[0].loadFromRenderText(menuTutorialItemsLabel[0], colorWhite);
     menuTutorialItemsLabelTex[1].loadFromRenderText(menuTutorialItemsLabel[1], colorWhite);
-    ButTutorialClip[MOVE_UP] = {48, 0, 16, 16};
-    ButTutorialClip[MOVE_DOWN] = {48, 0, 16, 16};
-    ButTutorialClip[MOVE_RIGHT] = {32, 0, 16, 16};
-    ButTutorialClip[MOVE_LEFT] = {0, 16, 16, 16};
-    ButTutorialClip[UNDO] = {32, 64, 16, 16};
-    ButTutorialClip[RESTART] = {0, 48, 16, 16};
+    for (int i = MOVE_UP; i <= MOVE_LEFT; i++)
+    {
+        ButTutorialClip[i] = {160 + i*32, 128, 32, 32};
+    }
+    
+    ButTutorialClip[UNDO] = {64, 32, 32, 32};
+    ButTutorialClip[RESTART] = {480, 0, 32, 32};
     ButTutorialDes[MOVE_UP] = {Game::BLOCK_WIDTH*2, Game::BLOCK_WIDTH*3, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
     ButTutorialDes[MOVE_DOWN] = {Game::BLOCK_WIDTH*2, Game::BLOCK_WIDTH*4, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
     ButTutorialDes[MOVE_LEFT] = {Game::BLOCK_WIDTH, Game::BLOCK_WIDTH*4, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
@@ -253,16 +253,14 @@ void Menu::menuRender() {
         }
     }
     if(!inMenu && !inOptPanel){
-        buttonsPresTex.render(ButDes[PAUSE_GAME].x, ButDes[PAUSE_GAME].y, &ButClip[PAUSE_GAME], &ButDes[PAUSE_GAME]);
+        buttonsTex.render(ButDes[PAUSE_GAME].x, ButDes[PAUSE_GAME].y, &ButClip[PAUSE_GAME], &ButDes[PAUSE_GAME]);
         for (int i = 0; i < TOTAL_TUTORIAL_ITEMS; i++) {
-            if (i == MOVE_DOWN) {
-                buttonsPresTex.render(ButTutorialDes[i].x , ButTutorialDes[i].y, &ButTutorialClip[i], &ButTutorialDes[i], 180, NULL);
-            } else if (i == UNDO_TEXT) {
+            if (i == UNDO_TEXT) {
                 menuTutorialItemsLabelTex[0].render(ButTutorialDes[i].x, ButTutorialDes[i].y, nullptr, &ButTutorialDes[i]);
             } else if (i == RESTART_TEXT) {
                 menuTutorialItemsLabelTex[1].render(ButTutorialDes[i].x, ButTutorialDes[i].y, nullptr, &ButTutorialDes[i]);
             } else {
-                buttonsPresTex.render(ButTutorialDes[i].x , ButTutorialDes[i].y, &ButTutorialClip[i], &ButTutorialDes[i]);
+                keyboardTex.render(ButTutorialDes[i].x , ButTutorialDes[i].y, &ButTutorialClip[i], &ButTutorialDes[i]);
             }
         } 
     }
