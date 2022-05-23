@@ -1,6 +1,7 @@
 
 #include "Menu.h"
 #include "Map.h"
+#include "Savegame.h"
 Menu::Menu() {
     curMX = 0;
     curMY = 0;
@@ -19,8 +20,8 @@ Menu::~Menu(){}
 void Menu::loadMenu() {
     //Load menu background IMG
     menuBackground.loadFromFile(FindRes::getPath("img","MenuBackground.jpg"));
-    backgroundClip.w = 1100;
-    backgroundClip.h = backgroundClip.w * 0.8;
+    backgroundClip.h = 800;
+    backgroundClip.w = backgroundClip.h *16/9;
     backgroundClip.x = menuBackground.getWidth()/2 - backgroundClip.w/2;
     backgroundClip.y = menuBackground.getHeight()/2 - backgroundClip.h/2 - 100;
     backgroundDestRect = {0, 0, Game::WINDOW_WIDTH, Game::WINDOW_HEIGHT};
@@ -94,6 +95,7 @@ void Menu::loadMenu() {
     }
     ButDes[RESTART_LEVEL] = ButDes[CREDIT];
     ButDes[NEXT_LEVEL] = ButDes[SOUND_EFFECT];
+    ButDes[NEXT_LEVEL].x =  optPanelDest.x + optPanelDest.w * 20 / 80;
 
     // Load tutorial item
     keyboardTex.loadFromFile(FindRes::getPath("img","keyboardIcons.png"));
@@ -118,7 +120,7 @@ void Menu::loadMenu() {
 
 
 void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
-    if(inMenu && !inOptPanel) {
+    if(inMenu && !inOptPanel && !inWinPanel) {
         if(Game::musicOn && !Mix_PlayingMusic())
         //Play intro sound while being in Menu state
             Mix_PlayMusic(Game::gTheme, -1);
@@ -186,7 +188,7 @@ void Menu::itemClickFunct(int item){
     {
     case NEW_GAME:
         inMenu = false;
-        Game::NewGame = true;
+        Game::newGame();
         break;
 
     case CONTINUE_GAME:
@@ -230,12 +232,44 @@ void Menu::itemClickFunct(int item){
         Game::effectOn = !Game::effectOn;
         break;
     case RESTART_LEVEL:
+        inWinPanel = false;
+        Game::restartGame();
         break;
     case NEXT_LEVEL:
+        inWinPanel = false;
+        Game::nextMap();
         break;
     default:
     break;
     }
+}
+
+void Menu::renderHighScoreText() {
+    winPanelHighScoreTextTex[SCORE_TEXT].loadFromRenderText(
+        winPanelHighScoreTextLabel[SCORE_TEXT] + to_string(Savegame::movesCount), defaultTextColor);
+    winPanelHighScoreTextTex[HIGH_SCORE_TEXT].loadFromRenderText(
+        winPanelHighScoreTextLabel[HIGH_SCORE_TEXT] + to_string(Savegame::currentHighScore), defaultTextColor);
+    winPanelHighScoreItemsDes[SCORE_TEXT] = {
+    optPanelDest.x + (optPanelDest.w * 9 / 16),
+    optPanelDest.y + optPanelDest.h * 15 / 48,
+    int(winPanelHighScoreTextTex[SCORE_TEXT].getWidth() * 1.5),
+    int(winPanelHighScoreTextTex[SCORE_TEXT].getHeight() * 1.5)};
+
+winPanelHighScoreItemsDes[HIGH_SCORE_TEXT] = {
+    optPanelDest.x + (optPanelDest.w * 9 / 16),
+    optPanelDest.y + optPanelDest.h * 26 / 48,
+    int(winPanelHighScoreTextTex[SCORE_TEXT].getWidth() * 1.5),
+    int(winPanelHighScoreTextTex[SCORE_TEXT].getHeight() * 1.5)};
+    winPanelHighScoreTextTex[SCORE_TEXT].render(
+        winPanelHighScoreItemsDes[SCORE_TEXT].x,
+        winPanelHighScoreItemsDes[SCORE_TEXT].y, nullptr,
+        &winPanelHighScoreItemsDes[SCORE_TEXT]);
+    winPanelHighScoreTextTex[HIGH_SCORE_TEXT].render(
+        winPanelHighScoreItemsDes[HIGH_SCORE_TEXT].x,
+        winPanelHighScoreItemsDes[HIGH_SCORE_TEXT].y, nullptr,
+        &winPanelHighScoreItemsDes[HIGH_SCORE_TEXT]);
+    winPanelHighScoreTextTex[SCORE_TEXT].free();
+    winPanelHighScoreTextTex[HIGH_SCORE_TEXT].free();
 }
 
 void Menu::menuRender() {
@@ -252,8 +286,17 @@ void Menu::menuRender() {
             buttonsTex.render(ButDes[i].x, ButDes[i].y, &ButClip[i], &ButDes[i]);
         }
     }
-    if(!inMenu && !inOptPanel){
-        buttonsTex.render(ButDes[PAUSE_GAME].x, ButDes[PAUSE_GAME].y, &ButClip[PAUSE_GAME], &ButDes[PAUSE_GAME]);
+    if(inWinPanel){
+        panelTex.render(winPanelDest.x, winPanelDest.y, &winPanelClip, &winPanelDest);
+        for (int i = NEXT_LEVEL; i < TOTAL_WINNING_BUTTONS; i++)
+        {
+            buttonsTex.render(ButDes[i].x, ButDes[i].y, &ButClip[i], &ButDes[i]);
+        }
+        buttonsTex.render(ButDes[RETURN_HOME].x,  ButDes[RETURN_HOME].y, &ButClip[RETURN_HOME], &ButDes[RETURN_HOME]);
+        renderHighScoreText();
+    }
+    if(!inMenu && !inOptPanel && !inWinPanel){
+        buttonsPresTex.render(ButDes[PAUSE_GAME].x, ButDes[PAUSE_GAME].y, &ButClip[PAUSE_GAME], &ButDes[PAUSE_GAME]);
         for (int i = 0; i < TOTAL_TUTORIAL_ITEMS; i++) {
             if (i == UNDO_TEXT) {
                 menuTutorialItemsLabelTex[0].render(ButTutorialDes[i].x, ButTutorialDes[i].y, nullptr, &ButTutorialDes[i]);
@@ -263,15 +306,6 @@ void Menu::menuRender() {
                 keyboardTex.render(ButTutorialDes[i].x , ButTutorialDes[i].y, &ButTutorialClip[i], &ButTutorialDes[i]);
             }
         } 
-    }
-    if(inWinPanel){
-        panelTex.render(winPanelDest.x, winPanelDest.y, &winPanelClip, &winPanelDest);
-        for (int i = NEXT_LEVEL; i < TOTAL_WINNING_BUTTONS; i++)
-        {
-            buttonsTex.render(ButDes[i].x, ButDes[i].y, &ButClip[i], &ButDes[i]);
-        }
-        buttonsTex.render(ButDes[RETURN_HOME].x,  ButDes[RETURN_HOME].y, &ButClip[RETURN_HOME], &ButDes[RETURN_HOME]);
-        buttonsTex.render(ButDes[CLOSE_OPTION].x,  ButDes[CLOSE_OPTION].y, &ButClip[CLOSE_OPTION], &ButDes[CLOSE_OPTION]);
     }
 
     
@@ -293,5 +327,6 @@ bool Menu::getMenuState() {return inMenu;}
 bool Menu::getOptPanelState() {return inOptPanel;}
 bool Menu::getWinPanelState() {return inWinPanel;}
 bool Menu::getWinMusicPlayed() {return inWinMusicPlayed;}
+
 void Menu::setWinPanelState(bool state) {inWinPanel = state;}
 void Menu::setWinMusicPlayed(bool state) {inWinMusicPlayed = state;}

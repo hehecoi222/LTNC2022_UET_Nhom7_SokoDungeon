@@ -100,28 +100,26 @@ void Hero::Move(int direction) {
     switch (direction) {
         case MOVE_RIGHT:
             hDesPosX += Game::BLOCK_WIDTH;
-            playerCurrentTex = &walkRight;
             hCurPosX = hDesPosX;
             playerCurrentTex = &idleRight;
             break;
         case MOVE_LEFT:
             hDesPosX -= Game::BLOCK_WIDTH;
-            playerCurrentTex = &walkLeft;
             hCurPosX = hDesPosX;
             playerCurrentTex = &idleLeft;
             break;
         case MOVE_UP:
             hDesPosY -= Game::BLOCK_WIDTH;
-            playerCurrentTex = &walkUp;
             hCurPosY = hDesPosY;
             playerCurrentTex = &idleUp;
             break;
         case MOVE_DOWN:
             hDesPosY += Game::BLOCK_WIDTH;
-            playerCurrentTex = &walkDown;
             hCurPosY = hDesPosY;
             playerCurrentTex = &idleDown;
             break;
+        case NOT_MOVE:
+            return;
     }
     if(Game::effectOn) Mix_PlayChannel(-1, Game::gHero, 0);
 

@@ -10,21 +10,22 @@ public:
     //load the map
     void LoadMap();
     // set map
-    void setMap(int curMap);
+    void setMap(int curMap) { current_map = curMap; };
     //Load image, position of box, hero
     void preLoadMap();
     //Map level0
     static char** level0;
-    //Current map of game
-    int current_map;
     //Change to the Next Map
     void NextMap();
     //Change to the Previous Map
     void PrevMap();
+    //Current map of game
+    int current_map;
     //name of the level
     string map;
     //Present Victory
     void PresVic();
+
     // clear map
     void clear();
     
@@ -39,14 +40,10 @@ private:
     Texture wall[3];
     //Draw goal position of the box to win 
     Texture Goal;
-    //Render Move Count
-    Texture moveCount;
     // Render goal position
     void goalClicked(int gridX, int gridY);
     //Draw Victory image
     Texture Victory;
-    
-    
 };
 
 template <class T> int checkCollisionwithMap(char** level, T& obj, int direction) {

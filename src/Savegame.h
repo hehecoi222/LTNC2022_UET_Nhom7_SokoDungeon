@@ -44,12 +44,6 @@ class Savegame {
     // Clear save game
     void clear();
 
-    // Get hero position to save
-    void saveHeroPosition(int x, int y) {
-        heroX = x/Game::BLOCK_WIDTH;
-        heroY = y/Game::BLOCK_WIDTH;
-    }
-
     // Record move
     void recordMove(int direction);
 
@@ -63,21 +57,24 @@ class Savegame {
     void undoMove(Hero& hero, Enemy& enemy);
 
     // Get Move count:
-    int getMovesCount() { return movesCount; }
+    static int getMovesCount() { return movesCount; }
 
     // Get high score
-    int getHighScore() { return currentHighScore; }
+    static int getHighScore() { return currentHighScore; }
+
+    // Current high score
+    static int currentHighScore;
+
+    // Count how many moves
+    static int movesCount;
+    static void addMovesCount() { movesCount++; }
+    static void subMovesCount() { movesCount--; }
 
     // Get current move
     int getCurrentMove() { return currentHeroMove;  }
 
-    // Count how many moves
-    static int movesCount;
-
     // Direction
     enum { NOT_MOVE, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT };
-
-    
 
    private:
     // Stack to save step
@@ -106,14 +103,9 @@ class Savegame {
     // Shift position
     void shift(Hero& hero, Enemy& enemy, int direction);
 
-    void addMovesCount() { movesCount++; }
-    void subMovesCount() { movesCount--; }
 
     // Current hero move
     int currentHeroMove = NOT_MOVE;
-
-    // Current high score
-    int currentHighScore = 0;
 };
 
 #endif
