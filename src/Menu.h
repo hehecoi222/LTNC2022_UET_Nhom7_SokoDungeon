@@ -17,7 +17,7 @@ private:
     Texture gameTitle;
     SDL_Rect gameTitleDest; 
 
-    //list of title menu items (3)
+    //list of title menu items
     enum {
         NEW_GAME,
         CONTINUE_GAME,
@@ -39,12 +39,12 @@ private:
         TOTAL_ITEMS
     };
 
-    // List of Tutorial menu items (3)
+    // List of tutorial menu items
     enum {
         MOVE_UP,
         MOVE_DOWN,
-        MOVE_LEFT,
         MOVE_RIGHT,
+        MOVE_LEFT,
         UNDO,
         UNDO_TEXT,
         RESTART,
@@ -74,7 +74,7 @@ private:
 
     SDL_Rect winPanelClip, winPanelDest;
     
-
+    Texture keyboardTex;
     Texture buttonsTex, buttonsPresTex;
     SDL_Rect ButClip[TOTAL_ITEMS], ButDes[TOTAL_ITEMS], ButTutorialClip[TOTAL_TUTORIAL_ITEMS], ButTutorialDes[TOTAL_TUTORIAL_ITEMS];
 
