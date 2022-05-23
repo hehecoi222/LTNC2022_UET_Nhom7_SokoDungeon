@@ -129,6 +129,11 @@ void Menu::loadMenu() {
     ButTutorialDes[RESTART_TEXT] = {Game::BLOCK_WIDTH*3 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*9 + Game::BLOCK_WIDTH/2, menuTutorialItemsLabelTex[1].getWidth()/2, menuTutorialItemsLabelTex[1].getHeight()/2 + Game::BLOCK_WIDTH/8};
     ButTutorialDes[CHANGE_LVL_TEXT] = {Game::BLOCK_WIDTH*4 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*10 + Game::BLOCK_WIDTH/2 + Game::BLOCK_WIDTH/4, menuTutorialItemsLabelTex[2].getWidth()/2, menuTutorialItemsLabelTex[1].getHeight()/2 + Game::BLOCK_WIDTH/8};
     
+    //Loa messeage to player
+    messTextFirst.loadFromRenderText("Thank you",defaultTextColor);
+    messTextSec.loadFromRenderText("for Playing",defaultTextColor);
+
+
 }
 
 
@@ -290,6 +295,8 @@ void Menu::menuRender() {
         for (int i = RETURN_HOME; i < PAUSE_GAME; i++) {
             buttonsTex.render(ButDes[i].x, ButDes[i].y, &ButClip[i], &ButDes[i]);
         }
+        messTextFirst.render(optPanelDest.x + optPanelDest.w/2 + 20, optPanelDest.y +optPanelDest.h/2 - messTextFirst.getHeight());
+        messTextSec.render(optPanelDest.x + optPanelDest.w/2 + 20, optPanelDest.y + optPanelDest.h/2);
     }
     if(inWinPanel){
         panelTex.render(winPanelDest.x, winPanelDest.y, &winPanelClip, &winPanelDest);
