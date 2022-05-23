@@ -156,26 +156,25 @@ void Game::handleEvents() {
         if (e.type == SDL_QUIT) {
             isRunning = false;
         } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_u &&
-                   e.key.repeat == 0) {
+                   e.key.repeat == 0 && !gMenu.getMenuState()) {
             save.undoMove(mainHero, mainEnemy);
         } else if (e.type == SDL_KEYDOWN &&
-                   e.key.keysym.sym == SDLK_LEFTBRACKET) {
+                   e.key.keysym.sym == SDLK_PERIOD && !gMenu.getMenuState() && !gMenu.getOptPanelState() && !gMenu.getWinPanelState()) {
             Game0.NextMap();
             restartGame();
             save.setMapInt(Game0.current_map);
             save.loadHighScore(
                 FindRes::getPath("savefile", "fileHighScore.skbhsf"));
-        } else if (e.type == SDL_KEYDOWN &&
-                   e.key.keysym.sym == SDLK_RIGHTBRACKET) {
+        } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_COMMA && !gMenu.getMenuState() && !gMenu.getOptPanelState() && !gMenu.getWinPanelState()) {
             Game0.PrevMap();
             restartGame();
             save.setMapInt(Game0.current_map);
             save.loadHighScore(
                 FindRes::getPath("savefile", "fileHighScore.skbhsf"));
-        } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_r) {
+        } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_r && !gMenu.getMenuState() && !gMenu.getOptPanelState() && !gMenu.getWinPanelState()) {
             restartGame();
         } else {
-            if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
+            if (e.type == SDL_KEYDOWN && e.key.repeat == 0 && !gMenu.getMenuState() && !gMenu.getOptPanelState() && !gMenu.getWinPanelState()) {
                 save.recordMove(mainHero.heroHandleEvent(e, mainEnemy));
                 if (save.getCurrentMove()) {
                     switch (e.key.keysym.sym) {
@@ -197,7 +196,6 @@ void Game::handleEvents() {
         }
     }
 }
-
 void Game::restartGame() {
     save.clear();
     Game0.preLoadMap();
@@ -260,40 +258,11 @@ void Game::render() {
     if (!Box::winLevel()) {
         // render menu
         gMenu.menuRender();
-
-        Mix_VolumeMusic(MIX_MAX_VOLUME);
-
-        // // Play intro sound while being in Menu state
-        // if (gMenu.getMenuState() && isMusicPlaying == false) {
-        //     Mix_PlayMusic(gTheme, -1);
-        //     isMusicPlaying = true;
-        // } else if (gMenu.getMenuState() == false && isMusicPlaying == true) {
-        //     // Play gMusic
-        //     Mix_PlayMusic(gMusic, -1);
-        //     isMusicPlaying = false;
-        // }
+        
     } else if (gMenu.getMenuState()) {
         gMenu.setWinPanelState(false);
         gMenu.menuRender();
-        Mix_VolumeMusic(MIX_MAX_VOLUME);
-
-        // // Play intro sound while being in Menu state
-        // if (gMenu.getMenuState() && isMusicPlaying == false && musicOn) {
-        //     Mix_PlayMusic(gTheme, -1);
-        //     isMusicPlaying = true;
-        // } else if (gMenu.getMenuState() == false && isMusicPlaying == true &&
-        //            musicOn) {
-        //     // Play gMusic
-        //     Mix_PlayMusic(gMusic, -1);
-        //     isMusicPlaying = false;
-        // }
     } else {
-        if (gMenu.getMenuState() == false && isMusicPlaying == true &&
-            musicOn) {
-            // Play gMusic
-            Mix_PlayMusic(gMusic, -1);
-            isMusicPlaying = false;
-        }
         gMenu.menuRender();
         if (effectOn && gMenu.getWinMusicPlayed() == false) {
             Mix_PlayChannel(2, gVictory, 0);

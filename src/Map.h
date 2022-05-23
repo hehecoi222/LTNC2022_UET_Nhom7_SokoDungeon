@@ -23,17 +23,12 @@ public:
     int current_map;
     //name of the level
     string map;
-    //Present Victory
-    void PresVic();
-
     // clear map
     void clear();
     
 private:    
     //destination x, y and width, height of the floor, wall, Goal
     SDL_Rect des0;
-    //destination x, y and width, height of the Victory image
-    SDL_Rect des1;
     //Draw the floor 
     Texture floor[3];
     //Draw the wall
@@ -42,8 +37,6 @@ private:
     Texture Goal;
     // Render goal position
     void goalClicked(int gridX, int gridY);
-    //Draw Victory image
-    Texture Victory;
 };
 
 template <class T> int checkCollisionwithMap(char** level, T& obj, int direction) {

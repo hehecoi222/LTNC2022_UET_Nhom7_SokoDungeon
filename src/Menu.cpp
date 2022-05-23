@@ -151,8 +151,6 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
             }
             break;
         case SDL_MOUSEBUTTONDOWN:
-            if(Game::effectOn)
-                    Mix_PlayChannel(-1, Game::gMouse, 0);
             for (int i = 0; i < TOTAL_MENU_ITEMS; i++) {
                 if(checkClicked(menuItemsDes, i) == EXIT_GAME) gameIsRunning = false;
             }
@@ -163,19 +161,13 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
     }
     else if(inOptPanel) {    
         if(e.type == SDL_MOUSEBUTTONDOWN) {
-            if(Game::effectOn)
-                    Mix_PlayChannel(-1, Game::gMouse, 0);
             for (int i = RETURN_HOME; i < PAUSE_GAME; i++) {
                 checkClicked(ButDes, i);
             }
         }
     }
     if(!inMenu && !inOptPanel && !inWinPanel) {
-        if(Game::musicOn && !Mix_PlayingMusic())
-            Mix_PlayMusic(Game::gMusic, -1);
         if(e.type == SDL_MOUSEBUTTONDOWN) {
-            if(Game::effectOn)
-                    Mix_PlayChannel(-1, Game::gMouse, 0);
         checkClicked(ButDes, PAUSE_GAME);
         }
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_w) {
@@ -184,8 +176,6 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
     }
     if(inWinPanel) {
         if(e.type == SDL_MOUSEBUTTONDOWN) {
-            if(Game::effectOn)
-                    Mix_PlayChannel(-1, Game::gMouse, 0);
             for (int i = NEXT_LEVEL; i < TOTAL_WINNING_BUTTONS; i++) {
                 checkClicked(ButDes, i);
             }
@@ -202,10 +192,12 @@ void Menu::itemClickFunct(int item){
     case NEW_GAME:
         inMenu = false;
         Game::newGame();
+        Mix_HaltMusic();
         break;
 
     case CONTINUE_GAME:
         inMenu = false;
+        Mix_HaltMusic();
         break;
 
     case OPTION_GAME:
@@ -230,6 +222,7 @@ void Menu::itemClickFunct(int item){
         inMenu = true;
         inOptPanel = false;
         inWinPanel = false;
+        Mix_HaltMusic();
         break;
     case MUSIC:
         swap(ButClip[MUSIC],ButClip[MUSIC_OFF]);
@@ -308,6 +301,8 @@ void Menu::menuRender() {
         renderHighScoreText();
     }
     if(!inMenu && !inOptPanel && !inWinPanel){
+        if(Game::musicOn && !Mix_PlayingMusic())
+            Mix_PlayMusic(Game::gMusic, -1);
         buttonsPresTex.render(ButDes[PAUSE_GAME].x, ButDes[PAUSE_GAME].y, &ButClip[PAUSE_GAME], &ButDes[PAUSE_GAME]);
         for (int i = 0; i < TOTAL_TUTORIAL_ITEMS; i++) {
             if (i == UNDO_TEXT) {
@@ -332,6 +327,9 @@ int Menu::checkClicked(SDL_Rect checkItemDes[], int checkItem){
             cout << "Exit Game\n";
             return EXIT_GAME;
         }
+        if(Game::effectOn)
+            Mix_PlayChannel(-1, Game::gMouse, 0);
+
         itemClickFunct(checkItem);
     }
     return TOTAL_ITEMS;

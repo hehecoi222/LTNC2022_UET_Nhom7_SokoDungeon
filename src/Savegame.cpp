@@ -281,7 +281,8 @@ void Savegame::undoMove(Hero& hero, Enemy& enemy) {
 
 void Savegame::shift(Hero& hero, Enemy& enemy, int direction) {
     hero.Move(direction);
-    subMovesCount();
+    if(direction != NOT_MOVE)
+        subMovesCount();
     while (movesStack->boxes) {
         int boxX = movesStack->boxes->x;
         int boxY = movesStack->boxes->y;
