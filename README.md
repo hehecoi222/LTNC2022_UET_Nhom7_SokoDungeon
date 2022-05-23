@@ -38,6 +38,6 @@ Về SokoDungeon, cách chơi khá giống game cổ điển Sokoban (Dẩy thù
 
 ## Tham khảo
 
-- Cách thức cài đặt thư viện/tìm kiếm các resources: [Lazyfoo](lazyfoo.net/tutorials/SDL) và [WillUsher](willusher.io/pages/sdl2/)
+- Cách thức cài đặt thư viện/tìm kiếm các resources: [Lazyfoo](https://www.lazyfoo.net/tutorials/SDL) và [WillUsher](https://www.willusher.io/pages/sdl2/)
 - Cách chia tách file: [Let's make game](https://www.youtube.com/c/CarlBirch)
-- Resources: [Itch.io](itch.io)
+- Resources: [Itch.io](https://www.itch.io)
