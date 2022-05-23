@@ -20,8 +20,8 @@ Menu::~Menu(){}
 void Menu::loadMenu() {
     //Load menu background IMG
     menuBackground.loadFromFile(FindRes::getPath("img","MenuBackground.jpg"));
-    backgroundClip.w = 1100;
-    backgroundClip.h = backgroundClip.w * 0.8;
+    backgroundClip.h = 800;
+    backgroundClip.w = backgroundClip.h *16/9;
     backgroundClip.x = menuBackground.getWidth()/2 - backgroundClip.w/2;
     backgroundClip.y = menuBackground.getHeight()/2 - backgroundClip.h/2 - 100;
     backgroundDestRect = {0, 0, Game::WINDOW_WIDTH, Game::WINDOW_HEIGHT};
