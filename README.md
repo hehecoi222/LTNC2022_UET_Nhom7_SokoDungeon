@@ -13,7 +13,7 @@
 
 Trò chơi SokoDungeon, bài tập lớn của nhóm 7, môn học Lập trình nâng cao INT2215 22 học kì 2 năm học 2021-2022. Nhóm 7 gồm 3 thành viên: Chu Ngọc Vương, Nguyễn Trung Hiếu, Bùi Anh Dũng cùng hoàn thành bài tập.
 
-Về SokoDungeon, cách chơi khá giống game cổ điển Sokoban (Dẩy thùng), người chơi sẽ phải tìm cách đưa các thùng về các vị trí đã định. Bên cạnh đó còn có một nhân vật sẽ tiến tới người và chặn đường hoàn thành nhiệm vụ chính.
+Về SokoDungeon, cách chơi khá giống game cổ điển Sokoban (Đẩy thùng), người chơi sẽ phải tìm cách đưa các thùng về các vị trí đã định. Bên cạnh đó còn có một nhân vật sẽ tiến tới người và chặn đường hoàn thành nhiệm vụ chính.
 
 ## Các chức năng
 
@@ -23,6 +23,8 @@ Về SokoDungeon, cách chơi khá giống game cổ điển Sokoban (Dẩy thù
 - Có lưu các bước đi, trở lại các bước đi
 - Có phân tách các đối tương, chức năng ra các file code cho thuận tiện xử lý
 - Có âm nhạc, hình ảnh, chức năng của menu
+- Có thể lưu được game sau khi thoát
+- Có Highscore cho người chơi
 
 ## Cách thức chạy chương trình
 
@@ -34,9 +36,9 @@ Về SokoDungeon, cách chơi khá giống game cổ điển Sokoban (Dẩy thù
 1. Về phần Chu Ngọc Vượng
   + Nhân vật 
   + Menu
-  + Texture
+  + Hình ảnh
 
-2. Về phần Nguyễn Trung Hiều
+2. Về phần Nguyễn Trung Hiếu
   + Enemy
   + Box
   + Save game
