@@ -1,8 +1,6 @@
-*.dll
 *.exe
 .vscode/
 bin/
-build/
 cmake/
-SDL*
 CMakeLists.txt
+Makefile
