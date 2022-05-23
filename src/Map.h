@@ -20,7 +20,7 @@ public:
     //Change to the Previous Map
     void PrevMap();
     //Current map of game
-    int current_map;
+    static int current_map;
     //name of the level
     string map;
     //Present Victory

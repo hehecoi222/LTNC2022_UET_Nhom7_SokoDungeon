@@ -49,9 +49,14 @@ private:
         UNDO_TEXT,
         RESTART,
         RESTART_TEXT,
+        BOX_COUNT,
+        BOX_COUNT_TEXT,
+        MOVE_COUNT,
+        MOVE_COUNT_TEXT,
+        MAP_NAME_TEXT,
         TOTAL_TUTORIAL_ITEMS
     };
-    static const int TOTAL_TUTORIAL_TEXT_ITEMS = 2;
+    static const int TOTAL_TUTORIAL_TEXT_ITEMS = 5;
 
     enum { SCORE_TEXT, HIGH_SCORE_TEXT, TOTAL_SCORE_TEXT_ITEMS };
 
@@ -59,7 +64,7 @@ private:
     Texture menuTutorialItemsLabelTex[TOTAL_TUTORIAL_TEXT_ITEMS];
     Texture winPanelHighScoreTextTex[TOTAL_SCORE_TEXT_ITEMS];
     string winPanelHighScoreTextLabel[TOTAL_SCORE_TEXT_ITEMS] = {"Moves: ", "High Score: "};
-    string menuTutorialItemsLabel[TOTAL_TUTORIAL_TEXT_ITEMS] = {"Undo", "Restart"};
+    string menuTutorialItemsLabel[TOTAL_TUTORIAL_TEXT_ITEMS] = {"Undo", "Restart", "Box: ", "Moves: ", "Level "};
     string menuItemsLabel[TOTAL_MENU_ITEMS] = {"New game", "Continue", "Options", "Exit"}; 
     SDL_Rect menuItemsDes[TOTAL_MENU_ITEMS];
     SDL_Rect winPanelHighScoreItemsDes[TOTAL_SCORE_TEXT_ITEMS];
