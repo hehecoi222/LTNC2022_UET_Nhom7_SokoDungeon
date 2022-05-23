@@ -204,18 +204,19 @@ void Game::restartGame() {
                        Enemy::enemyGlobalPos.second);
     gMenu.setWinPanelState(false);
     gMenu.setWinMusicPlayed(false);
+    save.loadHighScore(FindRes::getPath("savefile", "fileHighScore.skbhsf"));
 }
 
 void Game::newGame() {
     Game0.setMap(0);
+    save.setMapInt(Game0.current_map);
     restartGame();
 }
 
 void Game::nextMap() {
     Game0.NextMap();
-    restartGame();
     save.setMapInt(Game0.current_map);
-    save.loadHighScore(FindRes::getPath("savefile", "fileHighScore.skbhsf"));
+    restartGame();
 }
 
 void Game::update() {
