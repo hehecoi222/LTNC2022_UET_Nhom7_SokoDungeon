@@ -2,6 +2,7 @@
 #include "Menu.h"
 #include "Map.h"
 #include "Savegame.h"
+#include "Box.h"
 Menu::Menu() {
     curMX = 0;
     curMY = 0;
@@ -116,6 +117,10 @@ void Menu::loadMenu() {
     ButTutorialDes[RESTART] = {Game::BLOCK_WIDTH, Game::BLOCK_WIDTH*7, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
     ButTutorialDes[UNDO_TEXT] = {Game::BLOCK_WIDTH*2 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*6 +Game::BLOCK_WIDTH/4 , menuTutorialItemsLabelTex[0].getWidth()/2, menuTutorialItemsLabelTex[0].getHeight()/2 + Game::BLOCK_WIDTH/8};
     ButTutorialDes[RESTART_TEXT] = {Game::BLOCK_WIDTH*2 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*7 + Game::BLOCK_WIDTH/4, menuTutorialItemsLabelTex[1].getWidth()/2, menuTutorialItemsLabelTex[1].getHeight()/2 + Game::BLOCK_WIDTH/8};
+     ButTutorialDes[BOX_COUNT] = {Game::WINDOW_WIDTH - Game::BLOCK_WIDTH*5, Game::BLOCK_WIDTH*6 - Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH };
+    ButTutorialDes[BOX_COUNT_TEXT] = {Game::WINDOW_WIDTH - Game::BLOCK_WIDTH*4 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*6, Game::BLOCK_WIDTH*3, Game::BLOCK_WIDTH };
+    ButTutorialDes[MOVE_COUNT_TEXT] = {Game::WINDOW_WIDTH - Game::BLOCK_WIDTH*4 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*7, Game::BLOCK_WIDTH*3, Game::BLOCK_WIDTH };
+    ButTutorialDes[MAP_NAME_TEXT] = {Game::WINDOW_WIDTH - Game::BLOCK_WIDTH*4 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*9, Game::BLOCK_WIDTH*3, Game::BLOCK_WIDTH };
 }
 
 
@@ -291,12 +296,39 @@ void Menu::menuRender() {
     if(!inMenu && !inOptPanel && !inWinPanel){
         if(Game::musicOn && !Mix_PlayingMusic())
             Mix_PlayMusic(Game::gMusic, -1);
+        int menuTutorialItemsLabelCount = 0;
         buttonsPresTex.render(ButDes[PAUSE_GAME].x, ButDes[PAUSE_GAME].y, &ButClip[PAUSE_GAME], &ButDes[PAUSE_GAME]);
         for (int i = 0; i < TOTAL_TUTORIAL_ITEMS; i++) {
             if (i == UNDO_TEXT) {
-                menuTutorialItemsLabelTex[0].render(ButTutorialDes[i].x, ButTutorialDes[i].y, nullptr, &ButTutorialDes[i]);
+                menuTutorialItemsLabelTex[menuTutorialItemsLabelCount].render(ButTutorialDes[i].x, ButTutorialDes[i].y, nullptr, &ButTutorialDes[i]);
+                menuTutorialItemsLabelCount++;
             } else if (i == RESTART_TEXT) {
-                menuTutorialItemsLabelTex[1].render(ButTutorialDes[i].x, ButTutorialDes[i].y, nullptr, &ButTutorialDes[i]);
+                menuTutorialItemsLabelTex[menuTutorialItemsLabelCount].render(ButTutorialDes[i].x, ButTutorialDes[i].y, nullptr, &ButTutorialDes[i]);
+                menuTutorialItemsLabelCount++;
+            } else if (i == BOX_COUNT) {
+                Box::box.render(ButTutorialDes[i].x, ButTutorialDes[i].y, nullptr, &ButTutorialDes[i]);
+            } else if (i == BOX_COUNT_TEXT) {
+                menuTutorialItemsLabelTex[menuTutorialItemsLabelCount].loadFromRenderText(
+                    menuTutorialItemsLabel[menuTutorialItemsLabelCount] + to_string(Box::boxWinCount) +
+                        "/" + to_string(Box::boxCount),
+                    colorWhite);
+                menuTutorialItemsLabelTex[menuTutorialItemsLabelCount].render(ButTutorialDes[i].x, ButTutorialDes[i].y, nullptr, &ButTutorialDes[i]);
+                menuTutorialItemsLabelTex[menuTutorialItemsLabelCount].free();
+                menuTutorialItemsLabelCount++;
+            } else if ( i == MOVE_COUNT_TEXT) {
+                menuTutorialItemsLabelTex[menuTutorialItemsLabelCount].loadFromRenderText(
+                    menuTutorialItemsLabel[menuTutorialItemsLabelCount] + to_string(Savegame::movesCount),
+                    colorWhite);
+                menuTutorialItemsLabelTex[menuTutorialItemsLabelCount].render(ButTutorialDes[i].x, ButTutorialDes[i].y, nullptr, &ButTutorialDes[i]);
+                menuTutorialItemsLabelTex[menuTutorialItemsLabelCount].free();
+                menuTutorialItemsLabelCount++;
+            } else if (i == MAP_NAME_TEXT) {
+                menuTutorialItemsLabelTex[menuTutorialItemsLabelCount].loadFromRenderText(
+                    menuTutorialItemsLabel[menuTutorialItemsLabelCount] + to_string(Map::current_map),
+                    colorWhite);
+                menuTutorialItemsLabelTex[menuTutorialItemsLabelCount].render(ButTutorialDes[i].x, ButTutorialDes[i].y, nullptr, &ButTutorialDes[i]);
+                menuTutorialItemsLabelTex[menuTutorialItemsLabelCount].free();
+                menuTutorialItemsLabelCount++;
             } else {
                 keyboardTex.render(ButTutorialDes[i].x , ButTutorialDes[i].y, &ButTutorialClip[i], &ButTutorialDes[i]);
             }

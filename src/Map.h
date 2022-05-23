@@ -20,7 +20,7 @@ public:
     //Change to the Previous Map
     void PrevMap();
     //Current map of game
-    int current_map;
+    static int current_map;
     //name of the level
     string map;
     // clear map
@@ -36,6 +36,8 @@ private:
     //Draw goal position of the box to win 
     Texture Goal;
     // Render goal position
+    Texture Victory;
+    //Render 
     void goalClicked(int gridX, int gridY);
 };
 
