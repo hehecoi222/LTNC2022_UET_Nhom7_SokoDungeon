@@ -263,30 +263,30 @@ void Game::render() {
 
         Mix_VolumeMusic(MIX_MAX_VOLUME);
 
-        // Play intro sound while being in Menu state
-        if (gMenu.getMenuState() && isMusicPlaying == false) {
-            Mix_PlayMusic(gTheme, -1);
-            isMusicPlaying = true;
-        } else if (gMenu.getMenuState() == false && isMusicPlaying == true) {
-            // Play gMusic
-            Mix_PlayMusic(gMusic, -1);
-            isMusicPlaying = false;
-        }
+        // // Play intro sound while being in Menu state
+        // if (gMenu.getMenuState() && isMusicPlaying == false) {
+        //     Mix_PlayMusic(gTheme, -1);
+        //     isMusicPlaying = true;
+        // } else if (gMenu.getMenuState() == false && isMusicPlaying == true) {
+        //     // Play gMusic
+        //     Mix_PlayMusic(gMusic, -1);
+        //     isMusicPlaying = false;
+        // }
     } else if (gMenu.getMenuState()) {
         gMenu.setWinPanelState(false);
         gMenu.menuRender();
         Mix_VolumeMusic(MIX_MAX_VOLUME);
 
-        // Play intro sound while being in Menu state
-        if (gMenu.getMenuState() && isMusicPlaying == false && musicOn) {
-            Mix_PlayMusic(gTheme, -1);
-            isMusicPlaying = true;
-        } else if (gMenu.getMenuState() == false && isMusicPlaying == true &&
-                   musicOn) {
-            // Play gMusic
-            Mix_PlayMusic(gMusic, -1);
-            isMusicPlaying = false;
-        }
+        // // Play intro sound while being in Menu state
+        // if (gMenu.getMenuState() && isMusicPlaying == false && musicOn) {
+        //     Mix_PlayMusic(gTheme, -1);
+        //     isMusicPlaying = true;
+        // } else if (gMenu.getMenuState() == false && isMusicPlaying == true &&
+        //            musicOn) {
+        //     // Play gMusic
+        //     Mix_PlayMusic(gMusic, -1);
+        //     isMusicPlaying = false;
+        // }
     } else {
         if (gMenu.getMenuState() == false && isMusicPlaying == true &&
             musicOn) {
