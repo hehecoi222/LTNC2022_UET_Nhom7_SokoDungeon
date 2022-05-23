@@ -118,6 +118,7 @@ void Menu::loadMenu() {
     ButTutorialClip[RESTART] = {480, 0, 32, 32};
     ButTutorialClip[PREV_LVL_TUT] = {320, 64, 32, 32};
     ButTutorialClip[NEXT_LVL_TUT] = {352, 64, 32, 32};
+   
     ButTutorialDes[MOVE_UP] = {Game::BLOCK_WIDTH*2, Game::BLOCK_WIDTH*5, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
     ButTutorialDes[MOVE_DOWN] = {Game::BLOCK_WIDTH*2, Game::BLOCK_WIDTH*6, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
     ButTutorialDes[MOVE_LEFT] = {Game::BLOCK_WIDTH, Game::BLOCK_WIDTH*6, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
@@ -133,6 +134,10 @@ void Menu::loadMenu() {
     ButTutorialDes[UNDO_TEXT] = {Game::BLOCK_WIDTH*2 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*8 +Game::BLOCK_WIDTH/4 , menuTutorialItemsLabelTex[0].getWidth()/2, menuTutorialItemsLabelTex[0].getHeight()/2 + Game::BLOCK_WIDTH/8};
     ButTutorialDes[RESTART_TEXT] = {Game::BLOCK_WIDTH*2 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*9 + Game::BLOCK_WIDTH/4, menuTutorialItemsLabelTex[1].getWidth()/2, menuTutorialItemsLabelTex[1].getHeight()/2 + Game::BLOCK_WIDTH/8};
     ButTutorialDes[CHANGE_LVL_TEXT] = {Game::BLOCK_WIDTH*3 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*11 + Game::BLOCK_WIDTH/2 + Game::BLOCK_WIDTH/4, menuTutorialItemsLabelTex[5].getWidth()/2, menuTutorialItemsLabelTex[5].getHeight()/2 + Game::BLOCK_WIDTH/8};
+    
+    //Load messeage to player
+    messTextFirst.loadFromRenderText("Thank you",defaultTextColor);
+    messTextSec.loadFromRenderText("for Playing",defaultTextColor);
 }
 
 
@@ -155,8 +160,6 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
             }
             break;
         case SDL_MOUSEBUTTONDOWN:
-            if(Game::effectOn)
-                    Mix_PlayChannel(-1, Game::gMouse, 0);
             for (int i = 0; i < TOTAL_MENU_ITEMS; i++) {
                 if(checkClicked(menuItemsDes, i) == EXIT_GAME) gameIsRunning = false;
             }
@@ -167,19 +170,13 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
     }
     else if(inOptPanel) {    
         if(e.type == SDL_MOUSEBUTTONDOWN) {
-            if(Game::effectOn)
-                    Mix_PlayChannel(-1, Game::gMouse, 0);
             for (int i = RETURN_HOME; i < PAUSE_GAME; i++) {
                 checkClicked(ButDes, i);
             }
         }
     }
     if(!inMenu && !inOptPanel && !inWinPanel) {
-        if(Game::musicOn && !Mix_PlayingMusic())
-            Mix_PlayMusic(Game::gMusic, -1);
         if(e.type == SDL_MOUSEBUTTONDOWN) {
-            if(Game::effectOn)
-                    Mix_PlayChannel(-1, Game::gMouse, 0);
         checkClicked(ButDes, PAUSE_GAME);
         }
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_w) {
@@ -188,8 +185,6 @@ void Menu::menuHandleEvent(SDL_Event& e, bool &gameIsRunning) {
     }
     if(inWinPanel) {
         if(e.type == SDL_MOUSEBUTTONDOWN) {
-            if(Game::effectOn)
-                    Mix_PlayChannel(-1, Game::gMouse, 0);
             for (int i = NEXT_LEVEL; i < TOTAL_WINNING_BUTTONS; i++) {
                 checkClicked(ButDes, i);
             }
@@ -206,10 +201,12 @@ void Menu::itemClickFunct(int item){
     case NEW_GAME:
         inMenu = false;
         Game::newGame();
+        Mix_HaltMusic();
         break;
 
     case CONTINUE_GAME:
         inMenu = false;
+        Mix_HaltMusic();
         break;
 
     case OPTION_GAME:
@@ -234,6 +231,7 @@ void Menu::itemClickFunct(int item){
         inMenu = true;
         inOptPanel = false;
         inWinPanel = false;
+        Mix_HaltMusic();
         break;
     case MUSIC:
         swap(ButClip[MUSIC],ButClip[MUSIC_OFF]);
@@ -301,6 +299,8 @@ void Menu::menuRender() {
         for (int i = RETURN_HOME; i < PAUSE_GAME; i++) {
             buttonsTex.render(ButDes[i].x, ButDes[i].y, &ButClip[i], &ButDes[i]);
         }
+        messTextFirst.render(optPanelDest.x + optPanelDest.w/2 + 20, optPanelDest.y +optPanelDest.h/2 - messTextFirst.getHeight());
+        messTextSec.render(optPanelDest.x + optPanelDest.w/2 + 20, optPanelDest.y + optPanelDest.h/2);
     }
     if(inWinPanel){
         panelTex.render(winPanelDest.x, winPanelDest.y, &winPanelClip, &winPanelDest);
@@ -313,6 +313,8 @@ void Menu::menuRender() {
     }
     if(!inMenu && !inOptPanel && !inWinPanel){
         int menuTutorialItemsLabelCount = 0;
+        if(Game::musicOn && !Mix_PlayingMusic())
+            Mix_PlayMusic(Game::gMusic, -1);
         buttonsPresTex.render(ButDes[PAUSE_GAME].x, ButDes[PAUSE_GAME].y, &ButClip[PAUSE_GAME], &ButDes[PAUSE_GAME]);
         for (int i = 0; i < TOTAL_TUTORIAL_ITEMS; i++) {
             if (i == UNDO_TEXT) {
@@ -364,6 +366,9 @@ int Menu::checkClicked(SDL_Rect checkItemDes[], int checkItem){
             cout << "Exit Game\n";
             return EXIT_GAME;
         }
+        if(Game::effectOn)
+            Mix_PlayChannel(-1, Game::gMouse, 0);
+
         itemClickFunct(checkItem);
     }
     return TOTAL_ITEMS;

@@ -19,26 +19,7 @@ Map::Map()
 void Map::preLoadMap() {
     clear();
     // load the current map
-    switch (current_map) {
-        case 0:
-            map[5] = '0';
-            break;
-        case 1:
-            map[5] = '1';
-            break;
-        case 2:
-            map[5] = '2';
-            break;
-        case 3:
-            map[5] = '3';
-            break;
-        case 4:
-            map[5] = '4';
-            break;
-        case 5:
-            map[5] = '5';
-            break;
-    }
+    map[5] = current_map + '0';
     // using file operation to load
     ifstream file(FindRes::getPath("map", map));
     level0 = new char*[Game::GRID_HEIGHT];
@@ -127,14 +108,6 @@ void Map::PrevMap()
     //Decrease the map level
     current_map--;
     clear();
-}
-void Map::PresVic()
-{
-    des1.x = des1.y = 0;
-    des1.w = Game::BLOCK_WIDTH * Game::GRID_WIDTH;
-    des1.h = Game::BLOCK_WIDTH * Game::GRID_HEIGHT;
-    Victory.loadFromFile(FindRes::getPath("img", "Victory.png"));
-    Victory.render(0, 0, nullptr, &des1);
 }
 
 void Map::clear() {

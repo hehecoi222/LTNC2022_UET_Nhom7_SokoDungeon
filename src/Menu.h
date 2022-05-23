@@ -86,6 +86,9 @@ private:
     string winPanelHighScoreText[TOTAL_SCORE_TEXT_ITEMS] = {"Moves: ", "High Score: "};
     SDL_Rect HighScoreDes[TOTAL_SCORE_TEXT_ITEMS];
 
+    //Message to player
+    Texture messTextFirst, messTextSec;
+
     //Text color
     SDL_Color defaultTextColor, hoveringTextColor;
     SDL_Color colorWhite;

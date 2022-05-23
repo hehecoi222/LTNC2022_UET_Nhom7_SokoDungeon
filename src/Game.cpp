@@ -126,14 +126,14 @@ bool Game::loadMedia() {
 
     // Load menu texture
     gMenu.loadMenu();
-
+    
     // Load music and sound effect
     gVictory = Mix_LoadWAV(FindRes::getPath("audio", "Victory.wav"));
     gMusic = Mix_LoadMUS(FindRes::getPath("audio", "Soundtrack.wav"));
     gTheme = Mix_LoadMUS(FindRes::getPath("audio", "Theme Song.wav"));
     gHero = Mix_LoadWAV(FindRes::getPath("audio", "Footsteps.wav"));
     gBox = Mix_LoadWAV(FindRes::getPath("audio", "box.wav"));
-    gMouse = Mix_LoadWAV(FindRes::getPath("audio", "MouseClick.wav"));
+    gMouse = Mix_LoadWAV(FindRes::getPath("audio", "MouseClick.wav"));    
     // load Hero img
     mainHero.loadHeroIMG();
     mainEnemy.loadEnemyIMG();
@@ -156,26 +156,25 @@ void Game::handleEvents() {
         if (e.type == SDL_QUIT) {
             isRunning = false;
         } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_u &&
-                   e.key.repeat == 0) {
+                   e.key.repeat == 0 && !gMenu.getMenuState()) {
             save.undoMove(mainHero, mainEnemy);
         } else if (e.type == SDL_KEYDOWN &&
-                   e.key.keysym.sym == SDLK_LEFTBRACKET) {
+                   e.key.keysym.sym == SDLK_PERIOD && !gMenu.getMenuState() && !gMenu.getOptPanelState() && !gMenu.getWinPanelState()) {
             Game0.NextMap();
             restartGame();
             save.setMapInt(Game0.current_map);
             save.loadHighScore(
                 FindRes::getPath("savefile", "fileHighScore.skbhsf"));
-        } else if (e.type == SDL_KEYDOWN &&
-                   e.key.keysym.sym == SDLK_RIGHTBRACKET) {
+        } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_COMMA && !gMenu.getMenuState() && !gMenu.getOptPanelState() && !gMenu.getWinPanelState()) {
             Game0.PrevMap();
             restartGame();
             save.setMapInt(Game0.current_map);
             save.loadHighScore(
                 FindRes::getPath("savefile", "fileHighScore.skbhsf"));
-        } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_r) {
+        } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_r && !gMenu.getMenuState() && !gMenu.getOptPanelState() && !gMenu.getWinPanelState()) {
             restartGame();
         } else {
-            if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
+            if (e.type == SDL_KEYDOWN && e.key.repeat == 0 && !gMenu.getMenuState() && !gMenu.getOptPanelState() && !gMenu.getWinPanelState()) {
                 save.recordMove(mainHero.heroHandleEvent(e, mainEnemy));
                 if (save.getCurrentMove()) {
                     switch (e.key.keysym.sym) {
@@ -197,7 +196,6 @@ void Game::handleEvents() {
         }
     }
 }
-
 void Game::restartGame() {
     save.clear();
     Game0.preLoadMap();
@@ -260,56 +258,25 @@ void Game::render() {
     if (!Box::winLevel()) {
         // render menu
         gMenu.menuRender();
-
         Mix_VolumeMusic(MIX_MAX_VOLUME);
-
-        // Play intro sound while being in Menu state
-        if (gMenu.getMenuState() && switchMusicState == false && musicOn) {
-            Mix_PlayMusic(gTheme, -1);
-            switchMusicState = true;
-        } else if (gMenu.getMenuState() == false && switchMusicState == true && musicOn) {
-            // Play gMusic
-            Mix_PlayMusic(gMusic, -1);
-            switchMusicState = false;
-        }
+        
     } else if (gMenu.getMenuState()) {
         gMenu.setWinPanelState(false);
         gMenu.menuRender();
         Mix_VolumeMusic(MIX_MAX_VOLUME);
-
-        // Play intro sound while being in Menu state
-        if (gMenu.getMenuState() && switchMusicState == false && musicOn) {
-            Mix_PlayMusic(gTheme, -1);
-            switchMusicState = true;
-        } else if (gMenu.getMenuState() == false && switchMusicState == true &&
-                   musicOn) {
-            // Play gMusic
-            Mix_PlayMusic(gMusic, -1);
-            switchMusicState = false;
-        }
     } else {
-        if (gMenu.getMenuState() == false && switchMusicState == true &&
-            musicOn) {
-            // Play gMusic
-            Mix_PlayMusic(gMusic, -1);
-            switchMusicState = false;
-        }
+        Mix_VolumeMusic(64);
         gMenu.menuRender();
         if (effectOn && gMenu.getWinMusicPlayed() == false) {
             Mix_PlayChannel(2, gVictory, 0);
             gMenu.setWinMusicPlayed(true);
         }
-        Mix_VolumeMusic(64);
-    }
+    } 
     // Update Screen
     SDL_RenderPresent(gRenderer);
 }
 
 void Game::close() {
-    // Destroy window
-    SDL_DestroyRenderer(gRenderer);
-    SDL_DestroyWindow(gWindow);
-
     // Free the sound effects and sound
     Mix_FreeChunk(gVictory);
     Mix_FreeChunk(gHero);
@@ -320,8 +287,6 @@ void Game::close() {
     gTheme = gMusic = NULL;
     gHero = gBox = gMouse = gVictory = NULL;
 
-    gWindow = NULL;
-    gRenderer = NULL;
     Box::box.free();
     for (int i = 0; i < GRID_HEIGHT; i++) {
         for (int j = 0; j < GRID_WIDTH; j++) {
@@ -333,7 +298,17 @@ void Game::close() {
     delete[] Box::layerBox;
     delete[] Map::level0;
     save.toFile(FindRes::getPath("savefile", "level0.skbsf"));
+
+    // Destroy window
+    SDL_DestroyRenderer(gRenderer);
+    SDL_DestroyWindow(gWindow);
+    gWindow = NULL;
+    gRenderer = NULL;
+    gFont = NULL;
+
     // Quit SDL subsystems
+    TTF_Quit();
+    IMG_Quit();
     SDL_Quit();
     cout << "Game clear" << endl;
 }
