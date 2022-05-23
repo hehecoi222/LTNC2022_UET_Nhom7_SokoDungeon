@@ -288,7 +288,7 @@ void Game::render() {
                 isThemeMusicPlaying = false;
         }
         gMenu.menuRender();
-        if(isEffect && gMenu.getWinMusicPlayed() == false) {
+        if(effectOn && gMenu.getWinMusicPlayed() == false) {
             Mix_PlayChannel(2, gVictory, 0);
             gMenu.setWinMusicPlayed(true);
         }
