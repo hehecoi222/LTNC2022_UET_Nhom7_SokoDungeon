@@ -51,8 +51,7 @@ void Savegame::loadSavefile(const char* filename, Hero& hero, Enemy& enemy,
                             Map& map) {
     std::ifstream fileSaveIn(filename);
     if (fileSaveIn.is_open()) {
-        if (!fileSaveIn.eof()) {
-            fileSaveIn >> mapSave;
+        if (fileSaveIn >> mapSave) {
             setMap(hero, enemy, map);
         } else {
             mapSave = 0;

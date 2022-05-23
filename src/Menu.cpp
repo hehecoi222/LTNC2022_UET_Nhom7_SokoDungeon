@@ -118,21 +118,21 @@ void Menu::loadMenu() {
     ButTutorialClip[RESTART] = {480, 0, 32, 32};
     ButTutorialClip[PREV_LVL_TUT] = {320, 64, 32, 32};
     ButTutorialClip[NEXT_LVL_TUT] = {352, 64, 32, 32};
-    ButTutorialDes[MOVE_UP] = {Game::BLOCK_WIDTH*2, Game::BLOCK_WIDTH*3, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
-    ButTutorialDes[MOVE_DOWN] = {Game::BLOCK_WIDTH*2, Game::BLOCK_WIDTH*4, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
-    ButTutorialDes[MOVE_LEFT] = {Game::BLOCK_WIDTH, Game::BLOCK_WIDTH*4, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
-    ButTutorialDes[MOVE_RIGHT] = {Game::BLOCK_WIDTH*3, Game::BLOCK_WIDTH*4, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
-    ButTutorialDes[UNDO] = {Game::BLOCK_WIDTH, Game::BLOCK_WIDTH*6, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
-    ButTutorialDes[RESTART] = {Game::BLOCK_WIDTH, Game::BLOCK_WIDTH*7, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
-    ButTutorialDes[PREV_LVL_TUT] = {Game::BLOCK_WIDTH, Game::BLOCK_WIDTH*10 + Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
-    ButTutorialDes[NEXT_LVL_TUT] = {Game::BLOCK_WIDTH*2, Game::BLOCK_WIDTH*10 + Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
+    ButTutorialDes[MOVE_UP] = {Game::BLOCK_WIDTH*2, Game::BLOCK_WIDTH*5, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
+    ButTutorialDes[MOVE_DOWN] = {Game::BLOCK_WIDTH*2, Game::BLOCK_WIDTH*6, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
+    ButTutorialDes[MOVE_LEFT] = {Game::BLOCK_WIDTH, Game::BLOCK_WIDTH*6, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
+    ButTutorialDes[MOVE_RIGHT] = {Game::BLOCK_WIDTH*3, Game::BLOCK_WIDTH*6, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
+    ButTutorialDes[UNDO] = {Game::BLOCK_WIDTH, Game::BLOCK_WIDTH*8, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
+    ButTutorialDes[RESTART] = {Game::BLOCK_WIDTH, Game::BLOCK_WIDTH*9, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
+    ButTutorialDes[PREV_LVL_TUT] = {Game::BLOCK_WIDTH, Game::BLOCK_WIDTH*11 + Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
+    ButTutorialDes[NEXT_LVL_TUT] = {Game::BLOCK_WIDTH*2, Game::BLOCK_WIDTH*11 + Game::BLOCK_WIDTH/2, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH};
     ButTutorialDes[BOX_COUNT] = {Game::WINDOW_WIDTH - Game::BLOCK_WIDTH*5, Game::BLOCK_WIDTH*6 - Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH, Game::BLOCK_WIDTH };
     ButTutorialDes[BOX_COUNT_TEXT] = {Game::WINDOW_WIDTH - Game::BLOCK_WIDTH*4 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*6, Game::BLOCK_WIDTH*3, Game::BLOCK_WIDTH };
     ButTutorialDes[MOVE_COUNT_TEXT] = {Game::WINDOW_WIDTH - Game::BLOCK_WIDTH*4 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*7, Game::BLOCK_WIDTH*3, Game::BLOCK_WIDTH };
-    ButTutorialDes[MAP_NAME_TEXT] = {Game::WINDOW_WIDTH - Game::BLOCK_WIDTH*4 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*10, Game::BLOCK_WIDTH*3, Game::BLOCK_WIDTH };
-    ButTutorialDes[UNDO_TEXT] = {Game::BLOCK_WIDTH*2 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*6 +Game::BLOCK_WIDTH/4 , menuTutorialItemsLabelTex[0].getWidth()/2, menuTutorialItemsLabelTex[0].getHeight()/2 + Game::BLOCK_WIDTH/8};
-    ButTutorialDes[RESTART_TEXT] = {Game::BLOCK_WIDTH*2 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*7 + Game::BLOCK_WIDTH/4, menuTutorialItemsLabelTex[1].getWidth()/2, menuTutorialItemsLabelTex[1].getHeight()/2 + Game::BLOCK_WIDTH/8};
-    ButTutorialDes[CHANGE_LVL_TEXT] = {Game::BLOCK_WIDTH*4 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*10 + Game::BLOCK_WIDTH/2 + Game::BLOCK_WIDTH/4, menuTutorialItemsLabelTex[2].getWidth()/2, menuTutorialItemsLabelTex[1].getHeight()/2 + Game::BLOCK_WIDTH/8};
+    ButTutorialDes[MAP_NAME_TEXT] = {Game::WINDOW_WIDTH - Game::BLOCK_WIDTH*4 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*9, Game::BLOCK_WIDTH*3, Game::BLOCK_WIDTH };
+    ButTutorialDes[UNDO_TEXT] = {Game::BLOCK_WIDTH*2 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*8 +Game::BLOCK_WIDTH/4 , menuTutorialItemsLabelTex[0].getWidth()/2, menuTutorialItemsLabelTex[0].getHeight()/2 + Game::BLOCK_WIDTH/8};
+    ButTutorialDes[RESTART_TEXT] = {Game::BLOCK_WIDTH*2 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*9 + Game::BLOCK_WIDTH/4, menuTutorialItemsLabelTex[1].getWidth()/2, menuTutorialItemsLabelTex[1].getHeight()/2 + Game::BLOCK_WIDTH/8};
+    ButTutorialDes[CHANGE_LVL_TEXT] = {Game::BLOCK_WIDTH*3 + Game::BLOCK_WIDTH/8, Game::BLOCK_WIDTH*11 + Game::BLOCK_WIDTH/2 + Game::BLOCK_WIDTH/4, menuTutorialItemsLabelTex[5].getWidth()/2, menuTutorialItemsLabelTex[5].getHeight()/2 + Game::BLOCK_WIDTH/8};
 }
 
 
