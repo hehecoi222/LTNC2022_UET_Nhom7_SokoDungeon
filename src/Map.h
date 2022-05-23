@@ -36,6 +36,8 @@ private:
     //Draw goal position of the box to win 
     Texture Goal;
     // Render goal position
+    Texture Victory;
+    //Render 
     void goalClicked(int gridX, int gridY);
 };
 

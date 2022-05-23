@@ -92,7 +92,7 @@ void Menu::loadMenu() {
     ButDes[MUSIC].x = ButDes[MUSIC_OFF].x = ButDes[CREDIT].x;
     ButDes[MUSIC].y = ButDes[MUSIC_OFF].y = ButDes[SOUND_EFFECT].y;
 
-    //Load winning buttons
+    //Load winning buttons from img
     ButClip[RESTART_LEVEL] = {0, 48};
     ButClip[NEXT_LEVEL] = {32, 0};
     for (int i = NEXT_LEVEL; i < TOTAL_WINNING_BUTTONS; i++) {
@@ -265,14 +265,14 @@ void Menu::renderHighScoreText() {
     winPanelHighScoreTextTex[HIGH_SCORE_TEXT].loadFromRenderText(
         winPanelHighScoreText[HIGH_SCORE_TEXT] + to_string(Savegame::currentHighScore), defaultTextColor);
     HighScoreDes[SCORE_TEXT] = {
-        optPanelDest.x + (optPanelDest.w * 9 / 16),
-        optPanelDest.y + optPanelDest.h * 15 / 48,
+    optPanelDest.x + (optPanelDest.w * 9 / 16),
+    optPanelDest.y + optPanelDest.h * 15 / 48,
         int(winPanelHighScoreTextTex[SCORE_TEXT].getWidth()),
         int(winPanelHighScoreTextTex[SCORE_TEXT].getHeight())};
 
     HighScoreDes[HIGH_SCORE_TEXT] = {
-        optPanelDest.x + (optPanelDest.w * 9 / 16),
-        optPanelDest.y + optPanelDest.h * 26 / 48,
+    optPanelDest.x + (optPanelDest.w * 9 / 16),
+    optPanelDest.y + optPanelDest.h * 26 / 48,
         int(winPanelHighScoreTextTex[SCORE_TEXT].getWidth()),
         int(winPanelHighScoreTextTex[SCORE_TEXT].getHeight())};
     winPanelHighScoreTextTex[SCORE_TEXT].render(
@@ -283,7 +283,8 @@ void Menu::renderHighScoreText() {
         HighScoreDes[HIGH_SCORE_TEXT].x,
         HighScoreDes[HIGH_SCORE_TEXT].y, nullptr,
         &HighScoreDes[HIGH_SCORE_TEXT]);
-    
+    winPanelHighScoreTextTex[SCORE_TEXT].free();
+    winPanelHighScoreTextTex[HIGH_SCORE_TEXT].free();
 }
 
 void Menu::menuRender() {
@@ -312,9 +313,9 @@ void Menu::menuRender() {
         renderHighScoreText();
     }
     if(!inMenu && !inOptPanel && !inWinPanel){
-        int menuTutorialItemsLabelCount = 0;
         if(Game::musicOn && !Mix_PlayingMusic())
             Mix_PlayMusic(Game::gMusic, -1);
+        int menuTutorialItemsLabelCount = 0;
         buttonsPresTex.render(ButDes[PAUSE_GAME].x, ButDes[PAUSE_GAME].y, &ButClip[PAUSE_GAME], &ButDes[PAUSE_GAME]);
         for (int i = 0; i < TOTAL_TUTORIAL_ITEMS; i++) {
             if (i == UNDO_TEXT) {
@@ -353,7 +354,7 @@ void Menu::menuRender() {
             } else {
                 keyboardTex.render(ButTutorialDes[i].x , ButTutorialDes[i].y, &ButTutorialClip[i], &ButTutorialDes[i]);
             }
-        }
+        } 
     }
 
     

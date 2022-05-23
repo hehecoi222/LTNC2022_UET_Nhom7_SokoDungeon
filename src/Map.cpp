@@ -7,10 +7,10 @@
 #include "find_res.h"
 
 char** Map::level0 = nullptr;
+//Initialize variable of the level0
 int Map::current_map = 0;
 Map::Map()
 {
-    //Initialize variable of the level0
     map = "level0.smap";
     // destination x, y position of the image to render
     des0.x = des0.y = 0;
@@ -97,17 +97,22 @@ void Map::goalClicked(int gridX, int gridY) {
 void Map::NextMap()
 {
     if(current_map < 5)
-    //increase the map level
+    {//increase the map level
         current_map++;
-    clear();
+        clear();
+    }
+    else 
+        current_map = 0;
 }
 
 void Map::PrevMap()
 {
     if(current_map > 0)
+    {
     //Decrease the map level
-    current_map--;
-    clear();
+        current_map--;
+        clear();
+    }
 }
 
 void Map::clear() {

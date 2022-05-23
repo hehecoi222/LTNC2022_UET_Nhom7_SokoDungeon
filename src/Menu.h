@@ -54,7 +54,7 @@ private:
     Texture buttonsTex, buttonsPresTex;
     SDL_Rect ButClip[TOTAL_ITEMS], ButDes[TOTAL_ITEMS];
 
-     // List of tutorial items
+    // List of tutorial menu items
     enum {
         MOVE_UP,
         MOVE_DOWN,
@@ -119,7 +119,7 @@ private:
     bool getOptPanelState();
     bool getWinPanelState();
     bool getWinMusicPlayed();
-
+    
     void setWinPanelState(bool state);
     void setWinMusicPlayed(bool state);
 };
