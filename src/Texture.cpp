@@ -1,5 +1,5 @@
 #include "Texture.h"
-LTexture::LTexture()
+Texture::Texture()
 {
 	//Initialize
 	mTexture = NULL;
@@ -7,13 +7,13 @@ LTexture::LTexture()
 	mHeight = 0;
 }
 
-LTexture::~LTexture()
+Texture::~Texture()
 {
 	//Deallocate
 	free();
 }
 
-bool LTexture::loadFromFile( std::string path )
+bool Texture::loadFromFile( std::string path )
 {
 	//Get rid of preexisting texture
 	free();
@@ -30,7 +30,7 @@ bool LTexture::loadFromFile( std::string path )
 	else
 	{
 		//Color key image
-		SDL_SetColorKey( loadedSurface, SDL_TRUE, SDL_MapRGBA( loadedSurface->format, 0xFF,0xFF,0xFF,255 ) );
+		// SDL_SetColorKey( loadedSurface, SDL_TRUE, SDL_MapRGBA( loadedSurface->format, 0xFF,0xFF,0xFF,255 ) );
 
 		//Create texture from surface pixels
         newTexture = SDL_CreateTextureFromSurface( Game::gRenderer, loadedSurface );
@@ -55,7 +55,7 @@ bool LTexture::loadFromFile( std::string path )
 }
 
 #if defined(SDL_TTF_MAJOR_VERSION)
-bool LTexture::loadFromRenderText( string textureText, SDL_Color textColor)
+bool Texture::loadFromRenderText( string textureText, SDL_Color textColor)
 {
 	//Get rid of preexisting texture
 	free();
@@ -86,7 +86,7 @@ bool LTexture::loadFromRenderText( string textureText, SDL_Color textColor)
 }
 #endif
 
-void LTexture::free()
+void Texture::free()
 {
 	//Free texture if it exists
 	if( mTexture != NULL )
@@ -98,13 +98,13 @@ void LTexture::free()
 	}
 }
 
-void LTexture::setColor( Uint8 red, Uint8 green, Uint8 blue )
+void Texture::setColor( Uint8 red, Uint8 green, Uint8 blue )
 {
 	//Modulate texture
 	SDL_SetTextureColorMod( mTexture, red, green, blue );
 }
 
-void LTexture::render( int x, int y, SDL_Rect* clip, SDL_Rect* dest, double angle, SDL_Point* center, SDL_RendererFlip flip )
+void Texture::render( int x, int y, SDL_Rect* clip, SDL_Rect* dest, double angle, SDL_Point* center, SDL_RendererFlip flip )
 {
 	//Set rendering space and render to screen
 	if (dest == NULL) dest = new SDL_Rect{x, y, mWidth, mHeight};
@@ -114,20 +114,20 @@ void LTexture::render( int x, int y, SDL_Rect* clip, SDL_Rect* dest, double angl
 	SDL_RenderCopyEx( Game::gRenderer, mTexture, clip, dest, angle, center, flip );
 }
 
-int LTexture::getWidth()
+int Texture::getWidth()
 {
 	return mWidth;
 }
 
-int LTexture::getHeight()
+int Texture::getHeight()
 {
 	return mHeight;
 }
 
-void LTexture::setBlendMode( SDL_BlendMode blending){
+void Texture::setBlendMode( SDL_BlendMode blending){
 	SDL_SetTextureBlendMode( mTexture, blending);
 }
 
-void LTexture::setAlpha( Uint8 alpha){
+void Texture::setAlpha( Uint8 alpha){
 	SDL_SetTextureAlphaMod( mTexture, alpha);
 }

@@ -1,0 +1,2 @@
+g++ src/*.cpp -g -std=c++11 -Ilib/SDL2/include/SDL2 -Iinclude -Llib/SDL2/lib -w -Wl,-subsystem,windows -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -o build/sokodugeon.exe
+build\sokodugeon.exe
