@@ -28,8 +28,17 @@ Về SokoDungeon, cách chơi khá giống game cổ điển Sokoban (Đẩy th�
 
 ## Cách thức chạy chương trình
 
+### Cách 1:
+
 1. Clone repo này hoặc tải dưới dạng ZIP, giải nén ra
 2. Chạy `Makefile.bat`, trò chơi sẽ tự động build và chạy
+
+### Cách 2:
+
+1. Clone repo này hoặc tải dưới dạng ZIP, giải nén ra
+2. Mở cmd hoặc terminal/powershell gõ các lệnh
+> `g++ src/*.cpp -g -std=c++11 -Ilib/SDL2/include/SDL2 -Iinclude -Llib/SDL2/lib -w -Wl,-subsystem,windows -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -o build/sokodugeon.exe`
+3. Vào thư mục build, mở file `sokodungeon.exe`
 
 ## Phân công công việc
 
