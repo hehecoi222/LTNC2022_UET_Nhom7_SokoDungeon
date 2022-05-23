@@ -264,13 +264,13 @@ void Game::render() {
         Mix_VolumeMusic(MIX_MAX_VOLUME);
 
         // Play intro sound while being in Menu state
-        if (gMenu.getMenuState() && isMusicPlaying == false) {
+        if (gMenu.getMenuState() && switchMusicState == false && musicOn) {
             Mix_PlayMusic(gTheme, -1);
-            isMusicPlaying = true;
-        } else if (gMenu.getMenuState() == false && isMusicPlaying == true) {
+            switchMusicState = true;
+        } else if (gMenu.getMenuState() == false && switchMusicState == true && musicOn) {
             // Play gMusic
             Mix_PlayMusic(gMusic, -1);
-            isMusicPlaying = false;
+            switchMusicState = false;
         }
     } else if (gMenu.getMenuState()) {
         gMenu.setWinPanelState(false);
@@ -278,21 +278,21 @@ void Game::render() {
         Mix_VolumeMusic(MIX_MAX_VOLUME);
 
         // Play intro sound while being in Menu state
-        if (gMenu.getMenuState() && isMusicPlaying == false && musicOn) {
+        if (gMenu.getMenuState() && switchMusicState == false && musicOn) {
             Mix_PlayMusic(gTheme, -1);
-            isMusicPlaying = true;
-        } else if (gMenu.getMenuState() == false && isMusicPlaying == true &&
+            switchMusicState = true;
+        } else if (gMenu.getMenuState() == false && switchMusicState == true &&
                    musicOn) {
             // Play gMusic
             Mix_PlayMusic(gMusic, -1);
-            isMusicPlaying = false;
+            switchMusicState = false;
         }
     } else {
-        if (gMenu.getMenuState() == false && isMusicPlaying == true &&
+        if (gMenu.getMenuState() == false && switchMusicState == true &&
             musicOn) {
             // Play gMusic
             Mix_PlayMusic(gMusic, -1);
-            isMusicPlaying = false;
+            switchMusicState = false;
         }
         gMenu.menuRender();
         if (effectOn && gMenu.getWinMusicPlayed() == false) {
