@@ -7,8 +7,8 @@
 #define FIND_RES_H
 
 // stdio for logging errors, string for finding and concatenating paths, SDL for get errors and base path
-#include <stdio.h>
-#include <string>
+#include <iostream>
+#include <string.h>
 #include <SDL.h>
 
 // Class to find the path of the resource directory
