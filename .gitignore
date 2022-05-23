@@ -4,4 +4,3 @@ bin/
 cmake/
 CMakeLists.txt
 Makefile
-include/
