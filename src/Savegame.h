@@ -44,12 +44,6 @@ class Savegame {
     // Clear save game
     void clear();
 
-    // Get hero position to save
-    void saveHeroPosition(int x, int y) {
-        heroX = x/Game::BLOCK_WIDTH;
-        heroY = y/Game::BLOCK_WIDTH;
-    }
-
     // Record move
     void recordMove(int direction);
 

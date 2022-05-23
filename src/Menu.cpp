@@ -1,6 +1,7 @@
 
 #include "Menu.h"
 #include "Map.h"
+#include "Savegame.h"
 Menu::Menu() {
     curMX = 0;
     curMY = 0;
@@ -233,10 +234,40 @@ void Menu::itemClickFunct(int item){
         Game::restartGame();
         break;
     case NEXT_LEVEL:
+        inWinPanel = false;
+        Game::nextMap();
         break;
     default:
     break;
     }
+}
+
+void Menu::renderHighScoreText() {
+    winPanelHighScoreTextTex[SCORE_TEXT].loadFromRenderText(
+        winPanelHighScoreTextLabel[SCORE_TEXT] + to_string(Savegame::movesCount), defaultTextColor);
+    winPanelHighScoreTextTex[HIGH_SCORE_TEXT].loadFromRenderText(
+        winPanelHighScoreTextLabel[HIGH_SCORE_TEXT] + to_string(Savegame::currentHighScore), defaultTextColor);
+    winPanelHighScoreItemsDes[SCORE_TEXT] = {
+    optPanelDest.x + (optPanelDest.w * 9 / 16),
+    optPanelDest.y + optPanelDest.h * 15 / 48,
+    int(winPanelHighScoreTextTex[SCORE_TEXT].getWidth() * 1.5),
+    int(winPanelHighScoreTextTex[SCORE_TEXT].getHeight() * 1.5)};
+
+winPanelHighScoreItemsDes[HIGH_SCORE_TEXT] = {
+    optPanelDest.x + (optPanelDest.w * 9 / 16),
+    optPanelDest.y + optPanelDest.h * 26 / 48,
+    int(winPanelHighScoreTextTex[SCORE_TEXT].getWidth() * 1.5),
+    int(winPanelHighScoreTextTex[SCORE_TEXT].getHeight() * 1.5)};
+    winPanelHighScoreTextTex[SCORE_TEXT].render(
+        winPanelHighScoreItemsDes[SCORE_TEXT].x,
+        winPanelHighScoreItemsDes[SCORE_TEXT].y, nullptr,
+        &winPanelHighScoreItemsDes[SCORE_TEXT]);
+    winPanelHighScoreTextTex[HIGH_SCORE_TEXT].render(
+        winPanelHighScoreItemsDes[HIGH_SCORE_TEXT].x,
+        winPanelHighScoreItemsDes[HIGH_SCORE_TEXT].y, nullptr,
+        &winPanelHighScoreItemsDes[HIGH_SCORE_TEXT]);
+    winPanelHighScoreTextTex[SCORE_TEXT].free();
+    winPanelHighScoreTextTex[HIGH_SCORE_TEXT].free();
 }
 
 void Menu::menuRender() {
@@ -260,6 +291,7 @@ void Menu::menuRender() {
             buttonsTex.render(ButDes[i].x, ButDes[i].y, &ButClip[i], &ButDes[i]);
         }
         buttonsTex.render(ButDes[RETURN_HOME].x,  ButDes[RETURN_HOME].y, &ButClip[RETURN_HOME], &ButDes[RETURN_HOME]);
+        renderHighScoreText();
     }
     if(!inMenu && !inOptPanel && !inWinPanel){
         buttonsPresTex.render(ButDes[PAUSE_GAME].x, ButDes[PAUSE_GAME].y, &ButClip[PAUSE_GAME], &ButDes[PAUSE_GAME]);

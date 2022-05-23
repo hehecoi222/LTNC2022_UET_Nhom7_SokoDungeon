@@ -15,7 +15,7 @@ class Game {
     int cnt = 0;
     bool isRunning = true;
     SDL_Window* gWindow = NULL;
-    bool isThemeMusicPlaying = false;
+    bool isMusicPlaying = false;
         
 public:
     Game();
@@ -32,6 +32,7 @@ public:
     
     static void restartGame();
     static void newGame();
+    static void nextMap();
 
     bool getGameState(){ return isRunning; }
 

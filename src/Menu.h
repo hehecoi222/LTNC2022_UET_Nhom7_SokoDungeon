@@ -53,11 +53,16 @@ private:
     };
     static const int TOTAL_TUTORIAL_TEXT_ITEMS = 2;
 
+    enum { SCORE_TEXT, HIGH_SCORE_TEXT, TOTAL_SCORE_TEXT_ITEMS };
+
     Texture menuItemsTex[TOTAL_MENU_ITEMS];
     Texture menuTutorialItemsLabelTex[TOTAL_TUTORIAL_TEXT_ITEMS];
+    Texture winPanelHighScoreTextTex[TOTAL_SCORE_TEXT_ITEMS];
+    string winPanelHighScoreTextLabel[TOTAL_SCORE_TEXT_ITEMS] = {"Moves: ", "High Score: "};
     string menuTutorialItemsLabel[TOTAL_TUTORIAL_TEXT_ITEMS] = {"Undo", "Restart"};
     string menuItemsLabel[TOTAL_MENU_ITEMS] = {"New game", "Continue", "Options", "Exit"}; 
     SDL_Rect menuItemsDes[TOTAL_MENU_ITEMS];
+    SDL_Rect winPanelHighScoreItemsDes[TOTAL_SCORE_TEXT_ITEMS];
     SDL_Rect pauseGame;
 
     //Text color
@@ -73,6 +78,8 @@ private:
     Texture buttonsTex, buttonsPresTex;
     SDL_Rect ButClip[TOTAL_ITEMS], ButDes[TOTAL_ITEMS], ButTutorialClip[TOTAL_TUTORIAL_ITEMS], ButTutorialDes[TOTAL_TUTORIAL_ITEMS];
 
+    // Render win panel high score text
+    void renderHighScoreText();
 
     // Mouse position
     int curMX, curMY;
