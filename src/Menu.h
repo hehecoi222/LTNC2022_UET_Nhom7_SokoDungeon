@@ -39,7 +39,22 @@ private:
         TOTAL_ITEMS
     };
 
-    // List of tutorial menu items
+
+    Texture menuItemsTex[TOTAL_MENU_ITEMS];
+    string menuItemsLabel[TOTAL_MENU_ITEMS] = {"New game", "Continue", "Options", "Exit"}; 
+    SDL_Rect menuItemsDes[TOTAL_MENU_ITEMS];
+
+    //Panel item
+    Texture panelTex;
+    SDL_Rect optPanelClip, optPanelDest;
+
+    SDL_Rect winPanelClip, winPanelDest;
+    
+    Texture keyboardTex;
+    Texture buttonsTex, buttonsPresTex;
+    SDL_Rect ButClip[TOTAL_ITEMS], ButDes[TOTAL_ITEMS];
+
+     // List of tutorial items
     enum {
         MOVE_UP,
         MOVE_DOWN,
@@ -54,37 +69,26 @@ private:
         MOVE_COUNT,
         MOVE_COUNT_TEXT,
         MAP_NAME_TEXT,
+        PREV_LVL_TUT,
+        NEXT_LVL_TUT,
+        CHANGE_LVL_TEXT,
         TOTAL_TUTORIAL_ITEMS
     };
-    static const int TOTAL_TUTORIAL_TEXT_ITEMS = 5;
+    static const int TOTAL_TUTORIAL_TEXT_ITEMS = 6;
 
-    enum { SCORE_TEXT, HIGH_SCORE_TEXT, TOTAL_SCORE_TEXT_ITEMS };
-
-    Texture menuItemsTex[TOTAL_MENU_ITEMS];
     Texture menuTutorialItemsLabelTex[TOTAL_TUTORIAL_TEXT_ITEMS];
+    string menuTutorialItemsLabel[TOTAL_TUTORIAL_TEXT_ITEMS] = {"Undo", "Restart", "Box: ", "Moves: ", "Level ", "Change Level"};
+    SDL_Rect ButTutorialClip[TOTAL_TUTORIAL_ITEMS], ButTutorialDes[TOTAL_TUTORIAL_ITEMS];
+
+    //Highscore items
+    enum { SCORE_TEXT, HIGH_SCORE_TEXT, TOTAL_SCORE_TEXT_ITEMS };
     Texture winPanelHighScoreTextTex[TOTAL_SCORE_TEXT_ITEMS];
-    string winPanelHighScoreTextLabel[TOTAL_SCORE_TEXT_ITEMS] = {"Moves: ", "High Score: "};
-    string menuTutorialItemsLabel[TOTAL_TUTORIAL_TEXT_ITEMS] = {"Undo", "Restart", "Box: ", "Moves: ", "Level "};
-    string menuItemsLabel[TOTAL_MENU_ITEMS] = {"New game", "Continue", "Options", "Exit"}; 
-    SDL_Rect menuItemsDes[TOTAL_MENU_ITEMS];
-    SDL_Rect winPanelHighScoreItemsDes[TOTAL_SCORE_TEXT_ITEMS];
-    SDL_Rect pauseGame;
+    string winPanelHighScoreText[TOTAL_SCORE_TEXT_ITEMS] = {"Moves: ", "High Score: "};
+    SDL_Rect HighScoreDes[TOTAL_SCORE_TEXT_ITEMS];
 
     //Text color
     SDL_Color defaultTextColor, hoveringTextColor;
     SDL_Color colorWhite;
-
-    Texture panelTex;
-    SDL_Rect optPanelClip, optPanelDest;
-
-    SDL_Rect winPanelClip, winPanelDest;
-    
-    Texture keyboardTex;
-    Texture buttonsTex, buttonsPresTex;
-    SDL_Rect ButClip[TOTAL_ITEMS], ButDes[TOTAL_ITEMS], ButTutorialClip[TOTAL_TUTORIAL_ITEMS], ButTutorialDes[TOTAL_TUTORIAL_ITEMS];
-
-    // Render win panel high score text
-    void renderHighScoreText();
 
     // Mouse position
     int curMX, curMY;
@@ -106,10 +110,13 @@ private:
 
     int checkClicked(SDL_Rect itemDes[], int item);
 
+    void renderHighScoreText();
+
     bool getMenuState();
     bool getOptPanelState();
     bool getWinPanelState();
     bool getWinMusicPlayed();
+
     void setWinPanelState(bool state);
     void setWinMusicPlayed(bool state);
 };
