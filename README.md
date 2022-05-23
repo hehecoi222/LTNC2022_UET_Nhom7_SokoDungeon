@@ -32,10 +32,20 @@ Về SokoDungeon, cách chơi khá giống game cổ điển Sokoban (Dẩy thù
 ## Phân công công việc
 
 1. Về phần Chu Ngọc Vượng
+  + Nhân vật 
+  + Menu
+  + Texture
 
 2. Về phần Nguyễn Trung Hiều
+  + Enemy
+  + Box
+  + Save game
 
 3. Về phần Bùi Anh Dũng
+  + Map
+  + Âm thanh
+
+! Phần còn lại các thành viên cùng hoàn thiện
 
 ## Tham khảo
 
