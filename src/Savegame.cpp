@@ -8,7 +8,11 @@
 #include "Hero.h"
 #include "Map.h"
 
+int Savegame::currentHighScore = 0;
+
+    // Count how many moves
 int Savegame::movesCount = 0;
+
 Savegame::Savegame() {
     movesStack = nullptr;
     enemyStack = nullptr;
@@ -90,7 +94,7 @@ void Savegame::loadHighScore(const char* filename) {
 }
 
 void Savegame::compareHighScore(const char* filename) {
-    if (currentHighScore > movesCount) {
+    if (currentHighScore > movesCount || currentHighScore == 0) {
         currentHighScore = movesCount;
     }
     std::ifstream fileHighScoreIn(filename);
@@ -159,6 +163,7 @@ void Savegame::boxPush(int x, int y) {
 }
 
 void Savegame::push(int direction) {
+    addMovesCount();
     Node* newNode = new Node;
     newNode->direction = direction;
     newNode->boxes = tempBoxes;
@@ -221,27 +226,23 @@ void Savegame::recordEnemyMove(int direction) {
 }
 
 void Savegame::recordMove(int direction) {
+    currentHeroMove = direction;
     switch (direction) {
         case NOT_MOVE:
-            push(NOT_MOVE);
             break;
         case MOVE_UP:
-            addMovesCount();
             push(MOVE_UP);
             heroY--;
             break;
         case MOVE_DOWN:
-            addMovesCount();
             push(MOVE_DOWN);
             heroY++;
             break;
         case MOVE_LEFT:
-            addMovesCount();
             push(MOVE_LEFT);
             heroX--;
             break;
         case MOVE_RIGHT:
-            addMovesCount();
             push(MOVE_RIGHT);
             heroX++;
             break;
@@ -256,25 +257,21 @@ void Savegame::undoMove(Hero& hero, Enemy& enemy) {
             break;
         case MOVE_UP:
             direction = MOVE_DOWN;
-            subMovesCount();
             shift(hero, enemy, direction);
             heroY++;
             break;
         case MOVE_DOWN:
             direction = MOVE_UP;
-            subMovesCount();
             shift(hero, enemy, direction);
             heroY--;
             break;
         case MOVE_LEFT:
             direction = MOVE_RIGHT;
-            subMovesCount();
             shift(hero, enemy, direction);
             heroX++;
             break;
         case MOVE_RIGHT:
             direction = MOVE_LEFT;
-            subMovesCount();
             shift(hero, enemy, direction);
             heroX--;
             break;
@@ -284,6 +281,8 @@ void Savegame::undoMove(Hero& hero, Enemy& enemy) {
 
 void Savegame::shift(Hero& hero, Enemy& enemy, int direction) {
     hero.Move(direction);
+    if(direction != NOT_MOVE)
+        subMovesCount();
     while (movesStack->boxes) {
         int boxX = movesStack->boxes->x;
         int boxY = movesStack->boxes->y;

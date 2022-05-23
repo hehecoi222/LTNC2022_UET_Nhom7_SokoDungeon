@@ -45,9 +45,9 @@ void Hero::loadHeroIMG() {
 
 
     for (int i = 0; i < PLAYER_FRAMES; i++) {
-        playerCurrentFrame[i].x = (i * HERO_CLIP_WIDTH ) + Game::BLOCK_WIDTH/2;
-        playerCurrentFrame[i].y = Game::BLOCK_WIDTH/2;
-        playerCurrentFrame[i].w = playerCurrentFrame[i].h = Game::BLOCK_WIDTH;
+        playerCurrentFrame[i].x = (i * HERO_CLIP_WIDTH ) + 16;
+        playerCurrentFrame[i].y = 16;
+        playerCurrentFrame[i].w = playerCurrentFrame[i].h = 32;
     }
 }
 
@@ -100,49 +100,29 @@ void Hero::Move(int direction) {
     switch (direction) {
         case MOVE_RIGHT:
             hDesPosX += Game::BLOCK_WIDTH;
-            playerCurrentTex = &walkRight;
-            while (hCurPosX != hDesPosX) {
-                hCurPosX += HERO_VEL;
-                if(Game::effectOn)
-                    Mix_PlayChannel(-1, Game::gHero, 0);
-                heroRender();
-            }
+            hCurPosX = hDesPosX;
             playerCurrentTex = &idleRight;
             break;
         case MOVE_LEFT:
             hDesPosX -= Game::BLOCK_WIDTH;
-            playerCurrentTex = &walkLeft;
-            while (hCurPosX != hDesPosX) {
-                hCurPosX -= HERO_VEL;
-                if(Game::effectOn)
-                    Mix_PlayChannel(-1, Game::gHero, 0);
-                heroRender();
-            }
+            hCurPosX = hDesPosX;
             playerCurrentTex = &idleLeft;
             break;
         case MOVE_UP:
             hDesPosY -= Game::BLOCK_WIDTH;
-            playerCurrentTex = &walkUp;
-            while (hCurPosY != hDesPosY) {
-                hCurPosY -= HERO_VEL;
-                if(Game::effectOn)
-                    Mix_PlayChannel(-1, Game::gHero, 0);
-                heroRender();
-            }
+            hCurPosY = hDesPosY;
             playerCurrentTex = &idleUp;
             break;
         case MOVE_DOWN:
             hDesPosY += Game::BLOCK_WIDTH;
-            playerCurrentTex = &walkDown;
-            while (hCurPosY != hDesPosY) {
-                hCurPosY += HERO_VEL;
-                if(Game::effectOn)
-                    Mix_PlayChannel(-1, Game::gHero, 0);
-                heroRender();
-            }
+            hCurPosY = hDesPosY;
             playerCurrentTex = &idleDown;
             break;
+        case NOT_MOVE:
+            return;
     }
+    if(Game::effectOn) Mix_PlayChannel(-1, Game::gHero, 0);
+
 }
 
 void Hero::heroRender() {

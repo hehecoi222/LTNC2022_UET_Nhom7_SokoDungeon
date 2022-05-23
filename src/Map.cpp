@@ -5,41 +5,21 @@
 #include "Game.h"
 #include "Hero.h"
 #include "find_res.h"
-#include "Savegame.h"
 
 char** Map::level0 = nullptr;
-
 Map::Map()
 {
+    //Initialize variable of the level0
+    current_map = 0;
     map = "level0.smap";
     // destination x, y position of the image to render
     des0.x = des0.y = 0;
     des0.w = des0.h = Game::BLOCK_WIDTH;
-    current_map = 0;
 }
 void Map::preLoadMap() {
     clear();
     // load the current map
-    switch (current_map) {
-        case 0:
-            map[5] = '0';
-            break;
-        case 1:
-            map[5] = '1';
-            break;
-        case 2:
-            map[5] = '2';
-            break;
-        case 3:
-            map[5] = '3';
-            break;
-        case 4:
-            map[5] = '4';
-            break;
-        case 5:
-            map[5] = '5';
-            break;
-    }
+    map[5] = current_map + '0';
     // using file operation to load
     ifstream file(FindRes::getPath("map", map));
     level0 = new char*[Game::GRID_HEIGHT];
@@ -103,9 +83,6 @@ void Map::LoadMap() {
             }
         }
     }
-    SDL_Color tex = {255, 255, 255};
-    moveCount.loadFromRenderText("Moves: " + to_string(Savegame::movesCount), tex);
-    moveCount.render(0, Game::BLOCK_WIDTH *225/16);
 }
 
 void Map::goalClicked(int gridX, int gridY) {
@@ -132,14 +109,6 @@ void Map::PrevMap()
     current_map--;
     clear();
 }
-void Map::PresVic()
-{
-    des1.x = des1.y = 0;
-    des1.w = Game::BLOCK_WIDTH * Game::GRID_WIDTH;
-    des1.h = Game::BLOCK_WIDTH * Game::GRID_HEIGHT;
-    Victory.loadFromFile(FindRes::getPath("img", "Victory.png"));
-    Victory.render(0, 0, nullptr, &des1);
-}
 
 void Map::clear() {
     if (!level0) {
@@ -151,10 +120,4 @@ void Map::clear() {
     delete[] level0;
     level0 = nullptr;
     Box::flushBoxLayer();
-}
-
-void Map::setMap(int desiredMap)
-{
-    current_map = desiredMap;
-    clear();
 }

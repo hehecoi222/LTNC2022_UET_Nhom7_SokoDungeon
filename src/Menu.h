@@ -17,7 +17,7 @@ private:
     Texture gameTitle;
     SDL_Rect gameTitleDest; 
 
-    //list of title menu items (3)
+    //list of title menu items
     enum {
         NEW_GAME,
         CONTINUE_GAME,
@@ -38,9 +38,31 @@ private:
         TOTAL_WINNING_BUTTONS,
         TOTAL_ITEMS
     };
+
+    // List of tutorial menu items
+    enum {
+        MOVE_UP,
+        MOVE_DOWN,
+        MOVE_RIGHT,
+        MOVE_LEFT,
+        UNDO,
+        UNDO_TEXT,
+        RESTART,
+        RESTART_TEXT,
+        TOTAL_TUTORIAL_ITEMS
+    };
+    static const int TOTAL_TUTORIAL_TEXT_ITEMS = 2;
+
+    enum { SCORE_TEXT, HIGH_SCORE_TEXT, TOTAL_SCORE_TEXT_ITEMS };
+
     Texture menuItemsTex[TOTAL_MENU_ITEMS];
+    Texture menuTutorialItemsLabelTex[TOTAL_TUTORIAL_TEXT_ITEMS];
+    Texture winPanelHighScoreTextTex[TOTAL_SCORE_TEXT_ITEMS];
+    string winPanelHighScoreTextLabel[TOTAL_SCORE_TEXT_ITEMS] = {"Moves: ", "High Score: "};
+    string menuTutorialItemsLabel[TOTAL_TUTORIAL_TEXT_ITEMS] = {"Undo", "Restart"};
     string menuItemsLabel[TOTAL_MENU_ITEMS] = {"New game", "Continue", "Options", "Exit"}; 
     SDL_Rect menuItemsDes[TOTAL_MENU_ITEMS];
+    SDL_Rect winPanelHighScoreItemsDes[TOTAL_SCORE_TEXT_ITEMS];
     SDL_Rect pauseGame;
 
     //Text color
@@ -52,10 +74,12 @@ private:
 
     SDL_Rect winPanelClip, winPanelDest;
     
-
+    Texture keyboardTex;
     Texture buttonsTex, buttonsPresTex;
-    SDL_Rect ButClip[TOTAL_ITEMS], ButDes[TOTAL_ITEMS];
+    SDL_Rect ButClip[TOTAL_ITEMS], ButDes[TOTAL_ITEMS], ButTutorialClip[TOTAL_TUTORIAL_ITEMS], ButTutorialDes[TOTAL_TUTORIAL_ITEMS];
 
+    // Render win panel high score text
+    void renderHighScoreText();
 
     // Mouse position
     int curMX, curMY;
@@ -64,7 +88,9 @@ private:
     bool inMenu;
     bool inOptPanel;
     bool inWinPanel;
-public:
+    bool inWinMusicPlayed;
+
+   public:
     Menu();
     ~Menu();
 
@@ -78,7 +104,9 @@ public:
     bool getMenuState();
     bool getOptPanelState();
     bool getWinPanelState();
-    
+    bool getWinMusicPlayed();
+    void setWinPanelState(bool state);
+    void setWinMusicPlayed(bool state);
 };
 
 #endif
