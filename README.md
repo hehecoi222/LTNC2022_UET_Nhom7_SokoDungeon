@@ -1,4 +1,5 @@
 # Nhóm 7: SokoDungeon Bài tập lớn: 2122HK2 - Lập trình nâng cao - INT2215 22 
+![CMake build](https://github.com/hehecoi222/LTNC2022_UET_Nhom7_SokoDungeon/actions/workflows/cmake.yml/badge.svg)
 
 ## Mục lục
 
