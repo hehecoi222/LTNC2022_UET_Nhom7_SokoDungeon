@@ -1,5 +1,5 @@
 # Nhóm 7: SokoDungeon Bài tập lớn: 2122HK2 - Lập trình nâng cao - INT2215 22 
-![CMake build](https://github.com/hehecoi222/LTNC2022_UET_Nhom7_SokoDungeon/actions/workflows/cmake.yml/badge.svg)
+![Build](https://github.com/hehecoi222/LTNC2022_UET_Nhom7_SokoDungeon/actions/workflows/cmake.yml/badge.svg)
 
 ## Mục lục
 
@@ -55,11 +55,12 @@ Về SokoDungeon, cách chơi khá giống game cổ điển Sokoban (Đẩy th�
 3. Về phần Bùi Anh Dũng
   + Map
   + Âm thanh
+  + Level design
 
-! Phần còn lại các thành viên cùng hoàn thiện
+*Phần còn lại các thành viên cùng hoàn thiện*
 
 ## Tham khảo
 
 - Cách thức cài đặt thư viện/tìm kiếm các resources: [Lazyfoo](https://www.lazyfoo.net/tutorials/SDL) và [WillUsher](https://www.willusher.io/pages/sdl2/)
-- Cách chia tách file: [Let's make game](https://www.youtube.com/c/CarlBirch)
+- Cách chia tách file, capping fps: [Let's make game](https://www.youtube.com/c/CarlBirch)
 - Resources: [Itch.io](https://www.itch.io)
